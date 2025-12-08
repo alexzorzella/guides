@@ -142,3 +142,6 @@ Fix complaints using<br>
 `chmod 700 ~/.ssh`<br>
 `chmod 600 ~/.ssh/id_ed25519`<br>
 `chmod 644 ~/.ssh/id_ed25519.pub`
+
+Note for setting up SSH in Windows: it may be necessary to enable the OpenSSH Authentication Agent in `services.msc`. Access it with `Win + R`.<br>
+
