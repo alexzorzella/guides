@@ -145,6 +145,17 @@ Fix complaints using<br>
 
 Note for setting up SSH in Windows: it may be necessary to enable the OpenSSH Authentication Agent in `services.msc`. Access it with `Win + R`.<br>
 
+#### Rebasing a Downstream Repo's main Onto Its Upstream's main
+
+First, make sure that both the upstream and the downstream are clean<br>
+Checkout to `main` using `git checkout main`<br>
+Fetch the upstream's content `git fetch upstream`<br>
+Merge with the upstream's content `git merge upstream/main`<br>
+Settle any merge conflicts, if applicable<br>
+All branches will be behind `main`, so for each branch, `git checkout branch_name`, then `git rebase main`<br>
+Settle any merge conflicts, if applicable<br>
+Every branch you rebase onto `main` will now have content that the origin doesn't know about. Running `git push` will result in an error, so you must either force push using `git push -f` (be very careful with this command) or create a new branch and delete the old one.
+
 # Python
 
 Properly set up your [pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) to make your life eaiser.
