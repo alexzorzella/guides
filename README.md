@@ -1,11 +1,11 @@
 # Bootstrapping PostgreSQL On Your Windows Machine
 
 ### Part Zero: Documentation
-PostgreSQL: https://www.postgresql.org/docs/current/index.html<br>
-psycopg3: https://www.psycopg.org/psycopg3/docs/basic/index.html
+[PostgreSQL](https://www.postgresql.org/docs/current/index.html)<br>
+[psycopg3](https://www.psycopg.org/psycopg3/docs/basic/index.html)
 
 ### Part One: Download and Installation
-Download the PostgreSQL installer from https://www.postgresql.org/download/<br>
+Download the [PostgreSQL installer](https://www.postgresql.org/download/)<br>
 Run the installer and install PostgreSQL Server and Command Line Tools (psql)
 
 ### Part Two: Setting Up the Database
@@ -42,9 +42,9 @@ Uncomment and update the following line: `log_statement = 'all'`. This will make
 Run Powershell as admin <br>
 Run `cd "C:/Users/monalisa/Documents/Path/To/Dump/Location"` to navigate to the location you desire to save the `.dump` files<br>
 Run `pg_dump -U postgres -d db_name --params > filename.dump` to save a `.dump` file with the specifications outlined by `--params`<br>
-You can find the `pg_dump` documentation here: https://www.postgresql.org/docs/current/app-pgdump.html<br>
+You can find the `pg_dump` documentation [here](https://www.postgresql.org/docs/current/app-pgdump.html)<br>
 Find the log file using `SELECT pg_current_logfile();` when in the postgres shell<br>
-To easily find files in your system, download Everything (the program named 'Everything', not everything by Voidtools) by Voidtools here: https://www.voidtools.com/downloads/
+To easily find files in your system, download Everything (the program named 'Everything', not everything by Voidtools) by Voidtools (here)[https://www.voidtools.com/downloads/]
 
 # Git Guide
 
@@ -145,3 +145,17 @@ Fix complaints using<br>
 
 Note for setting up SSH in Windows: it may be necessary to enable the OpenSSH Authentication Agent in `services.msc`. Access it with `Win + R`.<br>
 
+# Python
+
+Properly set up your [pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) to make your life eaiser.
+
+## Astral UV
+
+Use [Astral UV](https://docs.astral.sh/uv/) for simple virutal environments.<br>
+
+Install it using `curl -LsSf https://astral.sh/uv/install.sh | sh`<br>
+Install a specific Python verison using `uv python install x.yz`<br>
+Initialize uv using `uv init`. Use `--python x.yz` to specify a Python version.<br>
+Activate the environment using `source ./.venv/bin/activate`<br>
+Use `uv add packagename` to install Python packages. If your `pyproject.toml` is set up correctly, then you can just use `uv sync` to install all dependencies.<br>
+Run Python files with `uv run filename.py`
