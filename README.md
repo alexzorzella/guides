@@ -156,6 +156,12 @@ All branches will be behind `main`, so for each branch, `git checkout branch_nam
 Settle any merge conflicts, if applicable<br>
 Every branch you rebase onto `main` will now have content that the origin doesn't know about. Running `git push` will result in an error, so you must either force push using `git push -f` (be very careful with this command) or create a new branch and delete the old one.
 
+#### Delete From Git Without Deleting Locally
+
+This is useful after updating the .gitignore.<br>
+Remove a file using `git rm --cached path/to/file`<br>
+Remove a directory recursively using `git rm --cached -r path/to/directory`
+
 # Python
 
 Properly set up your [pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) to make your life eaiser.
