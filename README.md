@@ -39,7 +39,7 @@ When rebasing, git essentially asks "What would have happened if everything that
 ### Pretty Log
 Pretty log: ``git log --all --decorate --oneline --graph``
 
-#### Setting Up SSH
+### Setting Up SSH
 
 Check if you already have an SSH key with<br>
 `ls -al ~/.ssh`<br>
@@ -69,7 +69,7 @@ Fix complaints using<br>
 
 Note for setting up SSH in Windows: it may be necessary to enable the OpenSSH Authentication Agent in `services.msc`. Access it with `Win + R`.<br>
 
-#### Rebasing a Downstream Repo's main Onto Its Upstream's main
+### Rebasing a Downstream Repo's main Onto Its Upstream's main
 
 First, make sure that both the upstream and the downstream are clean<br>
 Checkout to `main` using `git checkout main`<br>
@@ -80,13 +80,13 @@ All branches will be behind `main`, so for each branch, `git checkout branch_nam
 Settle any merge conflicts, if applicable<br>
 Every branch you rebase onto `main` will now have content that the origin doesn't know about. Running `git push` will result in an error, so you must either force push using `git push -f` (be very careful with this command) or create a new branch and delete the old one.
 
-#### Delete From Git Without Deleting Locally
+### Delete From Git Without Deleting Locally
 
 This is useful after updating the .gitignore.<br>
 Remove a file using `git rm --cached path/to/file`<br>
 Remove a directory recursively using `git rm --cached -r path/to/directory`
 
-#### Etiquette
+### Etiquette
 
 Naming your branches in a standard manner is convenient for the team.<br>
 Please name your branch your_name_short/branch_name:<br>
