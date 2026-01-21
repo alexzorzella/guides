@@ -88,11 +88,6 @@ Remove a directory recursively using `git rm --cached -r path/to/directory`
 
 ### Etiquette
 
-Naming your branches in a standard manner is convenient for the team.<br>
-Please name your branch your_name_short/branch_name:<br>
-``ldavinci/wing_refactor``<br>
-``monal/security_patch``<br>
-``alexz/squirrel_gui``<br>
 Branch names should be easy to read and easy to type. While naming a branch ``alexz/gar`` is fun, it also doesn't convey what that branch is responsible for. Unless there's an understanding that ``gar`` is a version with certain features, a better branch name would be ``alexz/catalogue_integration``.
 
 #### Why append your name to every branch you create?
@@ -124,7 +119,8 @@ Use [Astral UV](https://docs.astral.sh/uv/) for simple virutal environments.<br>
 
 Install it using `curl -LsSf https://astral.sh/uv/install.sh | sh`<br>
 Install a specific Python verison using `uv python install x.yz`<br>
-Initialize uv using `uv init`. Use `--python x.yz` to specify a Python version.<br>
+Initialize a Python project using uv with `uv init`. Use `--python x.yz` to specify a Python version.<br>
+Add a virtual environment to an existing project using uv with `uv venv`. Use `--python x.yz` to specify a Python version.<br>
 Activate the environment using `source ./.venv/bin/activate`<br>
 Use `uv add packagename` to install Python packages. If your `pyproject.toml` is set up correctly, then you can just use `uv sync` to install all dependencies.<br>
 Run Python files with `uv run filename.py`
