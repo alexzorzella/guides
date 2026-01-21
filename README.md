@@ -109,13 +109,18 @@ remotes/origin/ldavinci/flying_machine
 remotes/origin/kathyj/propellant_driver
 ```
 
+# Homebrew
+[Homebrew](https://brew.sh/) lets you easily install packages into your Mac.<br>
+Run `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"` to install Homebrew.<br>
+Install Homebrew packages with `brew install packagename`.
+
 # Python
 
 Properly set up your [pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) to make your life eaiser.
 
 ## Astral UV
 
-Use [Astral UV](https://docs.astral.sh/uv/) for simple virutal environments.<br>
+[Astral UV](https://docs.astral.sh/uv/) simplifies the creation, use, and maintenence of virutal environments.<br>
 
 Install it using `curl -LsSf https://astral.sh/uv/install.sh | sh`<br>
 Install a specific Python verison using `uv python install x.yz`<br>
