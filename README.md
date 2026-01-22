@@ -39,7 +39,7 @@ When rebasing, git essentially asks "What would have happened if everything that
 ### Pretty Log
 Pretty log: ``git log --all --decorate --oneline --graph``
 
-### Setting Up SSH
+### Setting Up SSH (MacOS/Linux)
 
 Check if you already have an SSH key with<br>
 `ls -al ~/.ssh`<br>
@@ -57,7 +57,7 @@ Copy your new key with<br>
 `pbcopy < ~/.ssh/id_ed25519.pub`<br>
 or by copying the output of<br>
 `cat ~/.ssh/id_ed25519.pub`<br>
-and pasting it into GitHub<br>
+and paste it into GitHub's [Add new SSH Key Key box](https://github.com/settings/ssh/new)<br>
 
 Test your new SSH key with<br>
 `ssh -T git@github.com`<br>
@@ -66,6 +66,27 @@ Fix complaints using<br>
 `chmod 700 ~/.ssh`<br>
 `chmod 600 ~/.ssh/id_ed25519`<br>
 `chmod 644 ~/.ssh/id_ed25519.pub`
+
+### Settings Up SSH (Windows)
+
+Check if you already have an SSH key with<br>
+`ls ~/.ssh`<br>
+
+If you don't, create a new key using<br>
+`ssh-keygen.exe -t ed25519 -C ameliaq@email.com`<br>
+
+Start the SSH agent using<br>
+`Start-Service ssh-agent`<br>
+
+Add your new key using<br>
+`ssh-add.exe C:\Users\ameliaq@gmail.com\.ssh\id_ed25519`<br>
+
+and by copying the output of<br>
+`cat C:\Users\ameliaq@gmail.com\.ssh\id_ed25519.pub`<br>
+and paste it into GitHub's [Add new SSH Key Key box](https://github.com/settings/ssh/new)<br>
+
+Test your new SSH key with<br>
+`ssh -T git@github.com`<br>
 
 Note for setting up SSH in Windows: it may be necessary to enable the OpenSSH Authentication Agent in `services.msc`. Access it with `Win + R`.<br>
 
