@@ -57,7 +57,7 @@ Copy your new key with<br>
 `pbcopy < ~/.ssh/id_ed25519.pub`<br>
 or by copying the output of<br>
 `cat ~/.ssh/id_ed25519.pub`<br>
-and paste it into GitHub's [Add new SSH Key Key box](https://github.com/settings/ssh/new)<br>
+and paste it into GitHub's [Add new SSH Key box](https://github.com/settings/ssh/new)<br>
 
 Test your new SSH key with<br>
 `ssh -T git@github.com`<br>
@@ -83,7 +83,7 @@ Add your new key using<br>
 
 and by copying the output of<br>
 `cat C:\Users\ameliaq@gmail.com\.ssh\id_ed25519.pub`<br>
-and paste it into GitHub's [Add new SSH Key Key box](https://github.com/settings/ssh/new)<br>
+and paste it into GitHub's [Add new SSH Key box](https://github.com/settings/ssh/new)<br>
 
 Test your new SSH key with<br>
 `ssh -T git@github.com`<br>
