@@ -34,7 +34,8 @@ When rebasing, git essentially asks "What would have happened if everything that
 ``git checkout yourname/working_branch``<br>
 ``git fetch origin``<br>
 ``git rebase name_of_branch_to_rebase_onto``<br>
-``git pull --rebase``
+If there are no conflicts, excellent. If there are, modern IDEs try their best to help resolve them. After rebasing, the branch in the origin has to be updated. It seems as simple as `git add .`, `git commit -m "Rebase message"`, and then `git push`.<br>
+Calling `git push` will most likely lead to Git saying that there's a mismatch with the origin and that `git pull --rebase` must be called, but calling it will just repeat the process above a second time. This is becasue the origin is out of sync with the current, (assumedly) accurate rebased branch. Instead of calling ``git pull --rebase``, it's better to either check out to a new branch and push the changes there, or call `git push -f` to force push the changes. The latter is riskier, and force pushes should only ever be used with confidence.
 
 ### Pretty Log
 Pretty log: ``git log --all --decorate --oneline --graph``
