@@ -120,7 +120,7 @@ Naming a branch this way gives two important pieces of information: who should b
 `squirrel_gui` tells someone checking into that branch that there's going to be Squirrel GUI code in that branch, but they'll have to read the commit history to find the person to contact. Yes, someone looking at a branch can always check the commit history for the author, but naming the branch well will lead to good info when someone calls `git branch -a`.<br>
 `alexz/squirrel_gui` tells someone checking into that branch a lot of good information: both what is being worked on and who's working on it.<br><br>
 ```
-ameliaq@wpeb-436-14:~/Documents/GitHub/Capstone $ git branch -a
+ameliaq@meow:~/Documents/GitHub/repo $ git branch -a
 monal/squirrel_gui
 ldavinci/flying_machine
 kathyj/propellant_driver *
