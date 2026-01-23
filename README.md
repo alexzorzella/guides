@@ -198,4 +198,4 @@ Run `cd "C:/Users/monalisa/Documents/Path/To/Dump/Location"` to navigate to the 
 Run `pg_dump -U postgres -d db_name --params > filename.dump` to save a `.dump` file with the specifications outlined by `--params`<br>
 You can find the `pg_dump` documentation [here](https://www.postgresql.org/docs/current/app-pgdump.html)<br>
 Find the log file using `SELECT pg_current_logfile();` when in the postgres shell<br>
-To easily find files in your system, download Everything (the program named 'Everything', not everything by Voidtools) by Voidtools (here)[https://www.voidtools.com/downloads/]
+To easily find files in your system, download Everything (the program named 'Everything', not everything by Voidtools) by Voidtools [here](https://www.voidtools.com/downloads/)
