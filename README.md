@@ -80,10 +80,10 @@ Start the SSH agent using<br>
 `Start-Service ssh-agent`<br>
 
 Add your new key using<br>
-`ssh-add.exe C:\Users\ameliaq@gmail.com\.ssh\id_ed25519`<br>
+`ssh-add.exe C:\Users\ameliaq@email.com\.ssh\id_ed25519`<br>
 
 and by copying the output of<br>
-`cat C:\Users\ameliaq@gmail.com\.ssh\id_ed25519.pub`<br>
+`cat C:\Users\ameliaq@email.com\.ssh\id_ed25519.pub`<br>
 and paste it into GitHub's [Add new SSH Key box](https://github.com/settings/ssh/new)<br>
 
 Test your new SSH key with<br>
