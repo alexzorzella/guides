@@ -104,7 +104,7 @@ Every branch you rebase onto `main` will now have content that the origin doesn'
 
 ### Delete From Git Without Deleting Locally
 
-This is useful after updating the .gitignore.<br>
+This is useful after updating the `.gitignore`.<br>
 Remove a file using `git rm --cached path/to/file`<br>
 Remove a directory recursively using `git rm --cached -r path/to/directory`
 
