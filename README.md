@@ -152,6 +152,16 @@ Activate the environment using `source ./.venv/bin/activate`<br>
 Use `uv add packagename` to install Python packages. If your `pyproject.toml` is set up correctly, then you can just use `uv sync` to install all dependencies.<br>
 Run Python files with `uv run filename.py`
 
+# WSL
+WSL is awesome. Install it by running `wsl.exe --install` in Powershell.<br>
+To install a specific distribution, use `wsl.exe --install distribution`<br>
+View your distributions with `wsl --list --verbose`<br>
+Unregister a distribution using `wsl --unregister distribution`<br>
+Update the current distribution with `wsl --update`<br>
+Install C/C++ essentials with `sudo apt-get install gcc`, `sudo apt-get install g++`, and `sudo apt-get install make`<br>
+Install the WSL extension in VSCode for better IDE support.<br>
+Open code in VSCode using `code .`
+
 # Bootstrapping PostgreSQL On Your Windows Machine
 
 ### Part Zero: Documentation
