@@ -15,7 +15,7 @@ Push: ``git push``
 
 ### Branching
 
-Checkout to a new branch: ``git checkout -b yourname/new_branch_name``<br>
+Checkout to a new branch: ``git checkout -b yourname/new_branch_name``, then ``git push --set-upstream origin new_branch_name``<br>
 Checkout to an existing branch: ``git checkout yourname/branch_name``<br>
 
 Check your current branch: ``git branch -a``<br>
