@@ -109,6 +109,30 @@ This is useful after updating the `.gitignore`.<br>
 Remove a file using `git rm --cached path/to/file`<br>
 Remove a directory recursively using `git rm --cached -r path/to/directory`
 
+### Amending Commits
+
+Amend the last commit using `git commit --amend` (This will bring up the commit editor. Commands are listed at the bottom, but Ctrl+O, Enter, Ctrl+X to write and exit.)<br>
+Amend the last commit instantly using `git commit --amend -m "New message"`<br>
+
+You'll have to force push (or create a one-off branch and make a pull request) after amending the last commit: `git push -f`
+
+### Co-Authoring
+
+Co-author people by adding `Co-authored-by: Amelia <ameliaq@email.com>` to the end of any commit message<br>
+This is what it should look like:
+```
+Commit message
+
+Co-authored-by: Amelia <ameliaq@email.com>
+```
+You can add multiple co-authors:
+```
+Commit message
+
+Co-authored-by: Amelia <ameliaq@email.com>
+Co-authored-by: Ellen <eripley@weylandyutani.org>
+```
+
 ### Etiquette
 
 Branch names should be easy to read and easy to type. While naming a branch ``alexz/gar`` is fun, it also doesn't convey what that branch is responsible for. Unless there's an understanding that ``gar`` is a version with certain features, a better branch name would be ``alexz/catalogue_integration``.
