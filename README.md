@@ -1,45 +1,5 @@
 # My Favorite Git Commands
 
-### Committing
-
-Pull: ``git pull``
-
-Check status: ``git status``<br>
-
-Add changes: ``git add .``<br>
-Add changes (specific): ``git add file_path``<br>
-
-Commit: ``git commit -m "Message"``<br>
-
-Push: ``git push``
-
-### Branching
-
-Checkout to a new branch: ``git checkout -b yourname/new_branch_name``, then ``git push --set-upstream origin new_branch_name``<br>
-Checkout to an existing branch: ``git checkout yourname/branch_name``<br>
-
-Check your current branch: ``git branch -a``<br>
-
-Delete a branch: ``git branch -d branch_name``<br>
-Force delete a branch (caution): ``git branch -D branch_name``<br>
-
-After a pull request to main:<br>
-``git checkout main``<br>
-``git pull --prune``<br>
-``git checkout yourname/new_branch_name``<br>
-``git push --set-upstream origin new_branch_name``
-
-### Rebasing
-When rebasing, git essentially asks "What would have happened if everything that had happened during ``name_of_branch_to_rebase_onto`` had happened before whatever had happened before ``yourname/working_branch``?" Because the past may have changes to code or assets that the present also interacts with, there may be conflicts. These are resolved during the rebase. Remember: you can always abort a rebase by using ``git rebase --abort``<br>
-``git checkout yourname/working_branch``<br>
-``git fetch origin``<br>
-``git rebase name_of_branch_to_rebase_onto``<br>
-If there are no conflicts, excellent. If there are, modern IDEs try their best to help resolve them. After rebasing, the branch in the origin has to be updated. It seems as simple as `git add .`, `git commit -m "Rebase message"`, and then `git push`.<br>
-Calling `git push` will most likely lead to Git saying that there's a mismatch with the origin and that `git pull --rebase` must be called, but calling it will just repeat the process above a second time. This is becasue the origin is out of sync with the current, (assumedly) accurate rebased branch. Instead of calling ``git pull --rebase``, it's better to either check out to a new branch and push the changes there, or call `git push -f` to force push the changes. The latter is riskier, and force pushes should only ever be used with confidence.
-
-### Pretty Log
-Pretty log: ``git log --all --decorate --oneline --graph``
-
 ### Setting Up SSH (MacOS/Linux)
 
 Check if you already have an SSH key with<br>
@@ -80,16 +40,57 @@ Start the SSH agent using<br>
 `Start-Service ssh-agent`<br>
 
 Add your new key using<br>
-`ssh-add.exe C:\Users\ameliaq@email.com\.ssh\id_ed25519`<br>
+`ssh-add.exe ~\.ssh\id_ed25519`<br>
 
 and by copying the output of<br>
-`cat C:\Users\ameliaq@email.com\.ssh\id_ed25519.pub`<br>
+`cat ~\.ssh\id_ed25519.pub`<br>
 and paste it into GitHub's [Add new SSH Key box](https://github.com/settings/ssh/new)<br>
 
 Test your new SSH key with<br>
 `ssh -T git@github.com`<br>
 
 Note for setting up SSH in Windows: it may be necessary to enable the OpenSSH Authentication Agent in `services.msc`. Access it with `Win + R`.<br>
+If the SSH Client isn't located, try `Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH.Client*'`
+
+### Committing
+
+Pull: ``git pull``
+
+Check status: ``git status``<br>
+
+Add changes: ``git add .``<br>
+Add changes (specific): ``git add file_path``<br>
+
+Commit: ``git commit -m "Message"``<br>
+
+Push: ``git push``
+
+### Branching
+
+Checkout to a new branch: ``git checkout -b yourname/new_branch_name``, then ``git push --set-upstream origin new_branch_name``<br>
+Checkout to an existing branch: ``git checkout yourname/branch_name``<br>
+
+Check your current branch: ``git branch -a``<br>
+
+Delete a branch: ``git branch -d branch_name``<br>
+Force delete a branch (caution): ``git branch -D branch_name``<br>
+
+After a pull request to main:<br>
+``git checkout main``<br>
+``git pull --prune``<br>
+``git checkout yourname/new_branch_name``<br>
+``git push --set-upstream origin new_branch_name``
+
+### Rebasing
+When rebasing, git essentially asks "What would have happened if everything that had happened during ``name_of_branch_to_rebase_onto`` had happened before whatever had happened before ``yourname/working_branch``?" Because the past may have changes to code or assets that the present also interacts with, there may be conflicts. These are resolved during the rebase. Remember: you can always abort a rebase by using ``git rebase --abort``<br>
+``git checkout yourname/working_branch``<br>
+``git fetch origin``<br>
+``git rebase name_of_branch_to_rebase_onto``<br>
+If there are no conflicts, excellent. If there are, modern IDEs try their best to help resolve them. After rebasing, the branch in the origin has to be updated. It seems as simple as `git add .`, `git commit -m "Rebase message"`, and then `git push`.<br>
+Calling `git push` will most likely lead to Git saying that there's a mismatch with the origin and that `git pull --rebase` must be called, but calling it will just repeat the process above a second time. This is becasue the origin is out of sync with the current, (assumedly) accurate rebased branch. Instead of calling ``git pull --rebase``, it's better to either check out to a new branch and push the changes there, or call `git push -f` to force push the changes. The latter is riskier, and force pushes should only ever be used with confidence.
+
+### Pretty Log
+Pretty log: ``git log --all --decorate --oneline --graph``
 
 ### Rebasing a Downstream Repo's main Onto Its Upstream's main
 
