@@ -63,7 +63,9 @@ Add changes (specific): ``git add file_path``<br>
 
 Commit: ``git commit -m "Message"``<br>
 
-Push: ``git push``
+Push: ``git push``<br>
+
+Add in chunks using `git add --patch` or `git add -p`
 
 ### Branching
 
