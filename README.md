@@ -177,7 +177,8 @@ Your Unity License is required to do some Git CI. To find your license, search y
 4. Click 'Get a free personal license', even if you already have one. If you already have one, it won't override your old one.
 5. Search for `Unity_lic.ulf` again
 
-If you're on a computer with multiple users, you should delete your license file.
+If you're on a computer with multiple users, you should delete your license file.<br>
+If you need the license for a secret for a Github Action, copy the entire contents of the file into the secret.
 
 # Homebrew
 [Homebrew](https://brew.sh/) lets you easily install packages into your Mac.<br>
