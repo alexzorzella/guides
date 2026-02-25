@@ -167,6 +167,18 @@ remotes/origin/ldavinci/flying_machine
 remotes/origin/kathyj/propellant_driver
 ```
 
+# Unity
+
+## Your Unity License
+Your Unity License is required to do some Git CI. To find your license, search your disc for a file called `Unity_lic.ulf`. If you can't find one, look for any `.ulf` files that might be it. Usually, license files are found in `C:\ProgramData\Unity`. If there is one, great! If not,
+1. Open Unity Hub
+2. Click 'Licenses' on the list of tabs on the left
+3. Click '+ Add License'
+4. Click 'Get a free personal license', even if you already have one. If you already have one, it won't override your old one.
+5. Search for `Unity_lic.ulf` again
+
+If you're on a computer with multiple users, you should delete your license file.
+
 # Homebrew
 [Homebrew](https://brew.sh/) lets you easily install packages into your Mac.<br>
 Run `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"` to install Homebrew.<br>
@@ -244,4 +256,6 @@ Run `cd "C:/Users/monalisa/Documents/Path/To/Dump/Location"` to navigate to the 
 Run `pg_dump -U postgres -d db_name --params > filename.dump` to save a `.dump` file with the specifications outlined by `--params`<br>
 You can find the `pg_dump` documentation [here](https://www.postgresql.org/docs/current/app-pgdump.html)<br>
 Find the log file using `SELECT pg_current_logfile();` when in the postgres shell<br>
+
+# Everything by Voidtools
 To easily find files in your system, download Everything (the program named 'Everything', not everything by Voidtools) by Voidtools [here](https://www.voidtools.com/downloads/)
