@@ -47,7 +47,7 @@ whoami = "!f() { name=$(git config user.name); email=$(git config user.email); e
 
 zsc = "!f() { git commit -p -m \"$1\"; git push; }; f;"
 
-wave = "!f() { git add .; git commit -m \"$1\"; git push; }; f \"$@\""
+wave = "!f() { git add -A; git commit -m \"$1\"; git push; }; f \"$@\""
 
 bait  = "!f() { git checkout -b YOUR_NAME/\"$1\"; git push --set-upstream origin YOUR_NAME/\"$1\"; }; f \"$@\""
 
