@@ -3,18 +3,30 @@ title: Unity
 description: Unity tips
 ---
 
+import { Steps, Aside } from "@astrojs/starlight/components";
+
 # Unity
 
 ## Your Unity License
 
 Your Unity License is required to do some Git CI. To find your license, search your disc for a file called `Unity_lic.ulf`. If you can't find one, look for any `.ulf` files that might be it. Usually, license files are found in `C:\ProgramData\Unity`. If there is one, great! If not,
 
-1. Open Unity Hub
-2. Click 'Licenses' on the list of tabs on the left
-3. Click '+ Add License'
-4. Click 'Get a free personal license', even if you already have one. If you already have one, it won't override your old one.
-5. Search for `Unity_lic.ulf` again
+<Steps>
+    1. Open Unity Hub
+    
+    2. Click 'Licenses' on the list of tabs on the left
+    
+    3. Click '+ Add License'
+    
+    4. Click 'Get a free personal license', even if you already have one. If you already have one, it won't override your old one.
+    
+    5. Search for `Unity_lic.ulf` again
+</Steps>
 
 If you're on a computer with multiple users, you should delete your license file.
 
 If you need the license for a secret for a Github Action, copy the entire contents of the file into the secret.
+
+<Aside type="tip" icon="starlight">
+    Hey! Download [Everything by Voidtools](https://www.voidtools.com/downloads/) to search your disk really quickly.
+</Aside>
