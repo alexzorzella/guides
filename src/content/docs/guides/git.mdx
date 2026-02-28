@@ -9,113 +9,114 @@ description: My favorite Git commands
 
 Check if you already have an SSH key with
 
-```ls -al ~/.ssh```
+`ls -al ~/.ssh`
 
 If you don't, create a new key using
 
-```ssh-keygen -t ed25519 -C ameliaq@email.com```
+`ssh-keygen -t ed25519 -C ameliaq@email.com`
 
 Start the SSH agent using
 
-```eval "$(ssh-agent -s)"```
+`eval "$(ssh-agent -s)"`
 
 Add your new key using
 
-```ssh-add ~/.ssh/id_ed25519```
+`ssh-add ~/.ssh/id_ed25519`
 
 Copy your new key with
 
-```pbcopy < ~/.ssh/id_ed25519.pub```
+`pbcopy < ~/.ssh/id_ed25519.pub`
 or by copying the output of
 
-```cat ~/.ssh/id_ed25519.pub```
+`cat ~/.ssh/id_ed25519.pub`
 and paste it into GitHub's [Add new SSH Key box](https://github.com/settings/ssh/new)
 
 Test your new SSH key with
 
-```ssh -T git@github.com```
+`ssh -T git@github.com`
 
 Fix complaints using
 
-```chmod 700 ~/.ssh```
+`chmod 700 ~/.ssh`
 
-```chmod 600 ~/.ssh/id_ed25519```
+`chmod 600 ~/.ssh/id_ed25519`
 
-```chmod 644 ~/.ssh/id_ed25519.pub```
+`chmod 644 ~/.ssh/id_ed25519.pub`
 
 ### Settings Up SSH (Windows)
 
 Check if you already have an SSH key with
 
-```ls ~/.ssh```
+`ls ~/.ssh`
 
 If you don't, create a new key using
 
-```ssh-keygen.exe -t ed25519 -C ameliaq@email.com```
+`ssh-keygen.exe -t ed25519 -C ameliaq@email.com`
 
 Start the SSH agent using
 
-```Start-Service ssh-agent```
+`Start-Service ssh-agent`
 
 Add your new key using
 
-```ssh-add.exe ~\.ssh\id_ed25519```
+`ssh-add.exe ~\.ssh\id_ed25519`
 
 and by copying the output of
 
-```cat ~\.ssh\id_ed25519.pub```
+`cat ~\.ssh\id_ed25519.pub`
 and paste it into GitHub's [Add new SSH Key box](https://github.com/settings/ssh/new)
 
 Test your new SSH key with
-```ssh -T git@github.com```
+`ssh -T git@github.com`
 
 Note for setting up SSH in Windows: it may be necessary to enable the OpenSSH Authentication Agent in `services.msc`. Access it with `Win + R`.
 If the SSH Client isn't located, try `Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH.Client*'`
 
 ### Committing
 
-Pull: ``git pull``
+Pull: `git pull`
 
-Check status: ``git status``
+Check status: `git status`
 
-Add changes: ``git add .``
-Add changes (specific): ``git add file_path``
+Add changes: `git add .`
+Add changes (specific): `git add file_path`
 
-Commit: ``git commit -m "Message"``
+Commit: `git commit -m "Message"`
 
-Push: ``git push``
+Push: `git push`
 
 Add in chunks using `git add --patch` or `git add -p`
 
 ### Branching
 
-Checkout to a new branch: ``git checkout -b yourname/new_branch_name``, then ``git push --set-upstream origin new_branch_name``
-Checkout to an existing branch: ``git checkout yourname/branch_name``
+Checkout to a new branch: `git checkout -b yourname/new_branch_name`, then `git push --set-upstream origin new_branch_name`
+Checkout to an existing branch: `git checkout yourname/branch_name`
 
-Check your current branch: ``git branch -a``
+Check your current branch: `git branch -a`
 
-Delete a branch: ``git branch -d branch_name``
-Force delete a branch (caution): ``git branch -D branch_name``
+Delete a branch: `git branch -d branch_name`
+Force delete a branch (caution): `git branch -D branch_name`
 
 After a pull request to main:
-``git checkout main``
-``git pull --prune``
-``git checkout yourname/new_branch_name``
-``git push --set-upstream origin new_branch_name``
+`git checkout main`
+`git pull --prune`
+`git checkout yourname/new_branch_name`
+`git push --set-upstream origin new_branch_name`
 
 ### Rebasing
-When rebasing, git essentially asks "What would have happened if everything that had happened during ``name_of_branch_to_rebase_onto`` had happened before whatever had happened before ``yourname/working_branch``?" Because the past may have changes to code or assets that the present also interacts with, there may be conflicts. These are resolved during the rebase. Remember: you can always abort a rebase by using ``git rebase --abort``
-``git checkout yourname/working_branch``
-``git fetch origin``
-``git rebase name_of_branch_to_rebase_onto``
+
+When rebasing, git essentially asks "What would have happened if everything that had happened during `name_of_branch_to_rebase_onto` had happened before whatever had happened before `yourname/working_branch`?" Because the past may have changes to code or assets that the present also interacts with, there may be conflicts. These are resolved during the rebase. Remember: you can always abort a rebase by using `git rebase --abort`
+`git checkout yourname/working_branch`
+`git fetch origin`
+`git rebase name_of_branch_to_rebase_onto`
 If there are no conflicts, excellent. If there are, modern IDEs try their best to help resolve them. After rebasing, the branch in the origin has to be updated. It seems as simple as `git add .`, `git commit -m "Rebase message"`, and then `git push`.
-Calling `git push` will most likely lead to Git saying that there's a mismatch with the origin and that `git pull --rebase` must be called, but calling it will just repeat the process above a second time. This is becasue the origin is out of sync with the current, (assumedly) accurate rebased branch. Instead of calling ``git pull --rebase``, it's better to either check out to a new branch and push the changes there, or call `git push -f` to force push the changes. The latter is riskier, and force pushes should only ever be used with confidence.
+Calling `git push` will most likely lead to Git saying that there's a mismatch with the origin and that `git pull --rebase` must be called, but calling it will just repeat the process above a second time. This is becasue the origin is out of sync with the current, (assumedly) accurate rebased branch. Instead of calling `git pull --rebase`, it's better to either check out to a new branch and push the changes there, or call `git push -f` to force push the changes. The latter is riskier, and force pushes should only ever be used with confidence.
 
 Good to know: use `git push --force-with-lease` instead of `git push -f` or `git push --force` to be safer. This will only allow you to force push if there haven't been any new commits on the remote.
 
 ### Pretty Log
 
-Pretty log: ``git log --all --decorate --oneline --graph``
+Pretty log: `git log --all --decorate --oneline --graph`
 
 ### Rebasing a Downstream Repo's main Onto Its Upstream's main
 
@@ -145,12 +146,15 @@ You'll have to force push (or create a one-off branch and make a pull request) a
 
 Co-author people by adding `Co-authored-by: Amelia <ameliaq@email.com>` to the end of any commit message
 This is what it should look like:
+
 ```
 Commit message
 
 Co-authored-by: Amelia <ameliaq@email.com>
 ```
+
 You can add multiple co-authors:
+
 ```
 Commit message
 
@@ -160,7 +164,7 @@ Co-authored-by: Ellen <eripley@weylandyutani.org>
 
 ### Etiquette
 
-Branch names should be easy to read and easy to type. While naming a branch ``alexz/gar`` is fun, it also doesn't convey what that branch is responsible for. Unless there's an understanding that ``gar`` is a version with certain features, a better branch name would be ``alexz/catalogue_integration``.
+Branch names should be easy to read and easy to type. While naming a branch `alexz/gar` is fun, it also doesn't convey what that branch is responsible for. Unless there's an understanding that `gar` is a version with certain features, a better branch name would be `alexz/catalogue_integration`.
 
 #### Why append your name to every branch you create?
 

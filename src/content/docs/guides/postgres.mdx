@@ -3,17 +3,23 @@ title: PostgreSQL Windows
 description: Windows bootstrapping guide for PostgreSQL
 ---
 
-import { Steps } from '@astrojs/starlight/components';
-import { LinkButton } from '@astrojs/starlight/components';
-import { Aside } from '@astrojs/starlight/components';
+import { Steps } from "@astrojs/starlight/components";
+import { LinkButton } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
 
 ## Bootstrapping PostgreSQL On Your Windows Machine
 
 #### Part Zero: Documentation
-<LinkButton href="https://www.postgresql.org/docs/current/index.html">PostgreSQL Docs</LinkButton>
-<LinkButton href="https://www.psycopg.org/psycopg3/docs/basic/index.html">psycopg3 Docs</LinkButton>
+
+<LinkButton href="https://www.postgresql.org/docs/current/index.html">
+  PostgreSQL Docs
+</LinkButton>
+<LinkButton href="https://www.psycopg.org/psycopg3/docs/basic/index.html">
+  psycopg3 Docs
+</LinkButton>
 
 #### Part One: Download and Installation
+
 Download the [PostgreSQL installer](https://www.postgresql.org/download/)
 
 Run the installer and install PostgreSQL Server and Command Line Tools (psql)
@@ -21,35 +27,32 @@ Run the installer and install PostgreSQL Server and Command Line Tools (psql)
 #### Part Two: Setting Up the Database
 
 <Steps>
-    1. Run PowerShell as admin
-    
-    2. Run `psql -U postgres` to open the postgres shell If that doesn't work, try `& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres` (or restart your computer and try again)
-    
-    3. Run `CREATE DATABASE db_name;` to create a new database called `db_name`
-    
-    4. Run `\c db_name` to navigate to said database
-    
-    5. To import a SQL database, run `\i 'C:/Users/monalisa/Documents/Path/To/Database/File.db.sql'`
+  1. Run PowerShell as admin 2. Run `psql -U postgres` to open the postgres
+  shell If that doesn't work, try `& "C:\Program
+  Files\PostgreSQL\18\bin\psql.exe" -U postgres` (or restart your computer and
+  try again) 3. Run `CREATE DATABASE db_name;` to create a new database called
+  `db_name` 4. Run `\c db_name` to navigate to said database 5. To import a SQL
+  database, run `\i 'C:/Users/monalisa/Documents/Path/To/Database/File.db.sql'`
 </Steps>
 
 #### Part Three: Testing the Database
+
 Run `\dt` to query all the tables in your database, and SQL commands to query your database from the postgres shell
 
 #### Part Four: Giving Your Account Permissions
 
 <Steps>
-    1. Run `CREATE USER username WITH PASSWORD 'password';` where `username` matches your system username. Check `C:/Users` to view the users. Your account will be listed there.
-    
-    2. Run `ALTER USER username WITH SUPERUSER;` to give the newly created account `SUPERUSER` status
-    
-    3. Restart postgres or restart your computer
-    
-    4. To update your password, run `ALTER USER username WITH PASSWORD 'new_password';`
-    
-    5. To explicitly grant connection access, run `GRANT CONNECT ON DATABASE db_name TO username;`
+  1. Run `CREATE USER username WITH PASSWORD 'password';` where `username`
+  matches your system username. Check `C:/Users` to view the users. Your account
+  will be listed there. 2. Run `ALTER USER username WITH SUPERUSER;` to give the
+  newly created account `SUPERUSER` status 3. Restart postgres or restart your
+  computer 4. To update your password, run `ALTER USER username WITH PASSWORD
+  'new_password';` 5. To explicitly grant connection access, run `GRANT CONNECT
+  ON DATABASE db_name TO username;`
 </Steps>
 
 #### Part Five: Python Integration
+
 install `psycopg` and `import psycopg` into your python project
 
 Run the program. If psycopg isn't finding PostgreSQL, try
@@ -64,7 +67,7 @@ Run the program. If psycopg isn't finding PostgreSQL, try
     4. Navigate to `System Variables > Path > Edit > New > Add`, and paste `C:\Program Files\PostgreSQL\18\bin`. If you're using a different version of PostgreSQL, make sure that the path is accurate, i.e. a user using PostgreSQL 17 will paste `C:\Program Files\PostgreSQL\17\bin`. If you installed PostgreSQL in a different location other than `C:\Program Files`, use that path instead
     
     5. Restart postgres or restart your computer
-</Steps>    
+</Steps>
 
 #### Part 6: Retrieving Dumps and Logs
 
@@ -86,4 +89,5 @@ Run the program. If psycopg isn't finding PostgreSQL, try
         <Aside type="tip" icon="starlight">
             Hey! Download [Everything by Voidtools](https://www.voidtools.com/downloads/) to search your disk really quickly.
         </Aside>
+
 </Steps>
