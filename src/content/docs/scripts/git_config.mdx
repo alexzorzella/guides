@@ -1,0 +1,65 @@
+---
+title: Git Config
+description: My .gitconfig
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+You can edit your `.gitconfig` file in your root directory to add aliases, which can run commands!
+
+Here's what mine looks like. If you're copying this file,
+
+<Steps>
+
+    1. Replace `YOUR_GITHUB_USERNAME` with your GitHub username
+    
+    2. Replace `0123456789+YOUR_GITHUB_USERNAME@users.noreply.github.com` with your GitHub email
+    
+    3. Replace `YOUR_NAME` with whatever you want your Git branch names to be preceded with.
+      
+        For example, if your name is Amelia Qux, then you could precede your branches with `ameliaq`. If your name was Ellen Ripley, you could precede your branches with `eripley`. Don't include the '/'.
+
+</Steps>
+    
+```bash title=".gitconfig"
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = YOUR_GITHUB_USERNAME
+	email = 0123456789+YOUR_GITHUB_USERNAME@users.noreply.github.com
+	
+[alias]
+br = branch
+co = checkout
+st = status
+z-prune = pull --prune
+z-current = branch --show-current
+log-pretty = log --all --decorate --oneline --graph
+
+cko = "!f() { git checkout YOUR_NAME/\"$1\"; }; f \"$@\""
+
+cf = "!f() { emacs ~/.gitconfig; }; f;"
+
+whoami = "!f() { name=$(git config user.name); email=$(git config user.email); echo \"$name [$email]\"; }; f;"
+
+zsc = "!f() { git commit -p -m \"$1\"; git push; }; f;"
+
+wave = "!f() { git add .; git commit -m \"$1\"; git push; }; f \"$@\""
+
+bait  = "!f() { git checkout -b YOUR_NAME/\"$1\"; git push --set-upstream origin YOUR_NAME/\"$1\"; }; f \"$@\""
+
+reel = "!f() { git co main; git pull --prune; z-git-delete-gone-branches.sh; git bait $1; }; f \"$@\""
+
+gen-ssh = "!f() { ssh-keygen -t ed25519 -C YOUR_EMAIL; cat ~/.ssh/id_ed25519.pub; }; f;"
+mask-ssh = "!f() { chmod 600 ~/.ssh/id_ed25519; chmod 644 ~/.ssh/id_ed25519.pub; }; f;"
+ping-ssh = "!f() { ssh -T git@github.com; }; f;"
+
+set-origin = "!f() { git remote set-url origin \"$1\"; }; f \"$@\""
+set-upstream = "!f() { git remote set-url upstream \"$1\"; }; f \"$@\""
+rig = set-origin
+
+whereami = remote -v
+```

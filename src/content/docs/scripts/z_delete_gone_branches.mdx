@@ -1,0 +1,56 @@
+---
+title: Z's Git Delete Gone Branches
+description: Excellent utility
+---
+
+```bash title="z-git-delete-gone-branches.sh"
+#!/bin/bash
+ 
+# set -uex
+ 
+set -ue
+ 
+# First, we delete any fully-merged branches that are gone
+ 
+GONE_BRANCHES=()
+while read -r branch; do
+    GONE_BRANCHES+=("${branch}")
+done < <(git branch -vv | cut -c3- | awk '/: gone]/{print $1}')
+ 
+if [[ ${#GONE_BRANCHES[@]} -gt 0 ]]; then
+  # delete all branches from GONE_BRANCHES
+  for branch in "${GONE_BRANCHES[@]}"; do
+    echo git branch -d "${branch}"
+    git branch -d "${branch}" || echo "Branch ${branch} is not fully merged"
+  done
+fi
+ 
+: ${NO_Z_GIT_PROMPT:=}
+ 
+if [[ "${NO_Z_GIT_PROMPT}" == "true" ]]; then
+  exit 0
+fi
+ 
+# Then we recalculate gone branches. These are, presumably,
+# not fully merged, and we will prompt one by one
+ 
+GONE_BRANCHES=()
+while read -r branch; do
+    GONE_BRANCHES+=("${branch}")
+done < <(git branch -vv | cut -c3- | awk '/: gone]/{print $1}')
+
+if [[ ${#GONE_BRANCHES[@]} -gt 0 ]]; then
+    for branch in "${GONE_BRANCHES}"; do
+ 
+        read -n 1 -p "Delete branch '${branch}'? [y/N] " answer
+        echo  # newline
+ 
+        # default to 'n' if no input
+        answer=${answer:-n}
+ 
+        if [[ "$answer" =~ ^[yY]$ ]]; then
+            git branch -D "${branch}"
+        fi
+    done
+fi
+```
