@@ -1,0 +1,182 @@
+---
+title: Git
+description: My favorite Git commands
+---
+
+# My Favorite Git Commands
+
+### Setting Up SSH (MacOS/Linux)
+
+Check if you already have an SSH key with
+
+```ls -al ~/.ssh```
+
+If you don't, create a new key using
+
+```ssh-keygen -t ed25519 -C ameliaq@email.com```
+
+Start the SSH agent using
+
+```eval "$(ssh-agent -s)"```
+
+Add your new key using
+
+```ssh-add ~/.ssh/id_ed25519```
+
+Copy your new key with
+
+```pbcopy < ~/.ssh/id_ed25519.pub```
+or by copying the output of
+
+```cat ~/.ssh/id_ed25519.pub```
+and paste it into GitHub's [Add new SSH Key box](https://github.com/settings/ssh/new)
+
+Test your new SSH key with
+
+```ssh -T git@github.com```
+
+Fix complaints using
+
+```chmod 700 ~/.ssh```
+
+```chmod 600 ~/.ssh/id_ed25519```
+
+```chmod 644 ~/.ssh/id_ed25519.pub```
+
+### Settings Up SSH (Windows)
+
+Check if you already have an SSH key with
+
+```ls ~/.ssh```
+
+If you don't, create a new key using
+
+```ssh-keygen.exe -t ed25519 -C ameliaq@email.com```
+
+Start the SSH agent using
+
+```Start-Service ssh-agent```
+
+Add your new key using
+
+```ssh-add.exe ~\.ssh\id_ed25519```
+
+and by copying the output of
+
+```cat ~\.ssh\id_ed25519.pub```
+and paste it into GitHub's [Add new SSH Key box](https://github.com/settings/ssh/new)
+
+Test your new SSH key with
+```ssh -T git@github.com```
+
+Note for setting up SSH in Windows: it may be necessary to enable the OpenSSH Authentication Agent in `services.msc`. Access it with `Win + R`.
+If the SSH Client isn't located, try `Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH.Client*'`
+
+### Committing
+
+Pull: ``git pull``
+
+Check status: ``git status``
+
+Add changes: ``git add .``
+Add changes (specific): ``git add file_path``
+
+Commit: ``git commit -m "Message"``
+
+Push: ``git push``
+
+Add in chunks using `git add --patch` or `git add -p`
+
+### Branching
+
+Checkout to a new branch: ``git checkout -b yourname/new_branch_name``, then ``git push --set-upstream origin new_branch_name``
+Checkout to an existing branch: ``git checkout yourname/branch_name``
+
+Check your current branch: ``git branch -a``
+
+Delete a branch: ``git branch -d branch_name``
+Force delete a branch (caution): ``git branch -D branch_name``
+
+After a pull request to main:
+``git checkout main``
+``git pull --prune``
+``git checkout yourname/new_branch_name``
+``git push --set-upstream origin new_branch_name``
+
+### Rebasing
+When rebasing, git essentially asks "What would have happened if everything that had happened during ``name_of_branch_to_rebase_onto`` had happened before whatever had happened before ``yourname/working_branch``?" Because the past may have changes to code or assets that the present also interacts with, there may be conflicts. These are resolved during the rebase. Remember: you can always abort a rebase by using ``git rebase --abort``
+``git checkout yourname/working_branch``
+``git fetch origin``
+``git rebase name_of_branch_to_rebase_onto``
+If there are no conflicts, excellent. If there are, modern IDEs try their best to help resolve them. After rebasing, the branch in the origin has to be updated. It seems as simple as `git add .`, `git commit -m "Rebase message"`, and then `git push`.
+Calling `git push` will most likely lead to Git saying that there's a mismatch with the origin and that `git pull --rebase` must be called, but calling it will just repeat the process above a second time. This is becasue the origin is out of sync with the current, (assumedly) accurate rebased branch. Instead of calling ``git pull --rebase``, it's better to either check out to a new branch and push the changes there, or call `git push -f` to force push the changes. The latter is riskier, and force pushes should only ever be used with confidence.
+
+Good to know: use `git push --force-with-lease` instead of `git push -f` or `git push --force` to be safer. This will only allow you to force push if there haven't been any new commits on the remote.
+
+### Pretty Log
+
+Pretty log: ``git log --all --decorate --oneline --graph``
+
+### Rebasing a Downstream Repo's main Onto Its Upstream's main
+
+First, make sure that both the upstream and the downstream are clean
+Checkout to `main` using `git checkout main`
+Fetch the upstream's content `git fetch upstream`
+Merge with the upstream's content `git merge upstream/main`
+Settle any merge conflicts, if applicable
+All branches will be behind `main`, so for each branch, `git checkout branch_name`, then `git rebase main`
+Settle any merge conflicts, if applicable
+Every branch you rebase onto `main` will now have content that the origin doesn't know about. Running `git push` will result in an error, so you must either force push using `git push -f` (be very careful with this command) or create a new branch and delete the old one.
+
+### Delete From Git Without Deleting Locally
+
+This is useful after updating the `.gitignore`.
+Remove a file using `git rm --cached path/to/file`
+Remove a directory recursively using `git rm --cached -r path/to/directory`
+
+### Amending Commits
+
+Amend the last commit using `git commit --amend` (This will bring up the commit editor. Commands are listed at the bottom, but Ctrl+O, Enter, Ctrl+X to write and exit.)
+Amend the last commit instantly using `git commit --amend -m "New message"`
+
+You'll have to force push (or create a one-off branch and make a pull request) after amending the last commit: `git push -f`
+
+### Co-Authoring
+
+Co-author people by adding `Co-authored-by: Amelia <ameliaq@email.com>` to the end of any commit message
+This is what it should look like:
+```
+Commit message
+
+Co-authored-by: Amelia <ameliaq@email.com>
+```
+You can add multiple co-authors:
+```
+Commit message
+
+Co-authored-by: Amelia <ameliaq@email.com>
+Co-authored-by: Ellen <eripley@weylandyutani.org>
+```
+
+### Etiquette
+
+Branch names should be easy to read and easy to type. While naming a branch ``alexz/gar`` is fun, it also doesn't convey what that branch is responsible for. Unless there's an understanding that ``gar`` is a version with certain features, a better branch name would be ``alexz/catalogue_integration``.
+
+#### Why append your name to every branch you create?
+
+First of all, appending your name to a branch isn't a declaration that nobody else can work on it. It is, however, difficult to simultaneously work on the same branch. Branches are really convenient because they provide the opportunity to work without worry of overlap. If two people want to work on the same code in the same files, the work probably hasn't been divided correctly. Pair programming can be done with one person typing and the other sitting next to the first making comments with both switching positions every once in a while. There are also programs that allow multiple to work on the same file at once. If multiple people want to work on the exact same code, try and avoid merge conflicts as much as possible by doing one of the aforementioned things.
+Naming a branch this way gives two important pieces of information: who should be contated about the code in that branch and what purpose it serves.
+
+`alexz` tells someone checking into that branch that Alex Zorzella wrote that code, but doesn't offer any other information. `squirrel_gui` tells someone checking into that branch that there's going to be Squirrel GUI code in that branch, but they'll have to read the commit history to find the person to contact. Yes, someone looking at a branch can always check the commit history for the author, but naming the branch well will lead to good info when someone calls `git branch -a`. `alexz/squirrel_gui` tells someone checking into that branch a lot of good information: both what is being worked on and who's working on it.
+
+```
+ameliaq@meow:~/Documents/GitHub/repo $ git branch -a
+monal/squirrel_gui
+ldavinci/flying_machine
+kathyj/propellant_driver *
+remotes/origin/HEAD -> origin/main
+remotes/origin/main
+remotes/origin/mlisa/squirrel_gui
+remotes/origin/ldavinci/flying_machine
+remotes/origin/kathyj/propellant_driver
+```

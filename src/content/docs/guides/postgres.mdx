@@ -1,0 +1,89 @@
+---
+title: PostgreSQL Windows
+description: Windows bootstrapping guide for PostgreSQL
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import { LinkButton } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
+
+## Bootstrapping PostgreSQL On Your Windows Machine
+
+#### Part Zero: Documentation
+<LinkButton href="https://www.postgresql.org/docs/current/index.html">PostgreSQL Docs</LinkButton>
+<LinkButton href="https://www.psycopg.org/psycopg3/docs/basic/index.html">psycopg3 Docs</LinkButton>
+
+#### Part One: Download and Installation
+Download the [PostgreSQL installer](https://www.postgresql.org/download/)
+
+Run the installer and install PostgreSQL Server and Command Line Tools (psql)
+
+#### Part Two: Setting Up the Database
+
+<Steps>
+    1. Run PowerShell as admin
+    
+    2. Run `psql -U postgres` to open the postgres shell If that doesn't work, try `& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres` (or restart your computer and try again)
+    
+    3. Run `CREATE DATABASE db_name;` to create a new database called `db_name`
+    
+    4. Run `\c db_name` to navigate to said database
+    
+    5. To import a SQL database, run `\i 'C:/Users/monalisa/Documents/Path/To/Database/File.db.sql'`
+</Steps>
+
+#### Part Three: Testing the Database
+Run `\dt` to query all the tables in your database, and SQL commands to query your database from the postgres shell
+
+#### Part Four: Giving Your Account Permissions
+
+<Steps>
+    1. Run `CREATE USER username WITH PASSWORD 'password';` where `username` matches your system username. Check `C:/Users` to view the users. Your account will be listed there.
+    
+    2. Run `ALTER USER username WITH SUPERUSER;` to give the newly created account `SUPERUSER` status
+    
+    3. Restart postgres or restart your computer
+    
+    4. To update your password, run `ALTER USER username WITH PASSWORD 'new_password';`
+    
+    5. To explicitly grant connection access, run `GRANT CONNECT ON DATABASE db_name TO username;`
+</Steps>
+
+#### Part Five: Python Integration
+install `psycopg` and `import psycopg` into your python project
+
+Run the program. If psycopg isn't finding PostgreSQL, try
+
+<Steps>
+    1. Press <kbd>Win</kbd> + <kbd>r</kbd>
+    
+    2. Type `sysdm.cpl` and hit OK
+    
+    3. Navigate to `Advanced > Environment Variables`
+    
+    4. Navigate to `System Variables > Path > Edit > New > Add`, and paste `C:\Program Files\PostgreSQL\18\bin`. If you're using a different version of PostgreSQL, make sure that the path is accurate, i.e. a user using PostgreSQL 17 will paste `C:\Program Files\PostgreSQL\17\bin`. If you installed PostgreSQL in a different location other than `C:\Program Files`, use that path instead
+    
+    5. Restart postgres or restart your computer
+</Steps>    
+
+#### Part 6: Retrieving Dumps and Logs
+
+<Steps>
+    1. Open `postgresql.conf`
+    
+    2. Uncomment and update the following line: `log_statement = 'all'`. This will make postgres log all queries, including ones from external connections.
+    
+    3. Run `Powershell` as admin 
+    
+    4. Run `cd "C:/Users/monalisa/Documents/Path/To/Dump/Location"` to navigate to the location you desire to save the `.dump` files
+    
+    5. Run `pg_dump -U postgres -d db_name --params > filename.dump` to save a `.dump` file with the specifications outlined by `--params`
+    
+    6. You can find the `pg_dump` documentation [here](https://www.postgresql.org/docs/current/app-pgdump.html)
+    
+    7. Find the log file using `SELECT pg_current_logfile();` when in the postgres shell
+
+        <Aside type="tip" icon="starlight">
+            Hey! Download [Everything by Voidtools](https://www.voidtools.com/downloads/) to search your disk really quickly.
+        </Aside>
+</Steps>
