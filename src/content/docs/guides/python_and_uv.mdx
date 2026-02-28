@@ -3,24 +3,79 @@ title: Python and UV
 description: Python and Astral UV tips
 ---
 
-# Python
+### Python
 
 Properly set up your [pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/) to make your life eaiser.
 
-## Astral UV
+### Astral UV
 
 [Astral UV](https://docs.astral.sh/uv/) simplifies the creation, use, and maintenence of virutal environments.
 
-Install it using `curl -LsSf https://astral.sh/uv/install.sh | sh`
+Install it using
 
-Install a specific Python verison using `uv python install x.yz`
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
 
-Initialize a Python project using uv with `uv init`. Use `--python x.yz` to specify a Python version.
+Install a specific Python verison using
 
-Add a virtual environment to an existing project using uv with `uv venv`. Use `--python x.yz` to specify a Python version.
+```bash
+uv python install x.yz
+```
 
-Activate the environment using `source ./.venv/bin/activate`
+Initialize a Python project using uv with
 
-Use `uv add packagename` to install Python packages. If your `pyproject.toml` is set up correctly, then you can just use `uv sync` to install all dependencies.
+```bash
+uv init
+```
 
-Run Python files with `uv run filename.py`
+Use
+
+```bash
+--python x.yz
+```
+
+to specify a Python version.
+
+Add a virtual environment to an existing project using uv with 
+```bash 
+uv venv
+```
+
+Use 
+
+```bash 
+--python x.yz
+```
+
+to specify a Python version.
+
+Activate the environment using 
+```bash 
+source ./.venv/bin/activate
+```
+
+Use 
+```bash 
+uv add packagename
+```
+
+to install Python packages. If your 
+
+```bash 
+pyproject.toml
+```
+
+is set up correctly, then you can just use 
+
+```bash 
+uv sync
+```
+
+to install all dependencies.
+
+Run Python files with 
+
+```bash 
+uv run filename.py
+```

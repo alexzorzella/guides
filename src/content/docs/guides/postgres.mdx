@@ -3,9 +3,7 @@ title: PostgreSQL Windows
 description: Windows bootstrapping guide for PostgreSQL
 ---
 
-import { Steps } from "@astrojs/starlight/components";
-import { LinkButton } from "@astrojs/starlight/components";
-import { Aside } from "@astrojs/starlight/components";
+import { Steps, LinkButton, Aside } from "@astrojs/starlight/components";
 
 ## Bootstrapping PostgreSQL On Your Windows Machine
 
@@ -27,12 +25,13 @@ Run the installer and install PostgreSQL Server and Command Line Tools (psql)
 #### Part Two: Setting Up the Database
 
 <Steps>
-  1. Run PowerShell as admin 2. Run `psql -U postgres` to open the postgres
-  shell If that doesn't work, try `& "C:\Program
-  Files\PostgreSQL\18\bin\psql.exe" -U postgres` (or restart your computer and
-  try again) 3. Run `CREATE DATABASE db_name;` to create a new database called
-  `db_name` 4. Run `\c db_name` to navigate to said database 5. To import a SQL
-  database, run `\i 'C:/Users/monalisa/Documents/Path/To/Database/File.db.sql'`
+    1. Run PowerShell as admin 
+    
+    2. Run `psql -U postgres` to open the postgres shell If that doesn't work, try `& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres` (or restart your computer and  try again)
+    
+    3. Run `CREATE DATABASE db_name;` to create a new database called `db_name`
+    
+    4. Run `\c db_name` to navigate to said database 5. To import a SQL database, run `\i 'C:/Users/monalisa/Documents/Path/To/Database/File.db.sql'`
 </Steps>
 
 #### Part Three: Testing the Database
@@ -42,13 +41,34 @@ Run `\dt` to query all the tables in your database, and SQL commands to query yo
 #### Part Four: Giving Your Account Permissions
 
 <Steps>
-  1. Run `CREATE USER username WITH PASSWORD 'password';` where `username`
-  matches your system username. Check `C:/Users` to view the users. Your account
-  will be listed there. 2. Run `ALTER USER username WITH SUPERUSER;` to give the
-  newly created account `SUPERUSER` status 3. Restart postgres or restart your
-  computer 4. To update your password, run `ALTER USER username WITH PASSWORD
-  'new_password';` 5. To explicitly grant connection access, run `GRANT CONNECT
-  ON DATABASE db_name TO username;`
+    1. Run
+    
+        ```ps1
+        CREATE USER username WITH PASSWORD 'password';
+        ```
+        
+        where `username` matches your system username. Check `C:/Users` to view the users. Your account will be listed there. 
+    
+    2. Run
+    
+        ```ps1
+        ALTER USER username WITH SUPERUSER;
+        ```
+        to give the newly created account `SUPERUSER` status
+    
+    3. Restart postgres or restart your computer
+    
+    4. To update your password, run 
+    
+        ```ps1
+        ALTER USER username WITH PASSWORD 'new_password';
+        ```
+    
+    5. To explicitly grant connection access, run
+    
+        ```
+        GRANT CONNECT ON DATABASE db_name TO username;
+        ```
 </Steps>
 
 #### Part Five: Python Integration
