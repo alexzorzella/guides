@@ -36,13 +36,14 @@ GitHub has support for a continuous development/continuous deployment workflow. 
 <Steps>
     1. Create `.yml` GitHub Action scripts in
         <FileTree>
-            - Project Root
-                - .github
+            - Project root
+                - .gitignore
+                - .github This folder may be hidden
                     - workflows
-                        - github-action.yml
-            - Assets
-            - Library
-            - ...
+                        - **github-action.yml**
+                - Assets/
+                - Library/
+                - ...
         </FileTree>
     
     2. Follow the steps above to find your Unity License
@@ -58,7 +59,7 @@ GitHub has support for a continuous development/continuous deployment workflow. 
 
 Documentation for GitHub actions can be found <a target="_blank" href="https://docs.github.com/en/actions">here</a>.
 
-The following actions will trigger whenever you make a pull request to main (or commit to a branch that's making a pull request to main).
+The following actions will trigger whenever you make a pull request to main (or commit to a branch that's making a pull request to main). Replace `UNITY_VERSION_HERE` with your project's Unity version and `TARGET_PLATFORM_HERE` with the associated tag for your build type. Find the list of build types in <a target="_blank" href="https://docs.unity.cn/ScriptReference/BuildTarget.html">Unity's Documentation</a>. Find more information about Game CI (the source of the Docker images that these tests use to run Unity) <a target="_blank" href="https://game.ci/docs/">here</a>, and learn more about Docker <a target="_blank" href="https://www.docker.com/">here</a>!
 
 ```yaml title="unity-build.yml"
 name: Unity Build
