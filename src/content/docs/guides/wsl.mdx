@@ -3,19 +3,53 @@ title: WSL
 description: I love UNIX
 ---
 
-# WSL
-WSL is awesome. Install it by running `wsl.exe --install` in Powershell.
+import { Aside } from '@astrojs/starlight/components';
 
-To install a specific distribution, use `wsl.exe --install distribution`
+WSL stands for Windows Subsystem for Linux. It installs a Linux distribution within your Windows machine so you can keep using Windows and experience the joys of a UNIX environment (with reduced performance)!
 
-View your distributions with `wsl --list --verbose`
+WSL is awesome. Install it by running the following in Powershell:
+```ps1
+wsl.exe --install
+```
 
-Unregister a distribution using `wsl --unregister distribution`
+<Aside type="note">
+    To install a specific distribution, use
+    
+    ```bash
+    wsl.exe --install distribution
+    ```
+</Aside>
 
-Update the current distribution with `wsl --update`
+View your distributions with
 
-Install C/C++ essentials with `sudo apt-get install gcc`, `sudo apt-get install g++`, and `sudo apt-get install make`
+```bash
+wsl --list --verbose
+```
+
+Unregister a distribution using
+
+```bash
+wsl --unregister distribution
+```
+
+Update the current distribution with
+
+```bash
+wsl --update
+```
+
+Install C/C++ essentials with
+
+```bash
+sudo apt install gcc
+sudo apt install g++
+sudo apt install make
+```
 
 Install the WSL extension in VSCode for better IDE support.
 
-Open code in VSCode using `code .`
+Open code in VSCode using
+
+```
+code .
+```
