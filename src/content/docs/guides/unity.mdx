@@ -3,9 +3,7 @@ title: Unity
 description: Unity tips
 ---
 
-import { Steps, Aside } from "@astrojs/starlight/components";
-
-# Unity
+import { Steps, Aside, FileTree } from "@astrojs/starlight/components";
 
 ## Your Unity License
 
@@ -25,8 +23,149 @@ Your Unity License is required to do some Git CI. To find your license, search y
 
 If you're on a computer with multiple users, you should delete your license file.
 
-If you need the license for a secret for a Github Action, copy the entire contents of the file into the secret.
+If you need the license for a secret for a GitHub Action, copy the entire contents of the file into the secret.
 
 <Aside type="tip" icon="starlight">
     Hey! Download [Everything by Voidtools](https://www.voidtools.com/downloads/) to search your disk really quickly.
+</Aside>
+
+## GitHub CI/CD
+
+GitHub has support for a continuous development/continuous deployment workflow. Unity has support for building and running unit tests.
+
+<Steps>
+    1. Create `.yml` GitHub Action scripts in
+        <FileTree>
+            - Project Root
+                - .github
+                    - workflows
+                        - github-action.yml
+            - Assets
+            - Library
+            - ...
+        </FileTree>
+    
+    2. Follow the steps above to find your Unity License
+    
+    3. Navigate to your GitHub repository's action secrets found in `Settings -> Secrets and Variables -> Actions`
+    
+    4. Add a new action secret by clicking 'New Repository Secret'. For these actions to work, you need three, named the following: `UNITY_EMAIL`, `UNITY_PASSWORD`, and `UNITY_LICENSE`. The value of the first (what you put in the value field) is the email account associated with your Unity account. The second is the password to your Unity account, and the third is the entire contents of the license file (.ulf or .alf, depending if you have Personal or Pro).
+    
+        <Aside>
+            GitHub secrets cannot be edited or viewed, they can only be overwritten. Whenever an action uses a secret, it replaces it with *** in the logs, so don't worry about security.
+        </Aside>
+</Steps>
+
+Documentation for GitHub actions can be found <a target="_blank" href="https://docs.github.com/en/actions">here</a>.
+
+The following actions will trigger whenever you make a pull request to main (or commit to a branch that's making a pull request to main).
+
+```yaml title="unity-build.yml"
+name: Unity Build
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build for Windows
+    runs-on: ubuntu-latest
+        
+    steps:
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          android: true
+          dotnet: false
+          haskell: true
+          large-packages: true
+          
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache Library
+        uses: actions/cache@v4
+        with:
+          path: |
+            Library
+            obj
+          key: UnityBuildCache-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            UnityBuildCache-
+            
+      - name: Build Project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          unityVersion: UNITY_VERSION_HERE
+          targetPlatform: TARGET_PLATFORM_HERE # (StandaloneWindows64 for a Windows Build)
+
+      - name: Upload Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build
+          path: build
+```
+
+```yaml title="unity-tests.yml"
+name: Unity Build
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+        
+    steps:
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          android: true
+          dotnet: false
+          haskell: true
+          large-packages: true
+        
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache Library
+        uses: actions/cache@v4
+        with:
+          path: |
+            Library
+            obj
+          key: UnityTestsCache-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            UnityTestsCache-
+
+      - name: Play Mode Tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          testMode: PlayMode
+          customParameters: -quit -batchmode -nographics
+          
+      - name: Edit Mode Tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          testMode: EditMode
+          customParameters: -quit -batchmode -nographics
+```
+
+<Aside>
+    Don't include a test action block if you don't have any of those tests (i.e. if you don't have any Play Mode tests, don't have the action try and run them).
 </Aside>
