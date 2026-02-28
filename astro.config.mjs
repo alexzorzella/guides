@@ -8,7 +8,7 @@ import cloudflare from "@astrojs/cloudflare";
 export default defineConfig({
   integrations: [
     starlight({
-      title: "High Quality Quick Reference",
+      title: "High Quality Docs",
       social: [
         {
           icon: "github",
