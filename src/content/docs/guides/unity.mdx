@@ -139,35 +139,32 @@ The following actions will trigger whenever you make a pull request to main (or 
               - name: Checkout
                 uses: actions/checkout@v4
         
-              - name: Cache Library
-                uses: actions/cache@v4
-                with:
-                  path: |
-                    Library
-                    obj
-                  key: UnityTestsCache-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-                  restore-keys: |
-                    UnityTestsCache-
-        
-              - name: Play Mode Tests
-                uses: game-ci/unity-test-runner@v4
-                env:
-                  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-                  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-                  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-                with:
-                  testMode: PlayMode
-                  customParameters: -quit -batchmode -nographics
-                  
-              - name: Edit Mode Tests
-                uses: game-ci/unity-test-runner@v4
-                env:
-                  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-                  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-                  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-                with:
-                  testMode: EditMode
-                  customParameters: -quit -batchmode -nographics
+                - name: Cache Library
+                  uses: actions/cache@v4
+                  with:
+                    path: |
+                      Library/PackageCache
+                    key: UnityTestsPackageCache-${{ hashFiles('Packages/manifest.json') }}
+                    restore-keys: |
+                      UnityTestsPackageCache-
+          
+                - name: Edit Mode Tests
+                  uses: game-ci/unity-test-runner@v4
+                  env:
+                    UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+                    UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+                    UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+                  with:
+                    testMode: EditMode
+                    
+                - name: Play Mode Tests
+                  uses: game-ci/unity-test-runner@v4
+                  env:
+                    UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+                    UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+                    UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+                  with:
+                    testMode: PlayMode
         ```
         
         <Aside>
