@@ -1,0 +1,27 @@
+---
+title: Grub Theme
+description: Steps to set Grub theme
+---
+
+### On Kubuntu
+
+Copy the theme into the grub themes folder:
+```bash
+sudo cp -r path_to_theme_dir /boot/grub/themes/folder_name
+```
+
+Open the grub config:
+```bash
+sudo vim /etc/default/grub
+```
+
+Update or add these configurations:
+```bash
+GRUB_TERMINAL="gfxterm"
+GRUB_THEME=/boot/grub/themes/folder_name/theme.txt
+```
+
+Apply the changes:
+```bash
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+```
