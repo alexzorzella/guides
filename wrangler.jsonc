@@ -1,9 +1,10 @@
 {
   "name": "guides",
-  "compatibility_date": "2025-09-27",
+  "compatibility_date": "2025-03-01",
   "compatibility_flags": [
     "global_fetch_strictly_public",
-    "nodejs_compat"
+    "nodejs_compat",
+    "disable_nodejs_process_v2"
   ],
   "assets": {
     "binding": "ASSETS",
