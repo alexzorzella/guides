@@ -230,33 +230,13 @@ used to quickly access a desired audio clip: `audioPool["eat"].Play()`. Maybe it
 public class LocalAudioPool {
     readonly Dictionary<string, MultiAudioSource> audioPool = new();
     
-    public void AddSourceWithSingleClip(
-        GameObject gameObject,
-        string path,
-        bool loop = false,
-        string audioMixer = "SFX", 
-        float volume = 1F, 
-        float pitch = 1F, 
-        float spatialBlend = 0, 
-        float minDistance = 0, 
-        float maxDistance = 0, 
-        float dopplerLevel = 1F) {
+    public void AddSourceWithSingleClip(GameObject gameObject, string path, bool loop = false, string audioMixer = "SFX", float volume = 1F, float pitch = 1F, float spatialBlend = 0, float minDistance = 0, float maxDistance = 0, float dopplerLevel = 1F) {
         if(!audioPool.ContainsKey(path)) {
             audioPool[path] = MultiAudioSource.FromResource(gameObject, path, loop, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
         }
     }
     
-    public void AddSourceWithMultipleClips(
-        GameObject gameObject, 
-        string pathPrefix, 
-        int count, 
-        string audioMixer = "SFX", 
-        float volume = 1F, 
-        float pitch = 1F, 
-        float spatialBlend = 0, 
-        float minDistance = 0, 
-        float maxDistance = 0,
-        float dopplerLevel = 1F) {
+    public void AddSourceWithMultipleClips(GameObject gameObject, string pathPrefix, int count, string audioMixer = "SFX", float volume = 1F, float pitch = 1F, float spatialBlend = 0, float minDistance = 0, float maxDistance = 0, float dopplerLevel = 1F) {
         if(!audioPool.ContainsKey(path)) {
             audioPool[path] = MultiAudioSource.FromResources(gameObject, pathPrefix, count, loop, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
         }
@@ -303,17 +283,7 @@ public class LocalAudioPool {
     class Builder() {
         readonly Dictionary<string, MultiAudioSource> audioPool = new();
    
-        public Builder AddSourceWithSingleClip(
-            GameObject gameObject, 
-            string path, 
-            bool loop = false, 
-            string audioMixer = "SFX", 
-            float volume = 1F, 
-            float pitch = 1F, 
-            float spatialBlend = 0,
-            float minDistance = 0, 
-            float maxDistance = 0, 
-            float dopplerLevel = 1F) {
+        public Builder AddSourceWithSingleClip(GameObject gameObject, string path, bool loop = false, string audioMixer = "SFX", float volume = 1F, float pitch = 1F, float spatialBlend = 0, float minDistance = 0, float maxDistance = 0, float dopplerLevel = 1F) {
             if(!audioPool.ContainsKey(path)) {
                 audioPool[path] = MultiAudioSource.FromResource(gameObject, path, loop, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
             }
@@ -321,17 +291,7 @@ public class LocalAudioPool {
             return this;
         }
         
-        public Builder AddSourceWithMultipleClips(
-            GameObject gameObject, 
-            string pathPrefix, 
-            int count, 
-            string audioMixer = "SFX", 
-            float volume = 1F, 
-            float pitch = 1F, 
-            float spatialBlend = 0, 
-            float minDistance = 0, 
-            float maxDistance = 0, 
-            float dopplerLevel = 1F) {
+        public Builder AddSourceWithMultipleClips(GameObject gameObject, string pathPrefix, int count, string audioMixer = "SFX", float volume = 1F, float pitch = 1F, float spatialBlend = 0, float minDistance = 0, float maxDistance = 0, float dopplerLevel = 1F) {
             if(!audioPool.ContainsKey(path)) {
                 audioPool[path] = MultiAudioSource.FromResources(gameObject, pathPrefix, count, loop, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
             }
