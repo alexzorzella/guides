@@ -23,11 +23,15 @@ export default defineConfig({
         },
         {
           label: "Guides",
-          autogenerate: { directory: "guides" },
+          items: [ { autogenerate: { directory: "guides" } } ],
         },
         {
           label: "Scripts",
-          autogenerate: { directory: "scripts" },
+          items: [ { autogenerate: { directory: "scripts" } } ],
+        },
+        {
+          label: "MParakeet3",
+          items: [ { autogenerate: { directory: "mparakeet3" } } ],
         },
       ],
     }),

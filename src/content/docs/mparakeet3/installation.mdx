@@ -1,0 +1,71 @@
+---
+title: Installation 
+description: MParakeet3 installation guide 
+---
+
+import { Steps, LinkButton, FileTree } from "@astrojs/starlight/components";
+
+[MParakeet3](https://github.com/alexzorzella/MParakeet3) is a free, open source mixtape creator that uses mp3 files on your device. This guide covers using the Windows installer, but the program may be built from source for both Linux and Mac.
+
+## Requirements
+- [ffmpeg](https://www.ffmpeg.org/download.html) (Audio/Video encoder).
+- [VLC](https://images.videolan.org/vlc/download-windows.html) (Audio/Video player). Make sure to install the appropriate version for your system. Installing the x32 version on a 64-bit system may cause issues.
+
+To install them on Windows, use `winget install fzf`, `winget install ffmpeg`, and `winget install VideoLAN.VLC`.
+
+To install them on Mac, use [Homebrew](https://brew.sh/) to run `brew install fzf`, `brew install ffmpeg`, and `brew install vlc`.
+
+## Installation
+
+<Steps>
+
+    1.
+        Download the MParakeet3 installer from the latest GitHub release
+    
+        <LinkButton href="https://github.com/alexzorzella/MParakeet3/releases/latest/download/mparakeet3_installer.exe">
+           Download Latest Release
+        </LinkButton>
+
+        <LinkButton href="https://github.com/alexzorzella/MParakeet3/releases/latest">
+            Visit Page 
+        </LinkButton>
+    
+    2. Run `mparakeet_installer.exe`
+
+    3. Edit `config.ini`
+
+        <FileTree>
+            - Programs
+                - MParakeet3 
+                    - **config.ini**
+                    - mparakeet3.exe 
+                    - ...
+                - ...
+            - ...
+        </FileTree>
+    
+</Steps>
+
+## Setup 
+MParakeet3 reads information from a local `config.ini` file if provided one in the same folder as the executable as seen above.
+
+```
+[theme]
+style=windows11
+
+[mix]
+search=C:\Users\vkim\Music
+mixes=C:\Users\vkim\Music\Mixes
+```
+
+### style
+Sets the look of the interface. The options may vary from system to system, but on Windows, you may choose from 'windows11', 'fusion', and 'windowsvista'.
+
+### search
+Specifies the root folder where your music is stored. You may select tracks from anywhere on your disk while using the application, but issues may arise when trying to load mixes with tracks that aren't present in your root folder. Subfolders are supported.
+
+### mixes
+Specifies the root folder where your mixes are saved. Mixes are saved as .txt files. Subfolders are supported.
+
+## Importing Playlists
+Playlists are stored as raw `.txt` files and are lenient when looking up song names from your music library. MParakeet3 has support for importing public (and unlisted) YouTube playlists found under `Mix/Import`.
