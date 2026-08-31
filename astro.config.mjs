@@ -33,6 +33,10 @@ export default defineConfig({
           label: "MParakeet3",
           items: [ { autogenerate: { directory: "mparakeet3" } } ],
         },
+        {
+          label: "Socrates Plugin",
+          items: [ { autogenerate: { directory: "socrates_plugin" } } ],
+        },
       ],
     }),
   ],

@@ -1,0 +1,366 @@
+---
+title: MultiAudioSource
+description: MultiAudioSource documentation 
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+MultiAudioSource is a utility class that can be used to play audio clips. 
+
+## Audio
+
+Put audio clips in any Resources folder (Assets/Resources, Assets/Audio/Resources, Assets/Audio/Cutscenes/Resources). If there are multiple clips of the same sound for variation (like various footsteps), they should be named with a suffix `_n` where `n` is 0 indexed and ascending continuously `clip_name_0`, `clip_name_1`, ..., `clip_name_n`.
+
+## Usage
+
+Say there is a Monobehaviour class `Cat` that wants to play `eat.mp3` every time it eats food. At some point before the first usage of any play function, the MultiAudioSource should be initialized using one of the two initialization functions, `FromResource` and `FromResources`. It can then be played any number of times later using any of the play functions `PlayRoundRobin()`, `Play()`, `PlayRandom()`, and `PlayOnlyIfDone()`.
+
+```csharp
+public class Cat : Monobehaviour {
+    MultiAudioSource eatAudio;
+    
+    public void Start() {
+        eatAudio = MultiAudioSource.FromResource(gameObject, "eat");
+    }
+    
+    // ...    
+    
+    // Called from somewhere
+    void Eat() {
+        audio.Play(); 
+    }
+}
+```
+
+If there are multiple audio clips that should be added to the pool, like `eat_0.mp3`, `eat_1.mp3`, and `eat_2.mp3`, use `FromResources` instead.
+
+```csharp
+public class Cat : Monobehaviour {
+    MultiAudioSource eatAudio;
+    
+    public void Start() {
+        // There are three eat_n.mp3 audio clips, so count is 3
+        eatAudio = MultiAudioSource.FromResources(gameObject, "eat", 3);
+    }
+    
+    // ...    
+    
+    // Called from somewhere
+    void Eat() {
+        audio.PlayRandom();
+    }
+}
+```
+
+## Functions
+Instances of MultiAudioSource can only be constructed through the FromResource() and FromResources() functions, its constructor is private.
+
+### string GetName
+Returns the name of the clip loaded into the first audio source.
+	
+### void SetVolume
+Sets the volume of all the sources to the passed volume.
+
+### void SetPitch
+Sets the pitch of all the audio sources to the passed pitch.
+	
+### void RandomizePitches
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|float minPitch|The minimum pitch to be randomly selected|0.8|
+|float maxPitch|The maximum pitch to be randomly selected|1.2|
+
+Randomly sets the pitch of all the audio sources to a pitch between `minPitch` and `maxPitch`.
+
+### void PlayRoundRobin 
+Plays the next audio clip in the rotation of loaded clips.
+
+### void Play 
+An alias for PlayRoundRobin
+	
+### void PlayRandom 
+Plays a random audio clip from the rotation loaded clips.
+
+### bool IsPlaying
+Returns true if at least one of the audio sources in the pool of sources is playing.
+
+### void PlayOnlyIfDone 
+Plays a random audio clip from the rotation of loaded clips if none of the sources are currently playing.
+
+### void Stop 
+Stops all the audio sources.
+
+### static MultiAudioSource FromResource
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|GameObject gameObject|The object that the AudioSource component will be attached to.||
+|string path|The name of the audio clip||
+|bool loop|Whether the audio should loop indefinitely when played|false|
+|string audioMixer|The mixer that the audio will play from|SFX|
+|float volume|The volume that the audio will be played at|1|
+|float pitch|The pitch that the audio should be played at|1|
+|float spatialBlend|The [spatial blend](https://docs.unity3d.com/ScriptReference/AudioSource-spatialBlend.html) of the audio source|0|
+|float minDistance|The audio source's [mininum distance](https://docs.unity3d.com/ScriptReference/AudioSource-minDistance.html). Only set if spatialBlend > 0|0|
+|float maxDistance|The audio source's [maximum distance](https://docs.unity3d.com/ScriptReference/AudioSource-maxDistance.html). Only set if spatialBlend > 0|0|
+|float dopplerLevel|The audio source's [doppler level](https://docs.unity3d.com/ScriptReference/AudioSource-dopplerLevel.html). Only set if spatialBlend > 0|1|
+
+Loads a single audio clip from the given `path`. This is a relative path to any directory named `Resources` within the `Assets` directory tree (i.e. it may be in Assets/Resources, Assets/Audio/Resources, Assets/Audio/Cutscenes/Resources). The `AudioSource` component is added to the passed `gameObject`. Typically, the `gameObject` will be the `this.gameObject` from the method's caller. There may be cases where a static script wants to use a MultiAudioSource. In that case, the passed gameObject should have the same lifetime as the method's caller. Do not pass a static, persistent, and/or singleton GameObject to `gameObject` if `FromResource` is being called from an object that won't live as long or longer than `gameObject`. This may lead to a large number of unused AudioSources that take up resources.
+
+This method throws if the resource does not exist.
+
+### static MultiAudioSource FromResources
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|GameObject gameObject|The object that the AudioSource component will be attached to.||
+|string pathPrefix|The name of the audio clip, not including the number `_n`||
+|int count|The total number of audio clips in that pool of clips||
+|bool loop|Whether the audio should loop indefinitely when played|false|
+|float volume|The volume that the audio will be played at|1|
+|float pitch|The pitch that the audio should be played at|1|
+|float spatialBlend|The [spatial blend](https://docs.unity3d.com/ScriptReference/AudioSource-spatialBlend.html) of the audio source|0|
+|float minDistance|The audio source's [mininum distance](https://docs.unity3d.com/ScriptReference/AudioSource-minDistance.html). Only set if spatialBlend > 0|0|
+|float maxDistance|The audio source's [maximum distance](https://docs.unity3d.com/ScriptReference/AudioSource-maxDistance.html). Only set if spatialBlend > 0|0|
+|float dopplerLevel|The audio source's [doppler level](https://docs.unity3d.com/ScriptReference/AudioSource-dopplerLevel.html). Only set if spatialBlend > 0|1|
+
+This is like `FromResource`, but for loading multiple audio clips (say to be played randomly or in a round-robin fashion). `count` denotes how many clips to load. The expected file names are `pathPrefix_0`, `pathPrefix_1`, ... `pathPrefix_{count - 1}`.
+
+This method throws if any of the resources does not exist.
+
+## Audio Pooling
+
+Something more akin to a traditional Audio Manager where the sources are pooled in a static singleton implemented using MultiAudioSource would look like this:
+
+```csharp
+using System.Collections.Generic;
+
+public class AudioPool : MonoBehaviour {
+	static AudioPool _i;
+
+	static readonly Dictionary<string, List<MultiAudioSource>> audioPool = new();
+	
+	void Start() {
+		DontDestroyOnLoad(gameObject);
+	}
+	
+	public static AudioPool i {
+		get {
+			if (_i == null) {
+				AudioPool x = Resources.Load<AudioPool>("AudioPool");
+
+				_i = Instantiate(x);
+			}
+			return _i;
+		}
+	}
+
+	public static bool PlayFirstAvailable(string name) {
+		MultiAudioSource firstAvailableSource = GetFirstAvailable(name);
+
+		if (firstAvailableSource != null) {
+			firstAvailableSource.Play();
+			return true;
+		}
+
+		return false;
+	}
+	
+	public static MultiAudioSource GetFirstAvailable(string name) {
+		if (!audioPool.ContainsKey(name)) {
+			audioPool[name] = new List<MultiAudioSource>();
+		}
+
+		foreach (var multiAudioSource in audioPool[name]) {
+			if (!multiAudioSource.IsPlaying()) {
+				return multiAudioSource;
+			}
+		}
+
+		MultiAudioSource newSource = MultiAudioSource.FromResource(_i.gameObject, name);
+		audioPool[name].Add(newSource);
+		return newSource;
+	}
+}
+```
+
+This is almost as basic as an audio pool can get, but it's clear that something needs to be responsible for initialization. Whose responsibility is it to call FromResource and FromResources? In this example, the only type of MultiAudioSource that's supported is one that only has a single clip with no optional parameters. To support optional parameters, someone needs to be the one to specify. At a glance, the first solution would be to pass the optional parameters into `GetFirstAvailable` (and `PlayFirstAvailable`, since it calls `GetFirstAvailable`), but then literally every location in code that would want to play an audio clip would have to pass the parameters (which would go unused if pool already contained a MultiAudioSource with that name). It also duplicates data, which isn't great. Maybe one place calls `PlayFirstAvailable` for one clip, but another may be played from dozens of different locations. Changing parameters at one of those locations won't change the variables everywhere, which gets the data out of sync and makes it inconsistent.
+
+Maybe it would be better to initialize them all at startup, and then re-use the passed optional parameters. Maybe MultiAudioSource can also have a `Clone` function that returns an identical MultiAudioSource attached to the same object. Maybe cloning isn't the greatest idea, so the parameters would have to get saved somewhere to get re-used by the audio pool when it doesn't have an available audio source.
+
+Maybe this audio pool is going to be extremely advanced, having lifetimes for each object that eventually expire, removing the actual AudioSource component from the object to save on resources. There are many options here.
+
+If creating a singleton audio pool isn't appealing and the part that seems useful is use of a dictionary to easily access the MultiAudioSources is the goal, then use can go from looking like this:
+
+```csharp
+public class Cat : Monobehaviour {
+    MultiAudioSource eatAudio;
+    MultiAudioSource meowAudio;
+    // Script declares a large number of audio sources here
+    MultiAudioSource sleepAudio;
+    
+    public void Start() {
+        eatAudio = MultiAudioSource.FromResource(gameObject, "eat");
+        eatAudio = MultiAudioSource.FromResource(gameObject, "meow");
+        // Script initializes a large number of audio sources here 
+        eatAudio = MultiAudioSource.FromResource(gameObject, "sleep");
+    }
+}
+```
+
+to a class with its own local dictionary
+
+```csharp
+public class Cat : Monobehaviour {
+    readonly Dictionary<string, MultiAudioSource> audioPool = new();
+    
+    public void Start() {
+        audioPool.Add("eat", MultiAudioSource.FromResource(gameObject, "eat"));
+        audioPool.Add("meow", MultiAudioSource.FromResource(gameObject, "meow"));
+        // Script initializes a large number of audio sources here 
+        audioPool.Add("sleep", MultiAudioSource.FromResource(gameObject, "sleep"));
+    }
+}
+```
+
+used to quickly access a desired audio clip: `audioPool["eat"].Play()`. Maybe it's even worth it to write a local pool with functions that support the optional parameters.
+
+```csharp
+public class LocalAudioPool {
+    readonly Dictionary<string, MultiAudioSource> audioPool = new();
+    
+    public void AddSourceWithSingleClip(
+        GameObject gameObject,
+        string path,
+        bool loop = false,
+        string audioMixer = "SFX", 
+        float volume = 1F, 
+        float pitch = 1F, 
+        float spatialBlend = 0, 
+        float minDistance = 0, 
+        float maxDistance = 0, 
+        float dopplerLevel = 1F) {
+        if(!audioPool.ContainsKey(path)) {
+            audioPool[path] = MultiAudioSource.FromResource(gameObject, path, loop, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
+        }
+    }
+    
+    public void AddSourceWithMultipleClips(
+        GameObject gameObject, 
+        string pathPrefix, 
+        int count, 
+        string audioMixer = "SFX", 
+        float volume = 1F, 
+        float pitch = 1F, 
+        float spatialBlend = 0, 
+        float minDistance = 0, 
+        float maxDistance = 0,
+        float dopplerLevel = 1F) {
+        if(!audioPool.ContainsKey(path)) {
+            audioPool[path] = MultiAudioSource.FromResources(gameObject, pathPrefix, count, loop, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
+        }
+    }
+ 
+    public MultiAudioSource GetSource(string name) {
+        if(!audioPool.ContainsKey(name)) {
+            return null; 
+        }
+        
+        return audioPool[name];
+    }
+    
+    public void Play(string name) { GetSource(name)?.Play(); }
+    public void PlayRandom(string name) { GetSource(name)?.PlayRandom(); }
+    public void PlayOnlyIfDone(string name) { GetSource(name)?.PlayOnlyIfDone(); }
+}
+```
+
+<Aside type="tip" icon="starlight">
+    If you're wondering how `GetSource(name)?.Play()` works, take a look at the documentation for null conditional operators <a target="_blank" href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/operators/member-access-operators">here</a>.
+</Aside>
+
+I think that this is okay. If `FromResource` and/or `FromResources` are updated to support more (or fewer) parameters in the future, these functions will have to be edited as well, so `LocalAudioPool` would have to be a part of the library, which would be fine.  It would look cleaner if the library's user had to null check `GetSource`'s result every time, but then it's more boilerplate on their end. This makes it so that someone using the library that passees an audio clip name with a typo or tries to play an audio clip before the pool is initialized is protected from NullReferenceExceptions. Ideally, the person using a `LocalAudioPool` would initialize the pool before trying to play any of its sources, so let's make it clear by using the builder pattern.
+
+```csharp
+public class LocalAudioPool {
+    readonly Dictionary<string, MultiAudioSource> audioPool = new();
+    
+    LocalAudioPool(Dictionary<string, MultiAudioSource> audioPool) { this.audioPool = audioPool; }
+ 
+    public MultiAudioSource GetSource(string name) {
+        if(!audioPool.ContainsKey(name)) {
+            return null; 
+        }
+        
+        return audioPool[name];
+    }
+    
+    public void Play(string name) { GetSource(name)?.Play(); }
+    public void PlayRandom(string name) { GetSource(name)?.PlayRandom(); }
+    public void PlayOnlyIfDone(string name) { GetSource(name)?.PlayOnlyIfDone(); }
+    
+    class Builder() {
+        readonly Dictionary<string, MultiAudioSource> audioPool = new();
+   
+        public Builder AddSourceWithSingleClip(
+            GameObject gameObject, 
+            string path, 
+            bool loop = false, 
+            string audioMixer = "SFX", 
+            float volume = 1F, 
+            float pitch = 1F, 
+            float spatialBlend = 0,
+            float minDistance = 0, 
+            float maxDistance = 0, 
+            float dopplerLevel = 1F) {
+            if(!audioPool.ContainsKey(path)) {
+                audioPool[path] = MultiAudioSource.FromResource(gameObject, path, loop, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
+            }
+            
+            return this;
+        }
+        
+        public Builder AddSourceWithMultipleClips(
+            GameObject gameObject, 
+            string pathPrefix, 
+            int count, 
+            string audioMixer = "SFX", 
+            float volume = 1F, 
+            float pitch = 1F, 
+            float spatialBlend = 0, 
+            float minDistance = 0, 
+            float maxDistance = 0, 
+            float dopplerLevel = 1F) {
+            if(!audioPool.ContainsKey(path)) {
+                audioPool[path] = MultiAudioSource.FromResources(gameObject, pathPrefix, count, loop, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
+            }
+            
+            return this;
+        }
+        
+        public LocalAudioPool Build() { return new LocalAudioPool(audioPool); }
+    }
+}
+```
+
+Now this is looking very nice. The only constructor for `LocalAudioPool` is private, so nobody can call `new LocalAudioPool()`. To get a new instance of `LocalAudioPool`, the script that wants it must go through the builder by using `new LocalAudioPool.Builder()`.
+
+```csharp
+public class Cat : Monobehaviour {
+    LocalAudioPool audioPool;
+    
+    public void Start() {
+        LocalAudioPool.Builder audioPoolBuilder = new LocalAudioPool.Builder();
+        
+        audioPoolBuilder.AddSourceWithSingleClip("eat");
+        audioPoolBuilder.AddSourceWithSingleClip("meow");
+        // Script adds a lot of clips to the builder here 
+        audioPoolBuilder.AddSourceWithSingleClip("sleep");
+        
+        audioPool = audioPoolBuilder.Build();
+    }
+}
+```
+
+Pretty good, and even if someone using this library doesn't look at the documentation, the fact that the `LocalAudioPool`'s only constructor is private can give them a hint as to what they need to do. Pooling anything is pretty involved and changes from situation to situation. I won't go too in depth about how to properly pool audio here, but this is a good start.
