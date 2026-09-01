@@ -3,9 +3,9 @@ title: GnaTransition
 description: GnaTransition documentation
 ---
 
-If you intend on using GnaTransition, make sure to have both the corresponding GnaTransition object and LeanTween in your project.
+If you intend on using GnaTransition, make sure to have both the corresponding GnaTransition object in a /Resources/ Folder in your project. [LeanTween](https://assetstore.unity.com/packages/tools/animation/leantween-3595) is required.
 
-GnaTransition is a self-instantiating static singleton. It does not have to be dragged into the scene view yourself.
+GnaTransition is a self-instantiating static singleton. It does not have to be manually dragged into the scene view.
 
 # Usage
 
@@ -29,14 +29,14 @@ public void QuitGame() {
 
 # Functions
 
-## void LoadScene
+## static void LoadScene
 Loads the scene with the passed name.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
 |string sceneName|The name of the scene to load||
 
-## void LoadScene
+## static void LoadScene
 Loads the scene with the passed build index.
 
 |Parameter|Description|Default|
@@ -49,5 +49,5 @@ Runs before the scene is transitioned. If anything should run every time a new s
 ## Bootstrap
 Runs after the scene is transitioned. If anything should run every time a new scene is loaded, after that scene is loaded, put it here. Same note as above.
 
-## void Quit
+## static void Quit
 Fades the screen to black and quits the application.
