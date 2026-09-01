@@ -1,0 +1,39 @@
+---
+title: State Machine
+description: State Machine documentation 
+---
+
+void AddTransition(StateMachineEvent trigger, StateMachineState transitionsTo) {
+Adds a transition to another state on handling the passed StateMachineEvent trigger. Throws an InvalidOperationException if transition map already contains the passed trigger.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|StateMachineEvent trigger|The trigger that will cause a transition to the other passed state||
+|StateMachineState transitionsTo|The state that the state will transition on the passed trigger||
+
+void AddEntryTransition(Predicate<object> checkOfEntry, StateMachineState transitionsTo) {
+Adds a transition to another state associated with a predicate that is evaluated on entry. Many logical scenarios can lead to entering a state with a transition out of it that will never be hit as the event that would have hit it already has occurred.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|string content|The content to be printed to the console||
+
+StateMachineState TryEntryTransitions() {
+Invokes the predicate associated with each entry transition and returns the first one that succeeds or null by default.
+
+bool HasAttribute(StateAttribute attribute) {
+Returns whether the state machine has the passed attribute.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|string content|The content to be printed to the console||
+
+StateMachineState Handle(StateMachineEvent trigger) {
+Returns the StateMachineState that this state transitions to on the passed trigger or null by default.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|string content|The content to be printed to the console||
+
+bool TransitionsOnAnimationCompleted() {
+Returns whether this state has a transition ON_ANIMATION_COMPLETED.
