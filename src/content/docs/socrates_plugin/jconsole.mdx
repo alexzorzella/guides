@@ -1,0 +1,135 @@
+---
+title: JConsole
+description: JConsole documentation 
+---
+
+If you intend on using JConsole, make sure to have the corresponding JConsole object in a /Resources/ folder in your project.
+
+JConsole is a static singleton, but it is **not** self-instantiating. It must be manually dragged into the scene view as it is responsible for opening itself. To make the JConsole a static, self-instantiating singleton, it requires an external script to listen for the hotkey to open the console, i.e. an input manager.
+
+## Functions
+
+### void SetVisible
+Sets the visibility of the console to the passed visibility.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|bool visible|The console's new state of visibility||
+
+### bool ToggleSuppressSystemMessages
+Toggles whether system messages are suppressed and returns the new value.
+
+### void RegisterListener
+Registers a JConsoleLogListener to the console.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|JConsoleLogListener newListener|The listener subscribing to this console||
+
+### void DisplaySystemMessage
+Displays the passed system message and prints the non-truncated message to the console. If the no non-truncated message is passed, the original message is printed to the console.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|string message|The message that will appear as a system message and be printed to the console.||
+|string nonTruncatedMessage|An optional, longer version of the message that will be printed to the console instead of the original message.|""|
+
+### void OpenConsole
+Opens the console.
+
+### void ClearConsole
+Clears the console.
+
+### void UpdateSystemMessageCount
+Updates the system message count and parent size. Currently, this function is only used to handle system messages disappearing after their lifetime is over.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|int alterBy|(1) system message added, (-1) system message removed||
+|float sizeY|The vertical size of the system message that was added or removed||
+
+### void CloseConsole
+Closes the console.
+
+### void UpdateVisuals
+Updates the canvas groups to be opaque, be interactable, and to block raycasts according to whether the console is visible or not.
+
+### void Print
+Prints a line to the console.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|string content|The content to be printed to the console||
+
+## Commands
+
+The console is useful to debug the program, and uses an interface
+
+```csharp title="HCommand.cs"
+public interface HCommand {
+    string CommandFunction(params string[] parameters);
+    string CommandHelp();
+    string Keyword();
+    List<string> AutocompleteOptions();
+}
+```
+
+### Creating New Commands
+
+This template can be used to create a new command class:
+
+```csharp title="HcNewCommand.cs"
+public class HcNewCommand : HCommand {
+    readonly List<string> options = null;
+
+    public string CommandFunction(params string[] parameters) {
+        if (parameters.Length < 2) {
+            return "Please pass a value";
+        }
+        
+        return $"Performed some action";
+    }
+
+    public string CommandHelp() {
+        return "(parameter_type parameter_name), What the command does";
+    }
+
+    public string Keyword() {
+        return "keyword";
+    }
+
+    public List<string> AutocompleteOptions() {
+        if (options == null) {
+           // Initialize options here 
+        }
+
+        return options;
+    }
+}
+```
+
+These are added at initialization
+
+```csharp title="JConsole.cs"
+void Start() {
+    ...
+    commands.Add(new HcCommandList());
+    // Commands are added here, i.e. commands.Add(new HcNewCommand());
+    commands.Add(new HcForceQuit());
+    ...
+}
+```
+
+### Default Commands
+
+|Command|Keyword|Description|
+|:---|:---|:---|
+|HcCommandList|help|Prints the list of available commands|
+|HcClearConsole|clear|Clears the console|
+|HcCloseConsole|close|Closes the console|
+|HcLoadScene|loadScene|Loads the scene with the passed name|
+|HcDebug|debug|Toggles the visibility of all debug elements if nothing is passed, or of a specific element if one is|
+|HcDialogue|dialogue|Begins a conversation with the passed referenceId|
+|HcMixerVolume|mixerInfo|Prints the volume of the mixer with the passed name|
+|HcSuppressMessages|suppressMessages|Toggles whether system messages are suppressed or not|
+|HcForceQuit|quit|Quits the application|
