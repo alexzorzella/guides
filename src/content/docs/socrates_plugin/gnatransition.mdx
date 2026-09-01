@@ -43,10 +43,10 @@ Loads the scene with the passed build index.
 |:---|:---|:---:|
 |int sceneIndex|The index of the scene to load||
 
-## Teardown
+## void Teardown
 Runs before the scene is transitioned. If anything should run every time a new scene is loaded, before that scene is loaded, put it here. Note: In the future, this may become an event that an external Bootstrap/Teardown function can listen to.
 
-## Bootstrap
+## void Bootstrap
 Runs after the scene is transitioned. If anything should run every time a new scene is loaded, after that scene is loaded, put it here. Same note as above.
 
 ## static void Quit
