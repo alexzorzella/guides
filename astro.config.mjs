@@ -9,6 +9,9 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "High Quality Docs",
+      customCss: [ 
+          './src/styles/custom.css', 
+      ],
       social: [
         {
           icon: "github",
