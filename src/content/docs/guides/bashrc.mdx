@@ -1,0 +1,20 @@
+---
+title: bashrc 
+description: What's a .bashrc?
+---
+
+Terminal use in Linux is expected. Someone might tell you to put commands you don't want to constantly run in a `.bashrc` file. Your `.bashrc` file lives in `~/.bashrc` by default. Edit it with your editor of choice. It will get read every time you open a new instance of a terminal (or login to a terminal), and non-commented lines will get executed then.
+
+It's useful to put bash code in here that you don't want to keep manually re-running. It's common to put `export`s.
+
+```bashrc
+# This is a comment
+
+export EDITOR=nvim
+```
+
+If you edit your ~/.bashrc and don't want to re-open your terminal, you can re-source it
+
+```bash
+source ~/.bashrc
+```

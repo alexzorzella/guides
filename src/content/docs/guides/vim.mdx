@@ -1,0 +1,91 @@
+---
+title: Vim
+description: Vim
+---
+
+## Neovim
+
+If you're looking into getting into Vim, try [Neovim](https://neovim.io/)
+
+```bash
+sudo apt install neovim
+```
+
+and then edit files using
+
+```bash
+nvim filename
+```
+
+You can always specify it as your editor of choice (in a Unix system) using
+
+```bash
+nvim ~/.bashrc
+```
+
+and adding
+
+```bash
+export EDITOR=nvim
+```
+
+to the bottom.
+
+Here some of my favorite Vim keybinds:
+
+|Key|Description|
+|:---|:---|
+|j|Move cursor down|
+|k|Move cursor up|
+|h|Move cursor left|
+|l|Move cursor right|
+|:|Open command line|
+|/|Open find (use \c in the find query for case insensitivity)|
+|w|Move forward one word|
+|b|Move back one word|
+|v|Visual mode (select)|
+|Shift+v|Enter visual line mode (select line)|
+|Ctrl+v|Enter blockwise visual mode|
+|u|Undo|
+|y|Yank (copy)|
+|p|Paste|
+|x|Delete (copies the deleted contents into your paste buffer)|
+|d+(any navigation key)|Delete|
+|dd|Delete line|
+|n|Next search result|
+|gg|Go to top|
+|Shift+g|Go to bottom|
+
+## IdeaVim
+
+I like Neovim, but I also like Rider (and the other JetBrains IDEs), so I use IdeaVim.
+
+The IdeaVim config file is found at `C:\Users\username\.ideavimrc`
+
+```bash
+nvim ~/.ideavimrc
+```
+
+To find all the mappable actions, use
+
+```bash
+:actionlist
+```
+
+to get a comprehensive of results and
+
+```bash
+:actionlist filter
+```
+
+to get a list of filtered results.
+
+I like
+
+```bash
+set relativenumber
+
+nmap fe <Action>(SearchEverywhere)
+nmap fr <Action>(RecentFiles)
+nmap fm <Action>(FileMenu)
+```
