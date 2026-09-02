@@ -236,6 +236,66 @@ Parses dialogue from the passed .tsv file found in the StreamingAssets/Localizat
 
 ## FancyText
 
+### List\<AnnotationToken\> GetAnnotationTokens
+Returns the list of annotations in the text.
+
+### void ClearDisplayTimes
+Clears the cache of the character display times. 
+
+### void LogDisplayTime
+Logs a character display time.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`float` time|The character display time to be added to the local list of times||
+
+### float GetCharDisplayTime
+Returns the timestamp that a character will or was revealed, accounting for the display time per character and delay annotations.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` index|The index of the character whose time will be returned||
+
+### private void AnnotateByMarkup
+Caches annotations according to markup found in the text.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` startAt|The index of the text character to start annotating at|0|
+
+### private void LinkTokens
+Pairs opening and closing annotation tokens together.
+
+### private void CleanText
+Cleans the text by realigning its annotation indices to account for the annotation markup being eaten, eats the annotation markup, and annotates it by its punctuation by default.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`bool` noPunctuationAnnotation|Whether delays will automatically get added for punctuation|false|
+
+### private void RealignAnnotationTokenIndices
+Realigns the annotation tokens according to its markup.
+
+### private void DiceAndDevourRichTextTokens
+Locates and removes the markup from the text.
+
+### private List\<RichTextToken\> DiceRichTextTokens
+Locates and returns the markup annotation tokens found in the originally passed text.
+
+### private void DevourRichTextTokens
+Removes the markup annotation tokens from the originally passed text.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`List\<RichTextToken\>` richTextTokens|The collection of `RichTextToken` to remove from the text||
+
+### private void AnnotateByPunctuation
+Annotates the text with delays at punctuation marks. Note! Account for annotation by punctuation while testing or initialize fancy text with the 'noPunctuationAnnotation' flag.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` startAt|The index of the text character to start annotating at|0|
+
 ## AnnotationToken
 
 ## AnnotationToken.Builder
