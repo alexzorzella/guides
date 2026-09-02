@@ -111,6 +111,22 @@ Initializes the dialogue choice and fades it in after a given amount of time.
 
 ## DialogueSection
 
+### bool HasFacet\<T\>
+#### where T : ZDialogueFacet
+Returns whether the dialogue contains a facet of type T.
+
+### T GetFacet\<T\>
+#### where T : ZDialogueFacet
+Returns the first instance of type T it finds in the list of facets and null if it doesn't find anything.
+
+### List\<T\> GetFacets\<T\>
+#### where T : ZDialogueFacet
+Returns the list of ZDialogueFacet of type T in facets.
+
+### int CountOfFacetType\<T\>
+#### where T : ZDialogueFacet
+Returns the number of ZDialogueFacet of type T in facets.
+
 ## (interface) DialogueListener
 
 Register `DialougeListener`s to `DialogueManager` for that class to be notified of dialogue state changes.
