@@ -96,6 +96,17 @@ Iterates through the local list of `SectionBuilder` and builds each one. Each bu
 
 ## DialogueChoice
 
+### void Initialize
+Initializes the dialogue choice and fades it in after a given amount of time.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`DialogueManager` dialogueManager|The Dialogue Manager that spawned this object||
+|`string` contents|The text content of the choice||
+|`string` nextSectionReference|The referenceId of the `DialogueSection` that this choice points to||
+|`float` fadeInAfter|The delay (in seconds) before this choice fades in|0|
+|`int` index|The index of this choice among the other choices in its `DialogueSection`|0|
+
 ## DialogueSection
 
 ## DialogueListener
