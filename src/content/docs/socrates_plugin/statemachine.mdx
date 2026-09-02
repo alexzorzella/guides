@@ -61,6 +61,9 @@ Sets the speed that will be used for transitions `ON_ANIMATION_COMPLETED`.
 ### string GetCurrentStateName
 Returns the current state's name.
 
+### StateMachineState CurrentState
+Returns the current state.
+
 ## StateMachine.Builder
 
 Both of the `StateMachine` constructors are private. New instances of StateMachine must be built using `StateMachine.Builder`.
@@ -160,6 +163,14 @@ Returns a StateMachine with the cached name and states.
 
 ## StateMachine.Utility
 
+## static void ImportLengthsFromRuntimeController
+Iterates through the state machine's states. If the state transitions ON_ANIMATION_COMPLETED, it finds a corresponding animation clip in the passed RuntimeAnimatorController. If a clip is found, the state's length is set to that clip's time. Otherwise, it's set to float.MaxValue.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachine` stateMachine|The `StateMachine` whose states will be iterated through||
+|`RuntimeAnimatorController` runtimeController|The `RuntimeAnimatorController` to search for animation clips in||
+
 ## StateMachineState
 
 ### void AddTransition
@@ -168,7 +179,7 @@ Adds a transition to another state on handling the passed `StateMachineEvent` tr
 |Parameter|Description|Default|
 |:---|:---|:---:|
 |`StateMachineEvent` trigger|The `StateMachineEvent` to trigger a transition to the other passed state||
-|`StateMachineState` transitionsTo|The state to transition on the passed `StateMachineEven`t||
+|`StateMachineState` transitionsTo|The state to transition on the passed `StateMachineEvent`||
 
 ### void AddEntryTransition
 Adds a transition to another state associated with a predicate that is evaluated on entry. Many logical scenarios can lead to entering a state with a transition out of it that will never be hit as the event that would have hit it already has occurred.
