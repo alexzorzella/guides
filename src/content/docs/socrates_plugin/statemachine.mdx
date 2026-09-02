@@ -63,6 +63,101 @@ Returns the current state's name.
 
 ## StateMachine.Builder
 
+Both of the `StateMachine` constructors are private. New instances of StateMachine must be built using `StateMachine.Builder`.
+
+### Builder WithState
+Adds the passed state to the list of states.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachineState` state|The state that will be added to the local list of states||
+
+### Builder WithStates
+Adds the passed list of states to the list of states one at a time via WithState.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`List\<StateMachineState\>` state|The states that will be added to the local list of states||
+
+### Builder WithStates
+Adds the passed list of states to the list of states one at a time by passing states.ToList() into WithStates.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`params StateMachineState[]` state|The states that will be added to the local list of states||
+
+### StateMachine Build
+Returns a StateMachine with the cached name and states.
+
+### Usage
+
+Usage will look something like this:
+
+```csharp
+StateMachineState idle = new StateMachineState("idle"); 
+
+StateMachineState walk = new StateMachineState("walk");
+StateMachineState run = new StateMachineState("run");
+
+StateMachineState jump = new StateMachineState("jump");
+StateMachineState fall = new StateMachineState("fall");
+
+StateMachineState wallrun = new StateMachineState("wallrunning");
+
+StateMachineState crouch = new StateMachineState("crouching");
+
+idle.AddTransition(StateMachineEvent.WALK, walk);
+idle.AddTransition(StateMachineEvent.RUN, run);
+idle.AddTransition(StateMachineEvent.JUMP, jump);
+idle.AddTransition(StateMachineEvent.CROUCH, crouch);
+idle.AddTransition(StateMachineEvent.FALL, fall);
+idle.AddEntryTransition((object o) => Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0, walk);
+
+ walk.AddTransition(StateMachineEvent.STOP, idle);
+ walk.AddTransition(StateMachineEvent.JUMP, jump);
+ walk.AddTransition(StateMachineEvent.CROUCH, crouch);
+ walk.AddTransition(StateMachineEvent.RUN, run);
+ walk.AddTransition(StateMachineEvent.FALL, fall);
+ walk.AddEntryTransition((object o) => Input.GetKey(KeyCode.LeftShift), run);
+ 
+ run.AddTransition(StateMachineEvent.STOP, idle);
+ run.AddTransition(StateMachineEvent.JUMP, jump);
+ run.AddTransition(StateMachineEvent.CROUCH, crouch);
+ run.AddTransition(StateMachineEvent.FALL, fall);
+ run.AddTransition(StateMachineEvent.STOP_RUNNING, walk);
+ 
+jump.AddTransition(StateMachineEvent.LAND, idle);
+jump.AddTransition(StateMachineEvent.FALL, fall);
+jump.AddTransition(StateMachineEvent.WALLRUN, wallrun);
+
+fall.AddTransition(StateMachineEvent.LAND, idle);
+fall.AddTransition(StateMachineEvent.WALLRUN, wallrun);
+fall.AddEntryTransition((object o) => quakeCharacterMovement.IsGrounded(), idle);
+
+wallrun.AddTransition(StateMachineEvent.JUMP, jump);
+wallrun.AddTransition(StateMachineEvent.LAND, idle);
+wallrun.AddTransition(StateMachineEvent.STOP_WALLRUNNING, fall);
+
+crouch.AddTransition(StateMachineEvent.UN_CROUCH, idle);
+
+List<StateMachineState> states = new() { idle, walk, run, wallrun, jump, fall, crouch }; 
+stateMachine = new StateMachine.Builder("Movement").WithStates(states).Build();
+```
+
+## StateMachine.ShellBuilder
+
+The shell builder is exactly like the builder, but it just takes a collection of state names and creates a state machine with minimal states. The states have no transitions to each other, no timing information, and no attributes.
+
+### ShellBuilder WithStates
+Adds a transitionless state with each of the passed names with no length.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`params string[]` stateNames|The names of the default states that will be added to the state list||
+
+### StateMachine Build
+Returns a StateMachine with the cached name and states.
+
 ## StateMachine.Utility
 
 ## StateMachineState
