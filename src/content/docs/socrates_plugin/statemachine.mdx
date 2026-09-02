@@ -5,6 +5,10 @@ description: State Machine documentation
 
 import { Aside } from "@astrojs/starlight/components";
 
+State machines are incredibly useful. Working with state machines can help refine a system, especially one that has undefined explicit states. For example, a lot of movement controllers begin with movement and crouching, but every time a new movement option is added, like crouching, wallrunning, walljumping, sliding, grappling, etc., the player's current movement state can become a semi-defined set of boolean functions that only have an understanding of what they're supposed to keep track of (i.e. whether the player is on the ground, whether they're crouching, whether they're diving). By using a single state machine with all possible movement states, there's only one source of truth, and notifications to listeners can reduce load so that other scripts that rely on information about the movement controller can avoid constantly checking for state changes.
+
+Overall, cause and effect becomes more explicit, the code becomes easier to read, and it becomes easier to debug what's happening, even in-game without a console in the editor.
+
 # Functions
 
 ## StateMachine
