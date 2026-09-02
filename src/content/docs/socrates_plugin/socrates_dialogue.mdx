@@ -188,17 +188,21 @@ Returns true when in conversation.
 
 ## DialoguePanel
 
-### void OnDialogueBegun (from DialogueListener)
+### void OnDialogueBegun
+#### (implemented from DialogueListener)
 Clears the name and content text and sets the panel to visible whenever a conversation is started.
 
-### void OnSectionChanged (from DialogueListener)
+### void OnSectionChanged
+#### (implemented from DialogueListener)
 Sets the name text fully and queues the content text to scroll, populated by new dialogue section
 data whenever the dialogue section changes.
 
-### void OnDialogueEnded (from DialogueListener)
+### void OnDialogueEnded
+#### (implemented from DialogueListener)
 Hides the panel when the dialogue ends.
 
-### void OnFullyDisplayed (from SocratesTextListener)
+### void OnFullyDisplayed
+#### (implemented from SocratesTextListener)
 Runs whenever the current dialogue section's content is fully displayed for the first time.
 
 ### bool OnStandby
