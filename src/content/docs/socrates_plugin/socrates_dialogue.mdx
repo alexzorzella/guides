@@ -96,6 +96,8 @@ Iterates through the local list of `SectionBuilder` and builds each one. Each bu
 
 ## DialogueChoice
 
+`DialogueChoice` is the Monobehaviour script for the choice object spawned when a `DialogueSection` has multiple `NextSection`s.
+
 ### void Initialize
 Initializes the dialogue choice and fades it in after a given amount of time.
 
@@ -125,7 +127,7 @@ Initializes the dialogue choice and fades it in after a given amount of time.
 
 ## SocratesText
 
-## SocratesTextListener
+## (interface) SocratesTextListener
 
 ## SocraticAnnotation
 
@@ -145,4 +147,13 @@ Initializes the dialogue choice and fades it in after a given amount of time.
 
 ## DialogueManifest
 
-## DialogueEventListener
+## (interface) DialogueEventListener
+
+Register `DialougeEventListener`s to `DialogueManager` for that class to be notified when the `DialogueManager` reaches a dialogue event. (Most likely used along with TSV written dialogue as dialogue written in code can arbitrarily run code itself)
+
+### void OnEvent
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` eventTag|The event's tag||
+|`string` parameters|The event's unparsed parameters as a string||
