@@ -163,8 +163,10 @@ Returns a StateMachine with the cached name and states.
 
 ## StateMachine.Utility
 
-## static void ImportLengthsFromRuntimeController
-Iterates through the state machine's states. If the state transitions ON_ANIMATION_COMPLETED, it finds a corresponding animation clip in the passed RuntimeAnimatorController. If a clip is found, the state's length is set to that clip's time. Otherwise, it's set to float.MaxValue.
+This utility class contains one function that imports animation clip lengths from a `RuntimeAnimatorController`, which enables the use of `ON_ANIMATION_COMPLETED` transitions.
+
+### static void ImportLengthsFromRuntimeController
+Iterates through the state machine's states. If the state transitions `ON_ANIMATION_COMPLETED`, it finds a corresponding animation clip in the passed RuntimeAnimatorController. If a clip is found, the state's length is set to that clip's time. Otherwise, it's set to float.MaxValue.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
