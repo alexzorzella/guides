@@ -3,37 +3,102 @@ title: State Machine
 description: State Machine documentation 
 ---
 
-void AddTransition(StateMachineEvent trigger, StateMachineState transitionsTo) {
-Adds a transition to another state on handling the passed StateMachineEvent trigger. Throws an InvalidOperationException if transition map already contains the passed trigger.
+import { Aside } from "@astrojs/starlight/components";
+
+# Functions
+
+## StateMachine
+
+### void RegisterListener
+Registers a listener to the state machine that reports a state change from a state `from` to another state `to`.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|StateMachineEvent trigger|The trigger that will cause a transition to the other passed state||
-|StateMachineState transitionsTo|The state that the state will transition on the passed trigger||
+|`StateMachineListener` listener|The listener to subscribe to this state machine||
 
-void AddEntryTransition(Predicate<object> checkOfEntry, StateMachineState transitionsTo) {
+### void Handle
+Handles a state machine event by checking if the current state
+has a transition for the passed `StateMachineEvent `
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachineEvent` trigger|The `StateMachineEvent` to compare to this state's transition map||
+
+### private void SetState
+Sets the current state to `StateMachineState to` and notifies the subscribed listeners of the state change. Entry transitions are handled recursively. To safeguard against infinite transitions, the recursive call stack is limited to a maximum recursive depth `depth`.
+
+If the final current state transitions when its animation is completed, a delayed LeanTween call is made to handle an `ON_ANIMATION_COMPLETED` event after the animation's runtime.
+
+<Aside type="note">
+    For transitions `ON_ANIMATION_COMPLETED` to work, the state machine's state times must be populated. Use `StateMachine.Utility.ImportLengthsFromRuntimeController` to automatically import times. Additionally, speed must reflect the animator's speed. If the animator's speed is changed, the speed must be updated here.
+</Aside>
+
+<Aside type="note">
+    This function is private, but is extremely relevant to the functionality of the class.
+</Aside>
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachineState` from|The state that the state machine was in||
+|`StateMachineState` to|The state that the state machine is getting set to||
+|`int` depth|The current recursive depth of function call (should only be used locally)|0|
+
+### void JumpTo
+Jumps from the current state to a state with the passed name. If the passed name
+is not a state in the list of states, nothing happens.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` stateName|The name of the state to jump to||
+
+### void SetSpeed
+Sets the speed that will be used for transitions `ON_ANIMATION_COMPLETED`.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`float` speed|The value that `speed` to set speed to||
+
+### string GetCurrentStateName
+Returns the current state's name.
+
+## StateMachine.Builder
+
+## StateMachine.Utility
+
+## StateMachineState
+
+### void AddTransition
+Adds a transition to another state on handling the passed `StateMachineEvent` trigger. Throws an `InvalidOperationException` if transition map already contains the passed trigger.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachineEvent` trigger|The `StateMachineEvent` to trigger a transition to the other passed state||
+|`StateMachineState` transitionsTo|The state to transition on the passed `StateMachineEven`t||
+
+### void AddEntryTransition
 Adds a transition to another state associated with a predicate that is evaluated on entry. Many logical scenarios can lead to entering a state with a transition out of it that will never be hit as the event that would have hit it already has occurred.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string content|The content to be printed to the console||
+|`Predicate\<object\>` checkOnEntry|The condition that, if met when transitioning to this state, will instantly transition to the passed state||
+|`StateMachineState` transitionsTo|The state to transition to if the predicate evaluates to true on entry||
 
-StateMachineState TryEntryTransitions() {
+### StateMachineState TryEntryTransitions
 Invokes the predicate associated with each entry transition and returns the first one that succeeds or null by default.
 
-bool HasAttribute(StateAttribute attribute) {
+### bool HasAttribute
 Returns whether the state machine has the passed attribute.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string content|The content to be printed to the console||
+|`StateAttribute` attribute|The attribute to compare to this state's attributes||
 
-StateMachineState Handle(StateMachineEvent trigger) {
-Returns the StateMachineState that this state transitions to on the passed trigger or null by default.
+### StateMachineState Handle
+Returns the `StateMachineState` that this state transitions to on the passed trigger or null by default.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string content|The content to be printed to the console||
+|`StateMachineEvent` trigger|The trigger that will be compared to this state's triggers||
 
-bool TransitionsOnAnimationCompleted() {
-Returns whether this state has a transition ON_ANIMATION_COMPLETED.
+### bool TransitionsOnAnimationCompleted
+Returns whether this state has a transition on `ON_ANIMATION_COMPLETED`.

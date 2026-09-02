@@ -13,7 +13,7 @@ ResourceLoader is a self-instantiating static singleton. It does not have to be 
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|Parameter|Description|Default|
+|`string` objectName|The name of the object||
 
 Returns an object named objectName found in any Resources folder. If specified, the function will look into a subfolder. Multiple subfolders are supported. A slash is not required for the deepest folder.
 
@@ -21,8 +21,8 @@ Returns an object named objectName found in any Resources folder. If specified, 
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string objectName|The name of the object||
-|Transform parent|The object that the instantiated object will be parented to (optional)|null|
+|`string` objectName|The name of the object||
+|`Transform` parent|The object that the instantiated object will be parented to (optional)|null|
 
 Instantiates an object with the passed name at the origin with no rotation if one is found.
 
@@ -30,10 +30,10 @@ Instantiates an object with the passed name at the origin with no rotation if on
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string objectName|The name of the object||
-|Vector3 position|The position that the object will be instantiated||
-|Quaternion rotation|The rotation that the object will be instantiated at||
-|Transform parent|The object that the instantiated object will be parented to (optional)|null|
+|`string` objectName|The name of the object||
+|`Vector3` position|The position that the object will be instantiated||
+|`Quaternion` rotation|The rotation that the object will be instantiated at||
+|`Transform` parent|The object that the instantiated object will be parented to (optional)|null|
 
 Instantiates an object with the passed name at the given position with the given rotation if one is found. If a parent transform is passed, it instantiates it parented to that object. Instantiates an object with the passed name at the given position with the given rotation if one is found. If a parent transform is passed, it instantiates it parented to that object.
 
@@ -41,8 +41,8 @@ Instantiates an object with the passed name at the given position with the given
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string filename|The name of the file to be loaded||
-|string subfolder|The subfolder within a /Resources/ folder where the file is located|""|
+|`string` filename|The name of the file to be loaded||
+|`string` subfolder|The subfolder within a /Resources/ folder where the file is located|""|
 
 Returns an object of type T named filename found in any Resources folder. If specified, the function will look into a subfolder. Multiple subfolders are supported. A slash is not required for the deepest folder. 
 
@@ -50,8 +50,8 @@ Returns an object of type T named filename found in any Resources folder. If spe
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string filename|The name of the Aseprite file to be loaded||
-|string subfolder|The subfolder within a /Resources/ folder where the Aseprite file is located|""|
+|`string` filename|The name of the Aseprite file to be loaded||
+|`string` subfolder|The subfolder within a /Resources/ folder where the Aseprite file is located|""|
 
 Returns an Aseprite file named filename found in any Resources folder. If specified, the function will look into a subfolder. Multiple subfolders are supported. A slash is not required for the deepest folder.
 
@@ -59,8 +59,8 @@ Returns an Aseprite file named filename found in any Resources folder. If specif
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string filename|The name of the sprite to be loaded||
-|string subfolder|The subfolder within a /Resources/ folder where the sprite is located|""|
+|`string` filename|The name of the sprite to be loaded||
+|`string` subfolder|The subfolder within a /Resources/ folder where the sprite is located|""|
 
 Returns a Sprite named filename found in any Resources folder. If specified, the function will look into a subfolder. Multiple subfolders are supported. A slash is not required for the deepest folder.
 
@@ -68,9 +68,9 @@ Returns a Sprite named filename found in any Resources folder. If specified, the
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string mainTexture|The name of the main texture containing multiple sprites||
-|string subtextureName|The name of the subtexture that will be returned||
-|string subfolder|The subfolder within a /Resources/ folder where the sprite is located|""|
+|`string` mainTexture|The name of the main texture containing multiple sprites||
+|`string` subtextureName|The name of the subtexture that will be returned||
+|`string` subfolder|The subfolder within a /Resources/ folder where the sprite is located|""|
 
 Returns a subtexture Sprite named subtextureName whose parent Sprite is named mainTexture found in any Resources folder. If specified, the function will look into a subfolder. Multiple subfolders are supported. A slash is not required for the deepest folder.
 
@@ -78,8 +78,8 @@ Returns a subtexture Sprite named subtextureName whose parent Sprite is named ma
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string mainTexture|The name of the main texture containing multiple sprites||
-|string subfolder|The subfolder within a /Resources/ folder where the sprite is located|""|
+|`string` mainTexture|The name of the main texture containing multiple sprites||
+|`string` subfolder|The subfolder within a /Resources/ folder where the sprite is located|""|
 
 Returns the first subtexture Sprite whose parent Sprite is named mainTexture found in any Resources folder. If specified, the function will look into a subfolder. Multiple subfolders are supported. A slash is not required for the deepest folder.
 
@@ -87,8 +87,8 @@ Returns the first subtexture Sprite whose parent Sprite is named mainTexture fou
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string mainTexture|The name of the main texture containing multiple sprites||
-|string subfolder|The subfolder within a /Resources/ folder where the sprite is located|""|
+|`string` mainTexture|The name of the main texture containing multiple sprites||
+|`string` subfolder|The subfolder within a /Resources/ folder where the sprite is located|""|
 
 Returns a random subtexture Sprite whose parent Sprite is named mainTexture found in any Resources folder. If specified, the function will look into a subfolder. Multiple subfolders are supported. A slash is not required for the deepest folder.
 

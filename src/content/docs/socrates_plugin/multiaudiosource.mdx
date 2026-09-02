@@ -68,8 +68,8 @@ Sets the pitch of all the audio sources to the passed pitch.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|float minPitch|The minimum pitch to be randomly selected|0.8|
-|float maxPitch|The maximum pitch to be randomly selected|1.2|
+|`float` minPitch|The minimum pitch to be randomly selected|0.8|
+|`float` maxPitch|The maximum pitch to be randomly selected|1.2|
 
 Randomly sets the pitch of all the audio sources to a pitch between `minPitch` and `maxPitch`.
 
@@ -95,16 +95,16 @@ Stops all the audio sources.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|GameObject gameObject|The object that the AudioSource component will be attached to.||
-|string path|The name of the audio clip||
-|bool loop|Whether the audio should loop indefinitely when played|false|
-|string audioMixer|The mixer that the audio will play from|SFX|
-|float volume|The volume that the audio will be played at|1|
-|float pitch|The pitch that the audio should be played at|1|
-|float spatialBlend|The [spatial blend](https://docs.unity3d.com/ScriptReference/AudioSource-spatialBlend.html) of the audio source|0|
-|float minDistance|The audio source's [mininum distance](https://docs.unity3d.com/ScriptReference/AudioSource-minDistance.html). Only set if spatialBlend > 0|0|
-|float maxDistance|The audio source's [maximum distance](https://docs.unity3d.com/ScriptReference/AudioSource-maxDistance.html). Only set if spatialBlend > 0|0|
-|float dopplerLevel|The audio source's [doppler level](https://docs.unity3d.com/ScriptReference/AudioSource-dopplerLevel.html). Only set if spatialBlend > 0|1|
+|`GameObject` gameObject|The object that the AudioSource component will be attached to.||
+|`string` path|The name of the audio clip||
+|`bool` loop|Whether the audio should loop indefinitely when played|false|
+|`string` audioMixer|The mixer that the audio will play from|SFX|
+|`float` volume|The volume that the audio will be played at|1|
+|`float` pitch|The pitch that the audio should be played at|1|
+|`float` spatialBlend|The [spatial blend](https://docs.unity3d.com/ScriptReference/AudioSource-spatialBlend.html) of the audio source|0|
+|`float` minDistance|The audio source's [mininum distance](https://docs.unity3d.com/ScriptReference/AudioSource-minDistance.html). Only set if spatialBlend > 0|0|
+|`float` maxDistance|The audio source's [maximum distance](https://docs.unity3d.com/ScriptReference/AudioSource-maxDistance.html). Only set if spatialBlend > 0|0|
+|`float` dopplerLevel|The audio source's [doppler level](https://docs.unity3d.com/ScriptReference/AudioSource-dopplerLevel.html). Only set if spatialBlend > 0|1|
 
 Loads a single audio clip from the given `path`. This is a relative path to any directory named `Resources` within the `Assets` directory tree (i.e. it may be in Assets/Resources, Assets/Audio/Resources, Assets/Audio/Cutscenes/Resources). The `AudioSource` component is added to the passed `gameObject`. Typically, the `gameObject` will be the `this.gameObject` from the method's caller. There may be cases where a static script wants to use a MultiAudioSource. In that case, the passed gameObject should have the same lifetime as the method's caller. Do not pass a static, persistent, and/or singleton GameObject to `gameObject` if `FromResource` is being called from an object that won't live as long or longer than `gameObject`. This may lead to a large number of unused AudioSources that take up resources.
 
@@ -114,16 +114,16 @@ This method throws if the resource does not exist.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|GameObject gameObject|The object that the AudioSource component will be attached to.||
-|string pathPrefix|The name of the audio clip, not including the number `_n`||
-|int count|The total number of audio clips in that pool of clips||
-|bool loop|Whether the audio should loop indefinitely when played|false|
-|float volume|The volume that the audio will be played at|1|
-|float pitch|The pitch that the audio should be played at|1|
-|float spatialBlend|The [spatial blend](https://docs.unity3d.com/ScriptReference/AudioSource-spatialBlend.html) of the audio source|0|
-|float minDistance|The audio source's [mininum distance](https://docs.unity3d.com/ScriptReference/AudioSource-minDistance.html). Only set if spatialBlend > 0|0|
-|float maxDistance|The audio source's [maximum distance](https://docs.unity3d.com/ScriptReference/AudioSource-maxDistance.html). Only set if spatialBlend > 0|0|
-|float dopplerLevel|The audio source's [doppler level](https://docs.unity3d.com/ScriptReference/AudioSource-dopplerLevel.html). Only set if spatialBlend > 0|1|
+|`GameObject` gameObject|The object that the AudioSource component will be attached to.||
+|`string` pathPrefix|The name of the audio clip, not including the number `_n`||
+|`int` count|The total number of audio clips in that pool of clips||
+|`bool` loop|Whether the audio should loop indefinitely when played|false|
+|`float` volume|The volume that the audio will be played at|1|
+|`float` pitch|The pitch that the audio should be played at|1|
+|`float` spatialBlend|The [spatial blend](https://docs.unity3d.com/ScriptReference/AudioSource-spatialBlend.html) of the audio source|0|
+|`float` minDistance|The audio source's [mininum distance](https://docs.unity3d.com/ScriptReference/AudioSource-minDistance.html). Only set if spatialBlend > 0|0|
+|`float` maxDistance|The audio source's [maximum distance](https://docs.unity3d.com/ScriptReference/AudioSource-maxDistance.html). Only set if spatialBlend > 0|0|
+|`float` dopplerLevel|The audio source's [doppler level](https://docs.unity3d.com/ScriptReference/AudioSource-dopplerLevel.html). Only set if spatialBlend > 0|1|
 
 This is like `FromResource`, but for loading multiple audio clips (say to be played randomly or in a round-robin fashion). `count` denotes how many clips to load. The expected file names are `pathPrefix_0`, `pathPrefix_1`, ... `pathPrefix_{count - 1}`.
 
