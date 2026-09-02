@@ -3,7 +3,7 @@ title: SocratesDialogue
 description: SocratesDialogue
 ---
 
-## About
+# About
 
 Socrates Dialogue includes four distinct systems: Socrates Dialogue, Socrates Markdown Language, SocraTSV, and SocraGUI.
 
@@ -36,9 +36,9 @@ Socrates Markdown works with [TextMeshPro Rich Text](https://docs.unity3d.com/Pa
 
 With lots of dialogue, it's important to be able to easily manage it. Instead of writing everything as constructor variables in a script, a .tsv can just be loaded once. Not only are .tsv files easier to manage and keep track of, but localization also becomes easier.
 
-### Tag Per Cell, Per Column, Or Do Both
+### Tagging
 
-To make the contents of a column default to a certain tag, specify it above! For example, all of the rows in the first column will be treated as if it was following the 'name:' tag, unless otherwise specified. In the third column, all of the rows that aren't empty will be treated as if they were following 'ref:', but any rows that have a different tag will ignore the default, i.e. 'sound:dialogue_2' will not be interpreted as 'ref:sound:dialogue_2', but as 'sound:dialogue_2'.
+Cells may be tagged per cell, per column, or both. To make the contents of a column default to a certain tag, specify it above! For example, all of the rows in the first column will be treated as if it was following the 'name:' tag, unless otherwise specified. In the third column, all of the rows that aren't empty will be treated as if they were following 'ref:', but any rows that have a different tag will ignore the default, i.e. 'sound:dialogue_2' will not be interpreted as 'ref:sound:dialogue_2', but as 'sound:dialogue_2'.
 
 ## Quick Reference
 
@@ -53,3 +53,85 @@ To make the contents of a column default to a certain tag, specify it above! For
 |`event:FUNC_NAME(PARAMS)`|Specifies that the dialogue system should send a signal identified with the event tag FUNC_NAME and parameters PARAMS when reaching that line. (These events must be explicitly parsed and handled by a script)|
 
 Anything in curly braces will be looked up from a token/value table specified in the file. For example, if there's a table like the one above, writing \{man\} anywhere will be referencing Rahul. If you reference a token that doesn't exist, it just won't replace it, i.e. 'name:\{nonexistenttoken\}' will just set the speaker's name to '\{nonexistenttoken\}'.
+
+# Dependency Diagram
+
+![Socrates Dialogue Dependency Diagram](/src/assets/socrates_dialogue.png)
+
+# Socrates Dialogue
+
+## DialogueBuilder
+
+### int GetCurrentSectionBuilderCount
+Returns the current number of section builders in the local list of `SectionBuilder`.
+
+### SectionBuilder GetLastSectionBuilder
+Returns the last `SectionBuilder` in the local list of `SectionBuilder`.
+
+### DialogueBuilder WithSection
+Adds the passed `SectionBuilder` to the local list of `SectionBuilder` and returns the instance of `DialogueBuilder`.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`SectionBuilder` sectionBuilder|The `SectionBuilder` to be added to the local list of `SectionBuilder`||
+
+### DialogueBuilder WithSequentialSections
+Adds each `SectionBuilder` in the passed list of `SectionBuilder` to the local list of SectionBuilder. Every section except for the last section gets a NextSection with the next `SectionBuilder`'s referenceId. This makes it so that long, sequential strings of lines don't have to be manually linked together.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`List\<SectionBuilder\>` passedSectionBuilders|The list of `SectionBuilder` to be added, automatically pointing to each other in sequence||
+
+### DialogueBuilder WithSequentialSections
+An overload for `WithSequentialSections` that accepts the `SectionBuilder`s as `params` so that a new list doesn't have to be manually made every time the function is called.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`params SectionBuilder[]` passedSectionBuilders|The `SectionBuilder` array to be passed to `WithSequentialActions` as a list||
+
+### Dialogue Build() {
+Iterates through the local list of `SectionBuilder` and builds each one. Each built `DialogueSection` is passed to the `DialogueManifest` to be potentially added to the map of `DialogueSection` by reference. Each `NextSection` is then linked to the `DialogueSection`s they're pointing to. These facets are linked here to support circular dependencies. The resulting `Dialogue` is returned.
+
+## SectionBuilder
+
+## DialogueChoice
+
+## DialogueSection
+
+## DialogueListener
+
+# SocraGUI
+
+## DialogueManager
+
+## DialoguePanel
+
+# SocraTSV
+
+## DialogueParser
+
+# Socrates Markdown Language
+
+## SocratesText
+
+## SocratesTextListener
+
+## SocraticAnnotation
+
+## FancyText
+
+## AnnotationToken
+
+## AnnotationToken.Builder
+
+## DialogueGradients
+
+# Utility
+
+## LeftClickContinuesDialogue
+
+## DialogueEventTester
+
+## DialogueManifest
+
+## DialogueEventListener
