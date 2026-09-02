@@ -3,11 +3,11 @@ title: About
 description: Resource Loader
 ---
 
-import { LinkButton } from "@astrojs/starlight/components";
+import { LinkButton, Steps } from "@astrojs/starlight/components";
 
 ## The Socrates Plugin
 
-<LinkButton href="https://github.com/alexzorzella/Socrates_Plugin/releases/latest/download/socrates_plugin_ver_25_12_19.unitypackage">
+<LinkButton href="https://github.com/alexzorzella/Socrates_Plugin/releases/latest/download/socrates_plugin.unitypackage">
    Download
 </LinkButton>
 
@@ -23,3 +23,21 @@ This repository and its contents are protected by the MIT License. If you don't 
 ### Contributions (Use Unity 6000.0.58f2)
 
 Contributions to the Socrates Plugin are more than welcome! If you intend on working with the Socrates Plugin's source code please do so in Unity version 6000.0.58f2, and make sure you're not commiting any editor caches! (These are folders like .idea/ or .vscode/. If you use another editor that isn't already in the .gitignore, make sure to add it to the .gitignore before making a pull request). The editor may be upgraded in the future.
+
+### How To Import the Socrates Plugin
+
+<Steps>
+    
+    1. Download `socrates_plugin.unitypackage` above, from <a href="https://github.com/alexzorzella/Socrates_Plugin/releases/latest/download/socrates_plugin.unitypackage">here</a>, or from the <a href="https://github.com/alexzorzella/Socrates_Plugin/releases/latest" target="_blank">latest release page</a> on GitHub
+    
+    2. Open Unity
+    
+    3. Navigate to `Assets/Import Package > Custom Package`
+    
+    4. Select `socrates_plugin.unitypackage`
+    
+    5. Select the Socrates Plugin script folders you would like to import (importing the Editor folder is highly recommended as it adds a window in the menu with a link to the documentation)
+    
+    6. Select Import
+    
+</Steps>
