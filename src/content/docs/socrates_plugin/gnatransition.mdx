@@ -3,9 +3,9 @@ title: GnaTransition
 description: GnaTransition documentation
 ---
 
-If you intend on using GnaTransition, make sure to have the corresponding GnaTransition object in a /Resources/ Folder in your project. [LeanTween](https://assetstore.unity.com/packages/tools/animation/leantween-3595) is required.
+If you `int`end on using GnaTransition, make sure to have the corresponding GnaTransition object in a /Resources/ Folder in your project. [LeanTween](https://assetstore.unity.com/packages/tools/animation/leantween-3595) is required.
 
-GnaTransition is a self-instantiating static singleton. It does not have to be manually dragged into the scene view.
+GnaTransition is a self-instantiating static singleton. It does not have to be manually dragged `int`o the scene view.
 
 # Usage
 
@@ -34,14 +34,14 @@ Loads the scene with the passed name.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string sceneName|The name of the scene to load||
+|`string` sceneName|The name of the scene to load||
 
 ## static void LoadScene
 Loads the scene with the passed build index.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|int sceneIndex|The index of the scene to load||
+|`int` sceneIndex|The index of the scene to load||
 
 ## void Teardown
 Runs before the scene is transitioned. If anything should run every time a new scene is loaded, before that scene is loaded, put it here. Note: In the future, this may become an event that an external Bootstrap/Teardown function can listen to.

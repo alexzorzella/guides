@@ -14,7 +14,7 @@ Sets the visibility of the console to the passed visibility.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|bool visible|The console's new state of visibility||
+|`bool` visible|The console's new state of visibility||
 
 ### bool ToggleSuppressSystemMessages
 Toggles whether system messages are suppressed and returns the new value.
@@ -24,15 +24,15 @@ Registers a JConsoleLogListener to the console.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|JConsoleLogListener newListener|The listener subscribing to this console||
+|`JConsoleLogListener` newListener|The listener subscribing to this console||
 
 ### void DisplaySystemMessage
 Displays the passed system message and prints the non-truncated message to the console. If the no non-truncated message is passed, the original message is printed to the console.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string message|The message that will appear as a system message and be printed to the console.||
-|string nonTruncatedMessage|An optional, longer version of the message that will be printed to the console instead of the original message.|""|
+|`string` message|The message that will appear as a system message and be printed to the console.||
+|`string` nonTruncatedMessage|An optional, longer version of the message that will be printed to the console instead of the original message.|""|
 
 ### void OpenConsole
 Opens the console.
@@ -45,8 +45,8 @@ Updates the system message count and parent size. Currently, this function is on
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|int alterBy|(1) system message added, (-1) system message removed||
-|float sizeY|The vertical size of the system message that was added or removed||
+|`int` alterBy|(1) system message added, (-1) system message removed||
+|`float` sizeY|The vertical size of the system message that was added or removed||
 
 ### void CloseConsole
 Closes the console.
@@ -59,7 +59,7 @@ Prints a line to the console.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|string content|The content to be printed to the console||
+|`string` content|The content to be printed to the console||
 
 ## Commands
 
@@ -124,12 +124,12 @@ void Start() {
 
 |Command|Keyword|Description|
 |:---|:---|:---|
-|HcCommandList|help|Prints the list of available commands|
-|HcClearConsole|clear|Clears the console|
-|HcCloseConsole|close|Closes the console|
-|HcLoadScene|loadScene|Loads the scene with the passed name|
-|HcDebug|debug|Toggles the visibility of all debug elements if nothing is passed, or of a specific element if one is|
-|HcDialogue|dialogue|Begins a conversation with the passed referenceId|
-|HcMixerVolume|mixerInfo|Prints the volume of the mixer with the passed name|
-|HcSuppressMessages|suppressMessages|Toggles whether system messages are suppressed or not|
-|HcForceQuit|quit|Quits the application|
+|`HcCommandList`|help|Prints the list of available commands|
+|`HcClearConsole`|clear|Clears the console|
+|`HcCloseConsole`|close|Closes the console|
+|`HcLoadScene`|loadScene|Loads the scene with the passed name|
+|`HcDebug`|debug|Toggles the visibility of all debug elements if nothing is passed, or of a specific element if one is|
+|`HcDialogue`|dialogue|Begins a conversation with the passed referenceId|
+|`HcMixerVolume`|mixerInfo|Prints the volume of the mixer with the passed name|
+|`HcSuppressMessages`|suppressMessages|Toggles whether system messages are suppressed or not|
+|`HcForceQuit`|quit|Quits the application|

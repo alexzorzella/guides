@@ -1,0 +1,218 @@
+---
+title: State Machine
+description: State Machine documentation 
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+State machines are incredibly useful. Working with state machines can help refine a system, especially one that has undefined explicit states. For example, a lot of movement controllers begin with movement and crouching, but every time a new movement option is added, like crouching, wallrunning, walljumping, sliding, grappling, etc., the player's current movement state can become a semi-defined set of boolean functions that only have an understanding of what they're supposed to keep track of (i.e. whether the player is on the ground, whether they're crouching, whether they're diving). By using a single state machine with all possible movement states, there's only one source of truth, and notifications to listeners can reduce load so that other scripts that rely on information about the movement controller can avoid constantly checking for state changes.
+
+Overall, cause and effect becomes more explicit, the code becomes easier to read, and it becomes easier to debug what's happening, even in-game without a console in the editor.
+
+I have used this state machine to replace the Unity `Animator` transition graph in the editor to easily manage dozens of animations that are constantly being updated.
+
+# Functions
+
+## StateMachine
+
+### void RegisterListener
+Registers a listener to the state machine that reports a state change from a state `from` to another state `to`.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachineListener` listener|The listener to subscribe to this state machine||
+
+### void Handle
+Handles a state machine event by checking if the current state
+has a transition for the passed `StateMachineEvent `
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachineEvent` trigger|The `StateMachineEvent` to compare to this state's transition map||
+
+### private void SetState
+Sets the current state to `StateMachineState to` and notifies the subscribed listeners of the state change. Entry transitions are handled recursively. To safeguard against infinite transitions, the recursive call stack is limited to a maximum recursive depth `depth`.
+
+If the final current state transitions when its animation is completed, a delayed LeanTween call is made to handle an `ON_ANIMATION_COMPLETED` event after the animation's runtime.
+
+<Aside type="note">
+    For transitions `ON_ANIMATION_COMPLETED` to work, the state machine's state times must be populated. Use `StateMachine.Utility.ImportLengthsFromRuntimeController` to automatically import times. Additionally, speed must reflect the animator's speed. If the animator's speed is changed, the speed must be updated here.
+</Aside>
+
+<Aside type="note">
+    This function is private, but is extremely relevant to the functionality of the class.
+</Aside>
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachineState` from|The state that the state machine was in||
+|`StateMachineState` to|The state that the state machine is getting set to||
+|`int` depth|The current recursive depth of function call (should only be used locally)|0|
+
+### void JumpTo
+Jumps from the current state to a state with the passed name. If the passed name
+is not a state in the list of states, nothing happens.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` stateName|The name of the state to jump to||
+
+### void SetSpeed
+Sets the speed that will be used for transitions `ON_ANIMATION_COMPLETED`.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`float` speed|The value that `speed` to set speed to||
+
+### string GetCurrentStateName
+Returns the current state's name.
+
+### StateMachineState CurrentState
+Returns the current state.
+
+## StateMachine.Builder
+
+Both of the `StateMachine` constructors are private. New instances of StateMachine must be built using `StateMachine.Builder`.
+
+### Builder WithState
+Adds the passed state to the list of states.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachineState` state|The state that will be added to the local list of states||
+
+### Builder WithStates
+Adds the passed list of states to the list of states one at a time via WithState.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`List\<StateMachineState\>` state|The states that will be added to the local list of states||
+
+### Builder WithStates
+Adds the passed list of states to the list of states one at a time by passing states.ToList() into WithStates.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`params StateMachineState[]` state|The states that will be added to the local list of states||
+
+### StateMachine Build
+Returns a StateMachine with the cached name and states.
+
+### Usage
+
+Usage will look something like this:
+
+```csharp
+StateMachineState idle = new StateMachineState("idle"); 
+
+StateMachineState walk = new StateMachineState("walk");
+StateMachineState run = new StateMachineState("run");
+
+StateMachineState jump = new StateMachineState("jump");
+StateMachineState fall = new StateMachineState("fall");
+
+StateMachineState wallrun = new StateMachineState("wallrunning");
+
+StateMachineState crouch = new StateMachineState("crouching");
+
+idle.AddTransition(StateMachineEvent.WALK, walk);
+idle.AddTransition(StateMachineEvent.RUN, run);
+idle.AddTransition(StateMachineEvent.JUMP, jump);
+idle.AddTransition(StateMachineEvent.CROUCH, crouch);
+idle.AddTransition(StateMachineEvent.FALL, fall);
+idle.AddEntryTransition((object o) => Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0, walk);
+
+ walk.AddTransition(StateMachineEvent.STOP, idle);
+ walk.AddTransition(StateMachineEvent.JUMP, jump);
+ walk.AddTransition(StateMachineEvent.CROUCH, crouch);
+ walk.AddTransition(StateMachineEvent.RUN, run);
+ walk.AddTransition(StateMachineEvent.FALL, fall);
+ walk.AddEntryTransition((object o) => Input.GetKey(KeyCode.LeftShift), run);
+ 
+ run.AddTransition(StateMachineEvent.STOP, idle);
+ run.AddTransition(StateMachineEvent.JUMP, jump);
+ run.AddTransition(StateMachineEvent.CROUCH, crouch);
+ run.AddTransition(StateMachineEvent.FALL, fall);
+ run.AddTransition(StateMachineEvent.STOP_RUNNING, walk);
+ 
+jump.AddTransition(StateMachineEvent.LAND, idle);
+jump.AddTransition(StateMachineEvent.FALL, fall);
+jump.AddTransition(StateMachineEvent.WALLRUN, wallrun);
+
+fall.AddTransition(StateMachineEvent.LAND, idle);
+fall.AddTransition(StateMachineEvent.WALLRUN, wallrun);
+fall.AddEntryTransition((object o) => quakeCharacterMovement.IsGrounded(), idle);
+
+wallrun.AddTransition(StateMachineEvent.JUMP, jump);
+wallrun.AddTransition(StateMachineEvent.LAND, idle);
+wallrun.AddTransition(StateMachineEvent.STOP_WALLRUNNING, fall);
+
+crouch.AddTransition(StateMachineEvent.UN_CROUCH, idle);
+
+List<StateMachineState> states = new() { idle, walk, run, wallrun, jump, fall, crouch }; 
+stateMachine = new StateMachine.Builder("Movement").WithStates(states).Build();
+```
+
+## StateMachine.ShellBuilder
+
+The shell builder is exactly like the builder, but it just takes a collection of state names and creates a state machine with minimal states. The states have no transitions to each other, no timing information, and no attributes.
+
+### ShellBuilder WithStates
+Adds a transitionless state with each of the passed names with no length.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`params string[]` stateNames|The names of the default states that will be added to the state list||
+
+### StateMachine Build
+Returns a StateMachine with the cached name and states.
+
+## StateMachine.Utility
+
+This utility class contains one function that imports animation clip lengths from a `RuntimeAnimatorController`, which enables the use of `ON_ANIMATION_COMPLETED` transitions.
+
+### static void ImportLengthsFromRuntimeController
+Iterates through the state machine's states. If the state transitions `ON_ANIMATION_COMPLETED`, it finds a corresponding animation clip in the passed RuntimeAnimatorController. If a clip is found, the state's length is set to that clip's time. Otherwise, it's set to float.MaxValue.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachine` stateMachine|The `StateMachine` whose states will be iterated through||
+|`RuntimeAnimatorController` runtimeController|The `RuntimeAnimatorController` to search for animation clips in||
+
+## StateMachineState
+
+### void AddTransition
+Adds a transition to another state on handling the passed `StateMachineEvent` trigger. Throws an `InvalidOperationException` if transition map already contains the passed trigger.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachineEvent` trigger|The `StateMachineEvent` to trigger a transition to the other passed state||
+|`StateMachineState` transitionsTo|The state to transition on the passed `StateMachineEvent`||
+
+### void AddEntryTransition
+Adds a transition to another state associated with a predicate that is evaluated on entry. Many logical scenarios can lead to entering a state with a transition out of it that will never be hit as the event that would have hit it already has occurred.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`Predicate\<object\>` checkOnEntry|The condition that, if met when transitioning to this state, will instantly transition to the passed state||
+|`StateMachineState` transitionsTo|The state to transition to if the predicate evaluates to true on entry||
+
+### StateMachineState TryEntryTransitions
+Invokes the predicate associated with each entry transition and returns the first one that succeeds or null by default.
+
+### bool HasAttribute
+Returns whether the state machine has the passed attribute.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateAttribute` attribute|The attribute to compare to this state's attributes||
+
+### StateMachineState Handle
+Returns the `StateMachineState` that this state transitions to on the passed trigger or null by default.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`StateMachineEvent` trigger|The trigger that will be compared to this state's triggers||
+
+### bool TransitionsOnAnimationCompleted
+Returns whether this state has a transition on `ON_ANIMATION_COMPLETED`.
