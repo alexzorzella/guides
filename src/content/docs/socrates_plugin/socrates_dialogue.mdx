@@ -111,7 +111,22 @@ Initializes the dialogue choice and fades it in after a given amount of time.
 
 ## DialogueSection
 
-## DialogueListener
+## (interface) DialogueListener
+
+Register `DialougeListener`s to `DialogueManager` for that class to be notified of dialogue state changes.
+
+### void OnDialogueBegun
+Notified when a new conversation begins.
+
+### void OnSectionChanged
+Notified when the current conversation advances.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`DialogueSection` newSection|The `DialogueSection` that the `DialogueManager` just changed to||
+
+### void OnDialogueEnded
+Notified when the current conversation ends.
 
 # SocraGUI
 
@@ -159,6 +174,8 @@ Returns the gradient listed in the dictionary with the passed name. If the passe
 Register `DialougeEventListener`s to `DialogueManager` for that class to be notified when the `DialogueManager` reaches a dialogue event. (Most likely used along with TSV written dialogue as dialogue written in code can arbitrarily run code itself)
 
 ### void OnEvent
+
+Notified when `DialogueManager` reaches a dialogue event.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
