@@ -36,33 +36,53 @@ Parses dialogue from the passed .tsv file found in the StreamingAssets/Localizat
 
 ## DialogueManifest
 
-### static List<string> GetSectionReferences(bool excludeSectionsWithANumericalReference = false) {
-Returns the list of referenceIds found in the map of referenceId to section, excluding sections
-with a numerical referenceId if specified to do so.
+### static List\<string\> GetSectionReferences
+Returns the list of referenceIds found in the map of referenceId to section, excluding sections with a numerical referenceId if specified to do so. 
 
-### static string GetUniqueReference() {
-Returns a unique reference not present in the dialogue dictionary
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`bool` excludeSectionsWithANumericalReference|Whether the list will exclude sections with a number as their referenceId|false|
 
-### static DialogueSection GetSectionByReference(string reference) {
-Returns a dialogue section with the passed reference if one exist.
-Makes sure that the dialogues have been parsed. If they haven't,
-it parses them before doing anything
+### static string GetUniqueReference
+Returns a unique reference not present in the dialogue dictionary.
 
-### static void TryAddEntry(string uniqueReference, DialogueSection current) {
-Adds a dialogue section linked with a passed reference. The passed referenceId uniqueReference
-must be unique.
+### static DialogueSection GetSectionByReference
+Returns a dialogue section mapped to the passed reference after making sure that the dialogue files have been parsed. If they haven't, it parses them before trying to return a section. If the passed reference isn't in the dictionary mapping references to dialogue sections, nothing is returned.
 
-### static void AddDialogueVariable(string variableReference, string replaceWith) {
-Adds the passed dialogue variable associated with its replacement to the
-dictionary of dialogue variables.
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` reference|The reference mapped to the desired dialogue section||
 
-### static string ReplaceTokensIn(string input) {
-Replaces all dialogue variables in the input with their
-respective values.
+### static void TryAddEntry
+Adds a dialogue section linked with a passed reference. The passed referenceId uniqueReference must be unique.
 
-### static void UpdateDialogueVariableValue(string variableReference, string newReplacement) {
-Updates the value of the dialogue variable with the passed variable
-reference to be the new replacement.
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` uniqueReference|A unique reference to map the passed dialogue section to||
+|`DialogueSection` current|The dialogue section to add to the manifest||
 
-### static void ClearDialogueVariables() {
+### static void AddDialogueVariable
+Adds the passed dialogue variable associated with its replacement to the dictionary of dialogue variables.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` variableReference|The dialogue variable token id||
+|`string` replaceWith|What it should be replaced with in the dialogue text||
+
+### static string ReplaceTokensIn
+Replaces all dialogue variables in the input with their respective values.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` input|The raw input potentially containing unreplaced dialogue variable tokens||
+
+### static void UpdateDialogueVariableValue
+Updates the value of the dialogue variable with the passed variable reference to be the new replacement.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` variableReference|The dialogue variable token id||
+|`string` newReplacement|The updated value to replace it with in the dialogue text||
+
+### static void ClearDialogueVariables
 Clears the dialogue variables.
