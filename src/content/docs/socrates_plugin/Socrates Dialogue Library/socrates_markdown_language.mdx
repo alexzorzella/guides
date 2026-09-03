@@ -163,6 +163,10 @@ Register `SocratesTextListener`s to instances of `SocratesText` for that class t
 
 ## SocraticAnnotation
 
+SocraticAnnotation is a self-instantiating static singleton. It does not have to be manually dragged into the scene view.
+
+It contains various variables that specify what characters define Socrates Markdown Language as well as shake, wave, delay, and gradient intensities, amplitudes, delays, multipliers, and speeds.
+
 ## FancyText
 
 ### List\<AnnotationToken\> GetAnnotationTokens
@@ -209,6 +213,7 @@ Realigns the annotation tokens according to its markup.
 Locates and removes the markup from the text.
 
 ### private List\<RichTextToken\> DiceRichTextTokens
+
 Locates and returns the markup annotation tokens found in the originally passed text.
 
 ### private void DevourRichTextTokens
