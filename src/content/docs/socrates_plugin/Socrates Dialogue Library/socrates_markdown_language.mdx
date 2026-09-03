@@ -3,6 +3,19 @@ title: Socrates Markdown Language
 description: Socrates Dialogue Library text Markdown documentation
 ---
 
+While writing the names and contents of dialogue, the following tags can be used to add flavor:
+
+|Tag|Description|
+|:---|:---|
+|`[wave,INT]This text will wave[!wave]`|Makes the surrounded text wave with the passed INT overriding the default amplitude|
+|`[shake,INT]This text will shake[!shake]`|Makes the surrounded text shake with the passed INT overriding the default intensity|
+|`This text is displayed before the delay[delay,FLOAT][!delay] and this text is displayed FLOAT seconds after!`|Pauses the text as it appears for FLOAT seconds|
+|`[gradient]This text will have a scrolling gradient specified in DialogueGradient[!gradient]`|Makes the surrounded text have a scrolling gradient (which by default is a rainbow)|
+
+Socrates Markdown works with [TextMeshPro Rich Text](https://docs.unity3d.com/Packages/com.unity.textmeshpro@4.0/manual/RichText.html).
+
+# Functions
+
 ## SocratesText
 
 ### void RegisterListener
