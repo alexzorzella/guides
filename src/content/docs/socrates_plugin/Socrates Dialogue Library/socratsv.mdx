@@ -1,0 +1,88 @@
+---
+title: SocraTSV
+description: Socrates Dialogue Library dialogue tsv parser documentation 
+---
+
+With lots of dialogue, it's important to be able to easily manage it. Instead of writing everything as constructor variables in a script, a .tsv can just be loaded once. Not only are .tsv files easier to manage and keep track of, but localization also becomes easier.
+
+### Tagging
+
+Cells may be tagged per cell, per column, or both. To make the contents of a column default to a certain tag, specify it above! For example, all of the rows in the first column will be treated as if it was following the 'name:' tag, unless otherwise specified. In the third column, all of the rows that aren't empty will be treated as if they were following 'ref:', but any rows that have a different tag will ignore the default, i.e. 'sound:dialogue_2' will not be interpreted as 'ref:sound:dialogue_2', but as 'sound:dialogue_2'.
+
+## Quick Reference
+
+|Tag|Description|
+|:---|:---|
+|`ref:REFERENCE`|Specifies that the line can be referenced via REFERENCE. This is used along with the 'next' and 'option' tags|
+|`name:NAME`|Specifies that line's speaker's name is NAME. It will appear in the name text box when that line is displayed|
+|`content:CONTENT`|Specifies that the line's content is CONTENT|
+|`sound:SOUND_NAME`|Specifies that a sound called SOUND_NAME should be played when the line is displayed (note: make this audio source loop)|
+|`next:REFERENCE`|Specifies the reference pointing to the next line in the conversation. By default, the next line will be the next line in the file, unless that line is empty, in which case the dialogue will end. Specifying nothing after 'next:' will make the dialogue end after that line|
+|`option:TEXT,REFERENCE`|Specifies that the line will have an option with the label 'TEXT' that leads to the dialogue 'REFERENCE'. By using multiple of these, the conversation can branch (note: this is secretly an alias for the next: tag, so if only one option is specified, it won't show up as a single option for that line)|
+|`event:FUNC_NAME(PARAMS)`|Specifies that the dialogue system should send a signal identified with the event tag FUNC_NAME and parameters PARAMS when reaching that line. (These events must be explicitly parsed and handled by a script)|
+
+Anything in curly braces will be looked up from a token/value table specified in the file. For example, if there's a table like the one above, writing \{man\} anywhere will be referencing Rahul. If you reference a token that doesn't exist, it just won't replace it, i.e. 'name:\{nonexistenttoken\}' will just set the speaker's name to '\{nonexistenttoken\}'.
+
+# Scripts 
+
+## DialogueParser
+
+### static DialogueSection ParseFile
+Parses dialogue from the passed .tsv file found in the StreamingAssets/Localization folder.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` filename|The name of the file to parse dialogue from||
+
+## DialogueManifest
+
+### static List\<string\> GetSectionReferences
+Returns the list of referenceIds found in the map of referenceId to section, excluding sections with a numerical referenceId if specified to do so. 
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`bool` excludeSectionsWithANumericalReference|Whether the list will exclude sections with a number as their referenceId|false|
+
+### static string GetUniqueReference
+Returns a unique reference not present in the dialogue dictionary.
+
+### static DialogueSection GetSectionByReference
+Returns a dialogue section mapped to the passed reference after making sure that the dialogue files have been parsed. If they haven't, it parses them before trying to return a section. If the passed reference isn't in the dictionary mapping references to dialogue sections, nothing is returned.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` reference|The reference mapped to the desired dialogue section||
+
+### static void TryAddEntry
+Adds a dialogue section linked with a passed reference. The passed referenceId uniqueReference must be unique.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` uniqueReference|A unique reference to map the passed dialogue section to||
+|`DialogueSection` current|The dialogue section to add to the manifest||
+
+### static void AddDialogueVariable
+Adds the passed dialogue variable associated with its replacement to the dictionary of dialogue variables.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` variableReference|The dialogue variable token id||
+|`string` replaceWith|What it should be replaced with in the dialogue text||
+
+### static string ReplaceTokensIn
+Replaces all dialogue variables in the input with their respective values.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` input|The raw input potentially containing unreplaced dialogue variable tokens||
+
+### static void UpdateDialogueVariableValue
+Updates the value of the dialogue variable with the passed variable reference to be the new replacement.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` variableReference|The dialogue variable token id||
+|`string` newReplacement|The updated value to replace it with in the dialogue text||
+
+### static void ClearDialogueVariables
+Clears the dialogue variables.

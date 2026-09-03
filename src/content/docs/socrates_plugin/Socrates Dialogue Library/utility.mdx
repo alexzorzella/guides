@@ -1,0 +1,21 @@
+---
+title: Utility
+description: Utility classes written for the Socrates Dialogue Library
+---
+
+## LeftClickContinuesDialogue
+
+If this script is present in the scene, left clicking will continue the conversation.
+
+## (interface) DialogueEventListener
+
+Register `DialougeEventListener`s to `DialogueManager` for that class to be notified when the `DialogueManager` reaches a dialogue event. (Most likely used along with TSV written dialogue as dialogue written in code can arbitrarily run code itself)
+
+### void OnEvent
+
+Notified when `DialogueManager` reaches a dialogue event.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` eventTag|The event's tag||
+|`string` parameters|The event's unparsed parameters as a string||

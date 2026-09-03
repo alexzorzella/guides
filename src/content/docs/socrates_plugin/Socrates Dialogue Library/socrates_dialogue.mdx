@@ -1,0 +1,90 @@
+---
+title: Socrates Dialogue
+description: Socrates Dialogue documentation
+---
+
+# Scripts
+
+## DialogueBuilder
+
+### int GetCurrentSectionBuilderCount
+Returns the current number of section builders in the local list of `SectionBuilder`.
+
+### SectionBuilder GetLastSectionBuilder
+Returns the last `SectionBuilder` in the local list of `SectionBuilder`.
+
+### DialogueBuilder WithSection
+Adds the passed `SectionBuilder` to the local list of `SectionBuilder` and returns the instance of `DialogueBuilder`.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`SectionBuilder` sectionBuilder|The `SectionBuilder` to be added to the local list of `SectionBuilder`||
+
+### DialogueBuilder WithSequentialSections
+Adds each `SectionBuilder` in the passed list of `SectionBuilder` to the local list of SectionBuilder. Every section except for the last section gets a NextSection with the next `SectionBuilder`'s referenceId. This makes it so that long, sequential strings of lines don't have to be manually linked together.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`List\<SectionBuilder\>` passedSectionBuilders|The list of `SectionBuilder` to be added, automatically pointing to each other in sequence||
+
+### DialogueBuilder WithSequentialSections
+An overload for `WithSequentialSections` that accepts the `SectionBuilder`s as `params` so that a new list doesn't have to be manually made every time the function is called.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`params SectionBuilder[]` passedSectionBuilders|The `SectionBuilder` array to be passed to `WithSequentialActions` as a list||
+
+### Dialogue Build
+Iterates through the local list of `SectionBuilder` and builds each one. Each built `DialogueSection` is passed to the `DialogueManifest` to be potentially added to the map of `DialogueSection` by reference. Each `NextSection` is then linked to the `DialogueSection`s they're pointing to. These facets are linked here to support circular dependencies. The resulting `Dialogue` is returned.
+
+## SectionBuilder
+
+## DialogueChoice
+
+`DialogueChoice` is the Monobehaviour script for the choice object spawned when a `DialogueSection` has multiple `NextSection`s.
+
+### void Initialize
+Initializes the dialogue choice and fades it in after a given amount of time.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`DialogueManager` dialogueManager|The Dialogue Manager that spawned this object||
+|`string` contents|The text content of the choice||
+|`string` nextSectionReference|The referenceId of the `DialogueSection` that this choice points to||
+|`float` fadeInAfter|The delay (in seconds) before this choice fades in|0|
+|`int` index|The index of this choice among the other choices in its `DialogueSection`|0|
+
+## DialogueSection
+
+### bool HasFacet\<T\>
+#### where T : ZDialogueFacet
+Returns whether the dialogue contains a facet of type T.
+
+### T GetFacet\<T\>
+#### where T : ZDialogueFacet
+Returns the first instance of type T it finds in the list of facets and null if it doesn't find anything.
+
+### List\<T\> GetFacets\<T\>
+#### where T : ZDialogueFacet
+Returns the list of ZDialogueFacet of type T in facets.
+
+### int CountOfFacetType\<T\>
+#### where T : ZDialogueFacet
+Returns the number of ZDialogueFacet of type T in facets.
+
+## (interface) DialogueListener
+
+Register `DialougeListener`s to `DialogueManager` for that class to be notified of dialogue state changes.
+
+### void OnDialogueBegun
+Notified when a new conversation begins.
+
+### void OnSectionChanged
+Notified when the current conversation advances.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`DialogueSection` newSection|The `DialogueSection` that the `DialogueManager` just changed to||
+
+### void OnDialogueEnded
+Notified when the current conversation ends.

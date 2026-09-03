@@ -40,6 +40,10 @@ export default defineConfig({
           label: "Socrates Plugin",
           items: [ { autogenerate: { directory: "socrates_plugin" } } ],
         },
+        {
+          label: "Editorial",
+          items: [ { autogenerate: { directory: "editorial" } } ],
+        },
       ],
     }),
   ],
