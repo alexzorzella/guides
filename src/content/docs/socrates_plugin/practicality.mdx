@@ -1,0 +1,35 @@
+---
+title: Practicality
+description: Documentation for the Practicality script
+---
+
+# AlexianCompression
+
+## static Vector2 ProportionalSize
+Returns the original vector2 scaled by the targetSize, anchored on the passed axis
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`Vector2` originalSize|The original size that will be scaled||
+|`float` targetSize|The reference size to scale the original size by (this is the target width if anchorWidth == true, and vice versa)||
+|`bool` anchorWidth|Whether the targetSize refers to the target width or target height||
+
+## static Sprite CompressSprite
+Returns a compressed version of the sprite with the passed name found in a /Resources/ folder. Smooth compression will average the color of neighboring pixels while quick compression will use the color of the pixels from a grid.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` name|The name of the sprite to compress||
+|`CompressionType` compressionMode|What method will be used to compress the images||
+
+# DontDestroyOnLoad
+
+# IncrementWithOverflow
+
+# SnapToCameraView
+
+# SocratesUtility
+
+# TimedDestroy
+
+# VersionText
