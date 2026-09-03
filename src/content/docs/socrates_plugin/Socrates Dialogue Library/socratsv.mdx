@@ -33,3 +33,36 @@ Parses dialogue from the passed .tsv file found in the StreamingAssets/Localizat
 |Parameter|Description|Default|
 |:---|:---|:---:|
 |`string` filename|The name of the file to parse dialogue from||
+
+## DialogueManifest
+
+### static List<string> GetSectionReferences(bool excludeSectionsWithANumericalReference = false) {
+Returns the list of referenceIds found in the map of referenceId to section, excluding sections
+with a numerical referenceId if specified to do so.
+
+### static string GetUniqueReference() {
+Returns a unique reference not present in the dialogue dictionary
+
+### static DialogueSection GetSectionByReference(string reference) {
+Returns a dialogue section with the passed reference if one exist.
+Makes sure that the dialogues have been parsed. If they haven't,
+it parses them before doing anything
+
+### static void TryAddEntry(string uniqueReference, DialogueSection current) {
+Adds a dialogue section linked with a passed reference. The passed referenceId uniqueReference
+must be unique.
+
+### static void AddDialogueVariable(string variableReference, string replaceWith) {
+Adds the passed dialogue variable associated with its replacement to the
+dictionary of dialogue variables.
+
+### static string ReplaceTokensIn(string input) {
+Replaces all dialogue variables in the input with their
+respective values.
+
+### static void UpdateDialogueVariableValue(string variableReference, string newReplacement) {
+Updates the value of the dialogue variable with the passed variable
+reference to be the new replacement.
+
+### static void ClearDialogueVariables() {
+Clears the dialogue variables.

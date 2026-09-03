@@ -232,61 +232,61 @@ Annotates the text with delays at punctuation marks. Note! Account for annotatio
 
 ## AnnotationToken
 
-## void ShiftCharIndices
+### void ShiftCharIndices
 Shifts the start and end character indices back by the passed value.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
 |`int` by|The number of characters to shift the character indices by||
 
-## void LinkToken
+### void LinkToken
 Links this token to the passed token.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
 |`AnnotationToken` linkedToken|The token to link to this token||
 
-## bool HasDynamicValue
+### bool HasDynamicValue
 Returns whether the annotation has a dynamic value cached.
 
-## string GetDynamicValue
+### string GetDynamicValue
 Returns the raw passed value.
 
-## float GetDynamicValueAsFloat
+### float GetDynamicValueAsFloat
 Returns the dynamic value as a float.
 
 ## AnnotationToken.Builder
 
 `AnnotationToken` has a private constructor. New instances of `AnnotationToken` can only be created through `AnnotationToken.Builder`. It follows a regular builder pattern, with functions that cache local variables that will be passed to `AnnotationToken`'s constructor when calling `Build`.
 
-## Builder WithPassedValue
+### Builder WithPassedValue
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
 |`string` passedValue|The value that was passed to this annotation, i.e. \[keyword,value\]||
 
-## Builder WithStartCharIndex
+### Builder WithStartCharIndex
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
 |`int` startCharIndex|This annotation's starting character index||
 
-## Builder WithEndCharIndex
+### Builder WithEndCharIndex
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
 |`int` endCharIndex|This annotation's start character index||
 
-## Builder IsCloser
+### Builder IsCloser
 Denotes that this annotation is a closer, i.e. \[!keyword\]
 
-## Builder WithRichTextType
+### Builder WithRichTextType
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
 |`SocraticAnnotation.RichTextType` richTextType|This annotation's type of Socratic Rich Text||
 
-## AnnotationToken Build
+### AnnotationToken Build
 Returns a new instance of `AnnotationToken` initialized with the locally cached variables.
 
 ## DialogueGradients
@@ -299,22 +299,3 @@ Returns the gradient listed in the dictionary with the passed name. If the passe
 |Parameter|Description|Default|
 |:---|:---|:---:|
 |`string` gradientName|The name associated with the desired gradient in the gradient map||
-
-# Utility
-
-## LeftClickContinuesDialogue
-
-## DialogueManifest
-
-## (interface) DialogueEventListener
-
-Register `DialougeEventListener`s to `DialogueManager` for that class to be notified when the `DialogueManager` reaches a dialogue event. (Most likely used along with TSV written dialogue as dialogue written in code can arbitrarily run code itself)
-
-### void OnEvent
-
-Notified when `DialogueManager` reaches a dialogue event.
-
-|Parameter|Description|Default|
-|:---|:---|:---:|
-|`string` eventTag|The event's tag||
-|`string` parameters|The event's unparsed parameters as a string||
