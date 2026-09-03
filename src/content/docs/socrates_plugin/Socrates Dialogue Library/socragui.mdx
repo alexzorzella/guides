@@ -1,0 +1,75 @@
+---
+title: SocraGUI
+description: Socrates Dialogue Library dialogue GUI documentation
+---
+
+# SocraGUI
+
+## DialogueManager
+
+### static DialogueManager i
+Returns the static instance of dialogue. If there is none, it loads one, sets the instance to that, and returns the instance. Access the manager using `DialogueManager.i`.
+
+### void RegisterListener
+Registers the passed listener to listen to this dialogue manager's events.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`DialogueListener` newListener|The new listener to notify of dialogue state changes||
+
+### void RegisterEventListener
+Registers the passed listener to be notified when events of the passed tag are notified. If no tag is specified, the listener will be notified of all dialogue events.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`DialogueEventListener` newListener|The new listener to notify of dialogue events||
+|`string` eventTag|The event tag to to only notify the listener of. If nothing is passed, the listener will be notified of all dialogue events|""|
+
+### void StartDialogue
+Starts a new dialogue interaction beginning with the passed starting dialogue section.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`DialogueSection` start|The section to start the conversation at||
+
+### void ContinueConversation
+Ends the dialogue if the passed reference to the next section is null. Otherwise, it counts the number of next sections and returns if there's no conversation going on or if a reference to the next section was passed and there is more than one choice in the current section. If a next dialogue section reference was passed, the corresponding next section is cached from the choices in the current section. Otherwise, if this line just points to one next section, the next section is set to that section. If the current dialogue has finished displaying, it continues the dialogue, moving onto the next section. If it hasn't, it fully displays the dialogue text content.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` nextSectionOverrideReference|An override referenceId to the next section. This is used when encountering a dialogue section with choices||
+
+### void EndDialogue
+Ends the current conversation and notifies all listeners.
+
+### bool Talking
+Returns true when in conversation.
+
+## DialoguePanel
+
+### void OnDialogueBegun
+#### (implemented from DialogueListener)
+Clears the name and content text and sets the panel to visible whenever a conversation is started.
+
+### void OnSectionChanged
+#### (implemented from DialogueListener)
+Sets the name text fully and queues the content text to scroll, populated by new dialogue section
+data whenever the dialogue section changes.
+
+### void OnDialogueEnded
+#### (implemented from DialogueListener)
+Hides the panel when the dialogue ends.
+
+### void OnFullyDisplayed
+#### (implemented from SocratesTextListener)
+Runs whenever the current dialogue section's content is fully displayed for the first time.
+
+### bool OnStandby
+Returns whether the content text has finished displaying.
+
+### void DisplayTextFully
+Forces the content of the passed section to fully display.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`DialogueSection` currentSection|The current section whose content will be displayed fully||

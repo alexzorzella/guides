@@ -1,0 +1,245 @@
+---
+title: Socrates Markdown Language
+description: Socrates Dialogue Library text Markdown documentation
+---
+
+## SocratesText
+
+### void RegisterListener
+Registers a SocratesTextListener to listen for notifications whenever this SocratesText finishes displaying its contents.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`SocratesTextListener` newListener|The listener to be registered to this instance of `SocratesText`||
+
+### void SetDialogueSfx
+Sets the sound effect that plays when a new character is revealed. The sound is not played when the function is called.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` soundName|The name of the new sound that will play when revealing new characters||
+
+### void PlaySoundbite
+Plays a sound with the passed name.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` soundName|The name of the new sound to play||
+
+### bool TextHasBeenDisplayed
+Returns whether all the text has been displayed. Only returns true if there's visible text in the text element.
+
+### void SetText
+Converts the passed raw text to fancy text and sets the text component's text fully, muted by default. Flagging it to scroll won't fully display it immediately and not muting it will make it play the current dialogue sound while the text scrolls.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` rawText|The raw, unprocessed text to set the text content to. This includes TMPro Rich Text and Socrates Markdown Language tags.||
+|`bool` scroll|Whether the text displays fully or displays character by character|false|
+|`bool` muted|Whether the text shouldn't play sound when displaying|true|
+
+### void ClearText
+Clears the current text.
+
+### private void NotifyListenersOfFullyDisplayed
+Notifies all listeners that the text has fully displayed.
+
+### private GetComponents
+Caches the text component attached to the object. If there's
+
+### private void IncrementCharCounter
+Increments the counter, resets the clock for the time left until the next character is displayed, executes parse actions that it's at or has passed that haven't been executed yet, and handles the state of the dialogue audio.
+
+### private void OnCharDelay
+Executes whenever a character delay beings.
+
+### private void OnPostCharDelay
+Executes whenever a character delay ends.
+
+### private static TMP_MeshInfo GetMaterialAtZero
+Gets the material at index zero for a given textInfo.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`TMP_TextInfo` textInfo|The text info to grab the first material from||
+
+### private void SetCharColor
+Sets all four vertices of a given character to a color.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`TextMeshProUGUI` textComponent|The text component containing the character||
+|`int` charIndex|The index of the character||
+|`Color32` color|The color to set the character||
+
+### private Color GetColorOfTopLeft
+Gets color of top left vertex.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`TextMeshProUGUI` textComponent|The text component containing the character||
+|`int` charIndex|The index of the character||
+
+### private Color OverrideAlpha
+Returns the color given with the alpha changed to 0 or 1.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`Color` color|The original color||
+|`bool` hidden|Whether the color should be transparent (0) or opaque (1)||
+
+### private void UpdateTextEmbellishes
+Manages the visible characters and calls the rich text to be updated.
+
+### private void ApplyRichText
+Applies the rich text based on what the parse means.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`TMP_TextInfo` textInfo|The text info to apply the rich text annotations to||
+|`Vector3[]` newVertexPositions|The array of vertex positions to modify for scrolling, shaking, and waving||
+
+### private void ScrollInFromY
+Makes the characters come from below.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`TMP_TextInfo` textInfo|The text info to apply the scroll to||
+|`Vector3[]` vertexPositionsReadFrom|Where the vertices were||
+|`Vector3[]` vertexPositionsWriteTo|Where the vertices will be||
+
+### private void ApplyRichTextShake
+Applies a shake to the passed textInfo given the passed token, using the readFrom and writeTo arrays.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`TMP_TextInfo` textInfo|The text info to apply the shake to||
+|`AnnotationToken` token|The token data with information about its character range and intensity||
+|`Vector3[]` vertexPositionsReadFrom|Where the vertices were||
+|`Vector3[]` vertexPositionsWriteTo|Where the vertices will be||
+
+### private void ApplyRichTextWave
+Applies a wave to the passed textInfo given the passed token, using the readFrom and writeTo arrays.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`TMP_TextInfo` textInfo|The text info to apply the wave to||
+|`AnnotationToken` token|The token data with information about its character range and intensity||
+|`Vector3[]` vertexPositionsReadFrom|Where the vertices were||
+|`Vector3[]` vertexPositionsWriteTo|Where the vertices will be||
+
+### private void ApplyRichTextGradient
+Applies a gradient to the passed textInfo given the passed token, using the readFrom and writeTo arrays.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`TMP_TextInfo` textInfo|The text info to apply the gradient to||
+|`AnnotationToken` token|The token data with information about its character range and gradient||
+|`int` totalVisibleCharacters|The current number of visible characters||
+
+### private static Vector2[] FromVector4Arr
+Returns an array of `Vector2` consisting of the (x,y) components from the passed array of `Vector4`.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`Vector4[]` input|The input array of `Vector4` to flatten||
+
+## (interface) SocratesTextListener
+
+## SocraticAnnotation
+
+## FancyText
+
+### List\<AnnotationToken\> GetAnnotationTokens
+Returns the list of annotations in the text.
+
+### void ClearDisplayTimes
+Clears the cache of the character display times.
+
+### void LogDisplayTime
+Logs a character display time.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`float` time|The character display time to be added to the local list of times||
+
+### float GetCharDisplayTime
+Returns the timestamp that a character will or was revealed, accounting for the display time per character and delay annotations.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` index|The index of the character whose time will be returned||
+
+### private void AnnotateByMarkup
+Caches annotations according to markup found in the text.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` startAt|The index of the text character to start annotating at|0|
+
+### private void LinkTokens
+Pairs opening and closing annotation tokens together.
+
+### private void CleanText
+Cleans the text by realigning its annotation indices to account for the annotation markup being eaten, eats the annotation markup, and annotates it by its punctuation by default.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`bool` noPunctuationAnnotation|Whether delays will automatically get added for punctuation|false|
+
+### private void RealignAnnotationTokenIndices
+Realigns the annotation tokens according to its markup.
+
+### private void DiceAndDevourRichTextTokens
+Locates and removes the markup from the text.
+
+### private List\<RichTextToken\> DiceRichTextTokens
+Locates and returns the markup annotation tokens found in the originally passed text.
+
+### private void DevourRichTextTokens
+Removes the markup annotation tokens from the originally passed text.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`List\<RichTextToken\>` richTextTokens|The collection of `RichTextToken` to remove from the text||
+
+### private void AnnotateByPunctuation
+Annotates the text with delays at punctuation marks. Note! Account for annotation by punctuation while testing or initialize fancy text with the 'noPunctuationAnnotation' flag.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` startAt|The index of the text character to start annotating at|0|
+
+## AnnotationToken
+
+## AnnotationToken.Builder
+
+## DialogueGradients
+
+A self-instantiating singleton object that stores the gradients used by the dialogue system. To add more gradients to the collection of available gradients, make a publicly facing gradient and add it in `Initialize` (or make one in the `Initialize` function itself, but in this instance the Unity editor provides a window that makes it easy to edit the gradient.)
+
+### Gradient GetGradient
+Returns the gradient listed in the dictionary with the passed name. If the passed name has no gradient listed, the first gradient in the dictionary is returned. If there are no gradients in the dictionary, the function returns null.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` gradientName|The name associated with the desired gradient in the gradient map||
+
+# Utility
+
+## LeftClickContinuesDialogue
+
+## DialogueManifest
+
+## (interface) DialogueEventListener
+
+Register `DialougeEventListener`s to `DialogueManager` for that class to be notified when the `DialogueManager` reaches a dialogue event. (Most likely used along with TSV written dialogue as dialogue written in code can arbitrarily run code itself)
+
+### void OnEvent
+
+Notified when `DialogueManager` reaches a dialogue event.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` eventTag|The event's tag||
+|`string` parameters|The event's unparsed parameters as a string||
