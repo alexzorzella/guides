@@ -28,6 +28,25 @@ An object with this script attached will call `DontDestroyOnLoad(gameObject)` on
 
 # IncrementWithOverflow
 
+## static void Run
+Increments the passed currentIndex with overflow, safe for looping indices pointing to lists. Uses an out parameter.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` currentIndex|The current index to be returned altered but still within the bounds of the collection||
+|`int` totalCount|The number of elements in the collection||
+|`int` change|The amount to add to the current index||
+|`out int` result|The result, an `out` parameter||
+
+## static int Run
+Increments the passed currentIndex with overflow, safe for looping indices pointing to lists. Returns the result.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` currentIndex|The current index to be returned altered but still within the bounds of the collection||
+|`int` totalCount|The number of elements in the collection||
+|`int` change|The amount to add to the current index||
+
 # SnapToCameraView
 
 # SocratesUtility
