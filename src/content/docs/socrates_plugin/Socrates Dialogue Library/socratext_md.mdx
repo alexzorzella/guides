@@ -1,5 +1,5 @@
 ---
-title: Socrates Markdown Language
+title: SocraText Markdown Language
 description: Socrates Dialogue Library text Markdown documentation
 ---
 
@@ -16,14 +16,14 @@ Socrates Markdown works with [TextMeshPro Rich Text](https://docs.unity3d.com/Pa
 
 # Scripts
 
-## SocratesText
+## SocraText
 
 ### void RegisterListener
-Registers a SocratesTextListener to listen for notifications whenever this SocratesText finishes displaying its contents.
+Registers a SocraTextListener to listen for notifications whenever this SocraText finishes displaying its contents.
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|`SocratesTextListener` newListener|The listener to be registered to this instance of `SocratesText`||
+|`SocraTextListener` newListener|The listener to be registered to this instance of `SocraText`||
 
 ### void SetDialogueSfx
 Sets the sound effect that plays when a new character is revealed. The sound is not played when the function is called.
@@ -157,13 +157,13 @@ Returns an array of `Vector2` consisting of the (x,y) components from the passed
 |:---|:---|:---:|
 |`Vector4[]` input|The input array of `Vector4` to flatten||
 
-## (interface) SocratesTextListener
+## (interface) SocraTextListener
 
-Register `SocratesTextListener`s to instances of `SocratesText` for that class to be notified when the `SocratesText` has been fully displayed.
+Register `SocraTextListener`s to instances of `SocraText` for that class to be notified when the `SocraText` has been fully displayed.
 
-## SocraticAnnotation
+## SocraTextAnnotation
 
-SocraticAnnotation is a self-instantiating static singleton. It does not have to be manually dragged into the scene view.
+SocraTextAnnotation is a self-instantiating static singleton. It does not have to be manually dragged into the scene view.
 
 It contains various variables that specify what characters define Socrates Markdown Language as well as shake, wave, delay, and gradient intensities, amplitudes, delays, multipliers, and speeds.
 
@@ -284,7 +284,7 @@ Denotes that this annotation is a closer, i.e. \[!keyword\]
 
 |Parameter|Description|Default|
 |:---|:---|:---:|
-|`SocraticAnnotation.RichTextType` richTextType|This annotation's type of Socratic Rich Text||
+|`SocraTextAnnotation.RichTextType` richTextType|This annotation's type of Socratic Rich Text||
 
 ### AnnotationToken Build
 Returns a new instance of `AnnotationToken` initialized with the locally cached variables.
