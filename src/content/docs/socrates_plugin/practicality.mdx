@@ -1,0 +1,76 @@
+---
+title: Practicality
+description: Documentation for the Practicality script
+---
+
+# AlexianCompression
+
+## static Vector2 ProportionalSize
+Returns the original vector2 scaled by the targetSize, anchored on the passed axis
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`Vector2` originalSize|The original size that will be scaled||
+|`float` targetSize|The reference size to scale the original size by (this is the target width if anchorWidth == true, and vice versa)||
+|`bool` anchorWidth|Whether the targetSize refers to the target width or target height||
+
+## static Sprite CompressSprite
+Returns a compressed version of the sprite with the passed name found in a /Resources/ folder. Smooth compression will average the color of neighboring pixels while quick compression will use the color of the pixels from a grid.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`string` name|The name of the sprite to compress||
+|`CompressionType` compressionMode|What method will be used to compress the images||
+
+# DontDestroyOnLoad
+
+An object with this script attached will call `DontDestroyOnLoad(gameObject)` on `Start`.
+
+# IncrementWithOverflow
+
+## static void Run
+Increments the passed currentIndex with overflow, safe for looping indices pointing to lists. Uses an out parameter.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` currentIndex|The current index to be returned altered but still within the bounds of the collection||
+|`int` totalCount|The number of elements in the collection||
+|`int` change|The amount to add to the current index||
+|`out int` result|The result, an `out` parameter||
+
+## static int Run
+Increments the passed currentIndex with overflow, safe for looping indices pointing to lists. Returns the result.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` currentIndex|The current index to be returned altered but still within the bounds of the collection||
+|`int` totalCount|The number of elements in the collection||
+|`int` change|The amount to add to the current index||
+
+# SnapToCameraView
+
+An object in the scene will be moved to the bottom right relative to the camera's view at `Start`.
+
+# SocratesUtility
+
+## static string CentsToString
+Returns the passed cents as a string formatted $DD.CC.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` cents|The dollar amount in cents||
+
+## static string FormatTimeHms
+Returns the passed time as a string formatted HH:MM:SS.
+
+|Parameter|Description|Default|
+|:---|:---|:---:|
+|`int` time|The time in seconds||
+
+# TimedDestroy
+
+The object is destroyed after `time` seconds.
+
+# VersionText
+
+An object with a TextMeshProUGUI component with this script attached will set the text component's text to the application version during `Start`.
