@@ -11,13 +11,13 @@ Your Unity License is required to do some Git CI. To find your license, search y
 
 <Steps>
     1. Open Unity Hub
-    
+
     2. Click 'Licenses' on the list of tabs on the left
-    
+
     3. Click '+ Add License'
-    
+
     4. Click 'Get a free personal license', even if you already have one. If you already have one, it won't override your old one.
-    
+
     5. Search for `Unity_lic.ulf` again
 </Steps>
 
@@ -45,20 +45,20 @@ GitHub has support for a continuous development/continuous deployment workflow. 
                 - Library/
                 - ...
         </FileTree>
-    
+
     2. Follow the steps above to find your Unity License
-    
+
     3. Navigate to your GitHub repository's action secrets found in `Settings -> Secrets and Variables -> Actions`
-    
+
     4. Add a new action secret by clicking 'New Repository Secret'. For these actions to work, you need three, named the following: `UNITY_EMAIL`, `UNITY_PASSWORD`, and `UNITY_LICENSE`. The value of the first (what you put in the value field) is the email account associated with your Unity account. The second is the password to your Unity account, and the third is the entire contents of the license file (.ulf or .alf, depending if you have Personal or Pro).
-    
+
         <Aside type="caution">
             After you save a repository secret, GitHub's settings UI does not let you read its value back. You can replace or delete it.
-            
+
             GitHub attempts to redact secrets from workflow logs, but redaction is not guaranteed. Encoded or otherwise transformed values may still appear.
-            
+
             Any action or build code given access to a secret can use it or send it elsewhere, even without printing it. Review third-party actions and run secret-bearing builds only on code you trust. Do not modify workflows to expose credentials to untrusted pull-request code.
-            
+
             If a secret is exposed, revoke or rotate it and remove any logs or artifacts containing it.
         </Aside>
 </Steps>
@@ -71,16 +71,16 @@ The following actions will trigger whenever you make a pull request to main (or 
     <TabItem label="Unity Build">
         ```yaml title="unity-build.yml"
         name: Unity Build
-        
+
         on:
           pull_request:
             branches: [ main ]
-        
+
         jobs:
           build:
             name: Build for Windows
             runs-on: ubuntu-latest
-                
+
             steps:
               - name: Free Disk Space
                 uses: jlumbroso/free-disk-space@v1.3.1
@@ -89,10 +89,10 @@ The following actions will trigger whenever you make a pull request to main (or 
                   dotnet: false
                   haskell: true
                   large-packages: true
-                  
+
               - name: Checkout
                 uses: actions/checkout@v4
-        
+
               - name: Cache Library
                 uses: actions/cache@v4
                 with:
@@ -102,7 +102,7 @@ The following actions will trigger whenever you make a pull request to main (or 
                   key: UnityBuildCache-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
                   restore-keys: |
                     UnityBuildCache-
-                    
+
               - name: Build Project
                 uses: game-ci/unity-builder@v4
                 env:
@@ -112,7 +112,7 @@ The following actions will trigger whenever you make a pull request to main (or 
                 with:
                   unityVersion: UNITY_VERSION_HERE
                   targetPlatform: TARGET_PLATFORM_HERE # (StandaloneWindows64 for a Windows Build)
-        
+
               - name: Upload Build
                 uses: actions/upload-artifact@v4
                 with:
@@ -123,16 +123,16 @@ The following actions will trigger whenever you make a pull request to main (or 
     <TabItem label="Unity Tests">
         ```yaml title="unity-tests.yml"
         name: Unity Build
-        
+
         on:
           pull_request:
             branches: [ main ]
-        
+
         jobs:
           build:
             name: Run Unit Tests
             runs-on: ubuntu-latest
-                
+
             steps:
               - name: Free Disk Space
                 uses: jlumbroso/free-disk-space@v1.3.1
@@ -141,38 +141,38 @@ The following actions will trigger whenever you make a pull request to main (or 
                   dotnet: false
                   haskell: true
                   large-packages: true
-                
+
               - name: Checkout
                 uses: actions/checkout@v4
-        
-                - name: Cache Library
+
+              - name: Cache Library
                   uses: actions/cache@v4
                   with:
-                    path: |
+                  path: |
                       Library/PackageCache
-                    key: UnityTestsPackageCache-${{ hashFiles('Packages/manifest.json') }}
-                    restore-keys: |
+                  key: UnityTestsPackageCache-${{ hashFiles('Packages/manifest.json') }}
+                  restore-keys: |
                       UnityTestsPackageCache-
-          
-                - name: Edit Mode Tests
+
+              - name: Edit Mode Tests
                   uses: game-ci/unity-test-runner@v4
                   env:
-                    UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-                    UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-                    UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+                  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+                  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+                  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
                   with:
-                    testMode: EditMode
-                    
-                - name: Play Mode Tests
+                  testMode: EditMode
+
+              - name: Play Mode Tests
                   uses: game-ci/unity-test-runner@v4
                   env:
-                    UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-                    UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-                    UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+                  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+                  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+                  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
                   with:
-                    testMode: PlayMode
+                  testMode: PlayMode
         ```
-        
+
         <Aside>
             Don't include a test action block if you don't have any of those tests (i.e. if you don't have any Play Mode tests, don't have the action try and run them).
         </Aside>
