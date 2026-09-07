@@ -60,6 +60,8 @@ GitHub has support for a continuous development/continuous deployment workflow. 
             Any action or build code given access to a secret can use it or send it elsewhere, even without printing it. Review third-party actions and run secret-bearing builds only on code you trust. Do not modify workflows to expose credentials to untrusted pull-request code.
 
             If a secret is exposed, revoke or rotate it and remove any logs or artifacts containing it.
+
+            See GitHub's [secure use reference](https://docs.github.com/en/actions/reference/security/secure-use) for guidance on handling secrets and trusting third-party actions.
         </Aside>
 </Steps>
 
