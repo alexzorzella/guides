@@ -52,8 +52,14 @@ GitHub has support for a continuous development/continuous deployment workflow. 
     
     4. Add a new action secret by clicking 'New Repository Secret'. For these actions to work, you need three, named the following: `UNITY_EMAIL`, `UNITY_PASSWORD`, and `UNITY_LICENSE`. The value of the first (what you put in the value field) is the email account associated with your Unity account. The second is the password to your Unity account, and the third is the entire contents of the license file (.ulf or .alf, depending if you have Personal or Pro).
     
-        <Aside>
-            GitHub secrets cannot be edited or viewed, they can only be overwritten. Whenever an action uses a secret, it replaces it with *** in the logs, so don't worry about security.
+        <Aside type="caution">
+            After you save a repository secret, GitHub's settings UI does not let you read its value back. You can replace or delete it.
+            
+            GitHub attempts to redact secrets from workflow logs, but redaction is not guaranteed. Encoded or otherwise transformed values may still appear.
+            
+            Any action or build code given access to a secret can use it or send it elsewhere, even without printing it. Review third-party actions and run secret-bearing builds only on code you trust. Do not modify workflows to expose credentials to untrusted pull-request code.
+            
+            If a secret is exposed, revoke or rotate it and remove any logs or artifacts containing it.
         </Aside>
 </Steps>
 
