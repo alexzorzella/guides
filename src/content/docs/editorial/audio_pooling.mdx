@@ -5,10 +5,15 @@ description: Audio pooling
 
 import { Aside } from "@astrojs/starlight/components";
 
-Something more akin to a traditional Audio Manager where the sources are pooled in a static singleton implemented using MultiAudioSource would look like this:
+Something more akin to a traditional Audio Manager where the sources are pooled in a static singleton implemented using `MultiAudioSource` would look like this:
+
+Create an `AudioPool` prefab with the `AudioPool` component attached and place it in `Assets/Resources`. The singleton loads and instantiates this prefab the first time a source is requested. Include `using UnityEngine;` and `using System.Collections.Generic;` in the scripts below where needed.
+
+These examples use the [MultiAudioSource API from release v26.9.3](https://github.com/alexzorzella/Socrates_Plugin/blob/v26.9.3/Assets/Scripts/Audio%20Management/MultiAudioSource.cs). `FromResource` accepts a loop setting; `FromResources` accepts a mixer name but has no loop parameter.
 
 ```csharp
 using System.Collections.Generic;
+using UnityEngine;
 
 public class AudioPool : MonoBehaviour {
 	static AudioPool _i;
@@ -52,7 +57,7 @@ public class AudioPool : MonoBehaviour {
 			}
 		}
 
-		MultiAudioSource newSource = MultiAudioSource.FromResource(_i.gameObject, name);
+		MultiAudioSource newSource = MultiAudioSource.FromResource(i.gameObject, name);
 		audioPool[name].Add(newSource);
 		return newSource;
 	}
@@ -68,7 +73,7 @@ Maybe this audio pool is going to be extremely advanced, having lifetimes for ea
 If creating a singleton audio pool isn't appealing and the part that seems useful is use of a dictionary to easily access the MultiAudioSources is the goal, then use can go from looking like this:
 
 ```csharp
-public class Cat : Monobehaviour {
+public class Cat : MonoBehaviour {
     MultiAudioSource eatAudio;
     MultiAudioSource meowAudio;
     // Script declares a large number of audio sources here
@@ -76,9 +81,9 @@ public class Cat : Monobehaviour {
     
     public void Start() {
         eatAudio = MultiAudioSource.FromResource(gameObject, "eat");
-        eatAudio = MultiAudioSource.FromResource(gameObject, "meow");
+        meowAudio = MultiAudioSource.FromResource(gameObject, "meow");
         // Script initializes a large number of audio sources here 
-        eatAudio = MultiAudioSource.FromResource(gameObject, "sleep");
+        sleepAudio = MultiAudioSource.FromResource(gameObject, "sleep");
     }
 }
 ```
@@ -86,7 +91,7 @@ public class Cat : Monobehaviour {
 to a class with its own local dictionary
 
 ```csharp
-public class Cat : Monobehaviour {
+public class Cat : MonoBehaviour {
     readonly Dictionary<string, MultiAudioSource> audioPool = new();
     
     public void Start() {
@@ -111,8 +116,8 @@ public class LocalAudioPool {
     }
     
     public void AddSourceWithMultipleClips(GameObject gameObject, string pathPrefix, int count, string audioMixer = "SFX", float volume = 1F, float pitch = 1F, float spatialBlend = 0, float minDistance = 0, float maxDistance = 0, float dopplerLevel = 1F) {
-        if(!audioPool.ContainsKey(path)) {
-            audioPool[path] = MultiAudioSource.FromResources(gameObject, pathPrefix, count, loop, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
+        if(!audioPool.ContainsKey(pathPrefix)) {
+            audioPool[pathPrefix] = MultiAudioSource.FromResources(gameObject, pathPrefix, count, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
         }
     }
  
@@ -154,7 +159,7 @@ public class LocalAudioPool {
     public void PlayRandom(string name) { GetSource(name)?.PlayRandom(); }
     public void PlayOnlyIfDone(string name) { GetSource(name)?.PlayOnlyIfDone(); }
     
-    class Builder() {
+    public class Builder {
         readonly Dictionary<string, MultiAudioSource> audioPool = new();
    
         public Builder AddSourceWithSingleClip(GameObject gameObject, string path, bool loop = false, string audioMixer = "SFX", float volume = 1F, float pitch = 1F, float spatialBlend = 0, float minDistance = 0, float maxDistance = 0, float dopplerLevel = 1F) {
@@ -166,8 +171,8 @@ public class LocalAudioPool {
         }
         
         public Builder AddSourceWithMultipleClips(GameObject gameObject, string pathPrefix, int count, string audioMixer = "SFX", float volume = 1F, float pitch = 1F, float spatialBlend = 0, float minDistance = 0, float maxDistance = 0, float dopplerLevel = 1F) {
-            if(!audioPool.ContainsKey(path)) {
-                audioPool[path] = MultiAudioSource.FromResources(gameObject, pathPrefix, count, loop, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
+            if(!audioPool.ContainsKey(pathPrefix)) {
+                audioPool[pathPrefix] = MultiAudioSource.FromResources(gameObject, pathPrefix, count, audioMixer, volume, pitch, spatialBlend, minDistance, maxDistance, dopplerLevel);
             }
             
             return this;
@@ -181,16 +186,16 @@ public class LocalAudioPool {
 Now this is looking very nice. The only constructor for `LocalAudioPool` is private, so nobody can call `new LocalAudioPool()`. To get a new instance of `LocalAudioPool`, the script that wants it must go through the builder by using `new LocalAudioPool.Builder()`.
 
 ```csharp
-public class Cat : Monobehaviour {
+public class Cat : MonoBehaviour {
     LocalAudioPool audioPool;
     
     public void Start() {
         LocalAudioPool.Builder audioPoolBuilder = new LocalAudioPool.Builder();
         
-        audioPoolBuilder.AddSourceWithSingleClip("eat");
-        audioPoolBuilder.AddSourceWithSingleClip("meow");
+        audioPoolBuilder.AddSourceWithSingleClip(gameObject, "eat");
+        audioPoolBuilder.AddSourceWithSingleClip(gameObject, "meow");
         // Script adds a lot of clips to the builder here 
-        audioPoolBuilder.AddSourceWithSingleClip("sleep");
+        audioPoolBuilder.AddSourceWithSingleClip(gameObject, "sleep");
         
         audioPool = audioPoolBuilder.Build();
     }
