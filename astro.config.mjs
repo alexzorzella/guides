@@ -6,6 +6,7 @@ import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
+  // base: '/guides/src/content/',
   integrations: [
     starlight({
       title: "High Quality Docs",
@@ -48,5 +49,5 @@ export default defineConfig({
     }),
   ],
 
-  adapter: cloudflare(),
+  adapter: cloudflare({imageService:"compile", prerenderEnvironment:"node"}),
 });
