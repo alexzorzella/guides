@@ -113,7 +113,7 @@ Run the program. If psycopg isn't finding PostgreSQL, try
         }
         ```
 
-        Review any warnings from `pg_dump`. A file's existence does not prove that the backup succeeded; a failed dump can leave a partial file. Timestamped names and the existence check help avoid overwrites, but do not guarantee unique files when backups run concurrently. Give concurrent jobs separate output paths.
+        Review any warnings from `pg_dump`. A file's existence does not prove that the backup succeeded. A failed dump can leave a partial file. Timestamped names and the existence check help avoid overwrites, but do not guarantee unique files when backups run concurrently. Give concurrent jobs separate output paths.
 
     6. Separately create an isolated, empty test database named `db_name_restore_test` before running the restore below. Do not use your production database as the restore target. In the same PowerShell session, run:
 
