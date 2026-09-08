@@ -173,7 +173,7 @@ Force delete a branch (caution)
 git branch -D branch_name
 ```
 
-After a pull request to main, start a fresh branch from the updated `main`. Start with a clean working tree and a configured upstream for `main`; stop if any command fails.
+After a pull request to main, start a fresh branch from the updated `main`. Start with a clean working tree and a configured upstream for `main`. Stop if any command fails.
 
 ```bash
 git checkout main
@@ -182,7 +182,7 @@ git checkout -b yourname/new_branch_name
 git push --set-upstream origin HEAD
 ```
 
-`HEAD` pushes the current branch to the matching branch name on `origin`. [`--ff-only`](https://git-scm.com/docs/git-pull#Documentation/git-pull.txt---ff-only) refuses to merge divergent history; inspect the divergence rather than bypassing it.
+`HEAD` pushes the current branch to the matching branch name on `origin`. [`--ff-only`](https://git-scm.com/docs/git-pull#Documentation/git-pull.txt---ff-only) refuses to merge divergent history. Inspect the divergence rather than bypassing it.
 
 ### Rebasing
 
@@ -209,9 +209,7 @@ When rebasing, git essentially asks "What would have happened if everything that
 
         Repeat for each conflict stop until the rebase finishes. To cancel instead, use `git rebase --abort`.
 
-    3. Inspect the completed result with `git status`, `git log`, and a diff against the base branch.
-
-    4. If you only rewrote unpublished commits, push normally with `git push --set-upstream origin HEAD`. If you rewrote published commits, coordinate with anyone using the branch before replacing them:
+    3. If you only rewrote unpublished commits, push normally with `git push --set-upstream origin HEAD`. If you rewrote published commits, coordinate with anyone using the branch before replacing them:
 
         ```bash
         git push --force-with-lease origin HEAD
