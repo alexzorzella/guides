@@ -7,17 +7,21 @@ import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
   // base: '/guides/src/content/',
+  site: "https://guides.highqualitybackup.com",
   integrations: [
     starlight({
       title: "High Quality Docs",
-      customCss: [ 
-          './src/styles/custom.css', 
+      editLink: {
+           baseUrl: 'https://github.com/alexzorzella/guides/edit/main/',
+         },
+      customCss: [
+          './src/styles/custom.css',
       ],
       social: [
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/withastro/starlight",
+          href: "https://github.com/alexzorzella/guides",
         },
       ],
       sidebar: [
