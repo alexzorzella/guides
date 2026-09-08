@@ -7,10 +7,6 @@ import { Aside } from "@astrojs/starlight/components";
 
 Something more akin to a traditional Audio Manager where the sources are pooled in a static singleton implemented using `MultiAudioSource` would look like this:
 
-Create an `AudioPool` prefab with the `AudioPool` component attached and place it in `Assets/Resources`. The singleton loads and instantiates this prefab the first time a source is requested. Include `using UnityEngine;` and `using System.Collections.Generic;` in the scripts below where needed.
-
-These examples use the [MultiAudioSource API from release v26.9.3](https://github.com/alexzorzella/Socrates_Plugin/blob/v26.9.3/Assets/Scripts/Audio%20Management/MultiAudioSource.cs). `FromResource` accepts a loop setting; `FromResources` accepts a mixer name but has no loop parameter.
-
 ```csharp
 using System.Collections.Generic;
 using UnityEngine;
