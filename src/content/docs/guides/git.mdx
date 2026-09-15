@@ -67,6 +67,48 @@ import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
                 chmod 644 ~/.ssh/id_ed25519.pub
                 ```
         </Steps>
+        
+        If you need multiple SSH keys on the same operating system, pass a filename when making the SSH key and point an alias to that file in the SSH config file:
+        
+        ```bash
+        ssh-keygen -t ed25519 -C ameliasotheraccount@email.com -f ~/.ssh/unique_key_filename
+        ```
+        
+        Then open the SSH config file
+        
+        ```bash
+        nvim ~/.ssh/config
+        ```
+        
+        and make aliases for the different keys
+        
+        ```bash title="~/.ssh/config"
+        Host github.com
+            Hostname github.com
+            User git
+            IdentityFile ~/.ssh/id_ed25519
+            IdentitiesOnly yes
+        
+        Host alt.github.com
+            Hostname github.com
+            User git
+            IdentityFile ~/.ssh/unique_key_filename
+            IdentitiesOnly yes
+        ```
+        
+        test the connection with
+        
+        ```bash
+        ssh -T git@alt.github.com
+        ```
+        
+        and make sure to clone repositories using
+        
+        ```bash
+        git clone git@alt.github.com:amelialt/repo.git
+        ```
+        
+        You can find an in-depth guide on setting up multiple SSH keys on the same machine <a target="_blank" href="https://medium.com/@chancedev093/managing-multiple-ssh-keys-for-github-and-gitlab-7d77604f8773">here</a>.
 </TabItem>
 <TabItem label="Windows">
     ### Setting Up SSH On <a target="_blank" href={"https://www.youtube.com/watch?v=Oc7Cin_87H4"}>Windows</a>
