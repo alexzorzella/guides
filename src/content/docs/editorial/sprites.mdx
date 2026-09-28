@@ -1,0 +1,72 @@
+---
+title: Sprites
+description: Sprites
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+## Introduction
+
+The vast majority of 2D games have visuals, and the vast majority of those are going to use sprites. I have had to do a lot of spritework over the years. I have used different software with different benefits, but the first main crossroads that a developer will encounter is the question
+
+## What's the best way to import sprites?
+
+At first, the solution may seem straightforward. In whatever art software you're using, just click Export, but there's already a choice to be made there: whether you're exporting a sprite sheet or individual frames. For one of my first games that I made with sprite visuals, I opened Photoshop on a computer at my middle school and drew each frame on different layers. I then exported those frames, layer by layer, into my project. I only had a handful of sprites (seriously - I had around five for the player character and a couple for the buildings in the game) so doing that worked.
+
+After that, I was working on a game that both required a tilemap for the levels and some visuals for the player character. Somehow, someone had gotten me a pixel art tool on <a href="https://humblebundle.com/" target="_blank">Humble Bundle</a> called <a href="https://pyxeledit.com/" target="_blank">Pyxel Edit</a>, which I discovered, downloaded, and used for years. Pyxel Edit was pretty good, especially for making tilesets. It also had some basic animation features that got the job done for the visuals I needed. For the entire time I used Pyxel Edit, I would export the animations as individual frames, because I needed the frames to create the animations. When I needed to export a tilemap, it would just be a single image.
+
+It was fine. The Unity animation system is fine. It got the job done.
+
+One day, I discovered <a href="https://www.aseprite.org/" target="_blank">Aseprite</a>. Aseprite had a lot of animation features that Pyxel Edit didn't, and I switched over completely a couple of years after first purchasing it. At first, I was still just exporting the frames as individual pngs, and I didn't do a lot of animation, so I kept using Pyxel Edit. I just didn't see why I would learn a new piece of software if I had a strategy that worked, but over the years, my games got bigger, and there were more visuals to handle. There was something that was missing, something I couldn't put my finger on. I figured out what was missing when first working on <a href="https://store.steampowered.com/app/3445850/Friday_Night_Knockout/" target="_blank">Friday Night Knockout</a>. Friday Night Knockout is a fighting game, and so it has a lot of visuals. Laura, the first character I worked on, had over two hundred frames of animation, not counting the ones for the hirelings that she would summon.
+
+The problem with the workflow that I had was an X/Y problem.
+
+You see, my thought process was like this:
+
+<Steps>
+    1. I need animations
+    
+    2. The only way to have animations in Unity is to create them
+    
+    3. When you create animations in Unity, you need frames to put in the animations
+    
+    4. To have frames for my animations, I need to export them from the software
+</Steps>
+
+So my workflow ended up like this:
+
+<Steps>
+    1. Create the animations in the art software
+    
+    2. Export the animation frames as raster images
+    
+    3. Create an Animator in Unity
+    
+    4. Create the Animations in Unity, drag the frames in, and set the correct framerate for each animation
+    
+    5. Link the animations together in the Animator
+    
+    6. Create various variables and set the transitions in the Animator to transition under certain conditions
+</Steps>
+
+This was okay when I had a character with a couple of animations, but the fighting game made it abundantly clear what that workflow lacked.
+
+1. Each new animation required me to manually add a transition to every single other animation that it could transition to (fighting games have dozens of animations per characters)
+
+2. Even if I had the patience to link them together, I would need to set the transition conditions up, which would mean I would have to be manually managing dozens, maybe nearly hundreds of transitions and conditions (fighting games require precise control over when and how the animations transition from and to each other)
+
+3. If I changed the number of frames and/or the framerate of an animation, I would have to re-export the frames, clear the frames and/or framerate of the existing Animation in Unity, and then put the new ones in (fighting game animations are frequently updated, especially in the beginning when balancing the moves for the first time)
+
+4. Animation Events are added manually and only support primitives (fighting game animations play sounds, create hitboxes, alter hurtboxes, and can do anything from creating an object in the world to changing post-processing effects)
+
+What I wanted was a workflow that looked like this:
+
+<Steps>
+    1. Create and/or edit the animations in the art software
+    
+    2. Save
+    
+    3. The animations were in the game
+</Steps>
+
+## Runtime Sprite Creation
