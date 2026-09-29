@@ -7,7 +7,7 @@ import { Steps } from "@astrojs/starlight/components";
 
 ## Introduction
 
-The vast majority of 2D games have visuals, and the vast majority of those are going to use sprites. I have had to do a lot of spritework over the years. I have used different software with different benefits, but the first main crossroads that a developer will encounter is the question
+The vast majority of 2D games have visuals, and the vast majority of those are going to use sprites. I have had to do a lot of spritework over the years. I have used different software with different benefits, but the first main crossroads is how the sprites get imported into the project.
 
 ## What's the best way to import sprites?
 
@@ -18,8 +18,6 @@ After that, I was working on a game that both required a tilemap for the levels 
 It was fine. The Unity animation system is fine. It got the job done.
 
 One day, I discovered <a href="https://www.aseprite.org/" target="_blank">Aseprite</a>. Aseprite had a lot of animation features that Pyxel Edit didn't, and I switched over completely a couple of years after first purchasing it. At first, I was still just exporting the frames as individual pngs, and I didn't do a lot of animation, so I kept using Pyxel Edit. I just didn't see why I would learn a new piece of software if I had a strategy that worked, but over the years, my games got bigger, and there were more visuals to handle. There was something that was missing, something I couldn't put my finger on. I figured out what was missing when first working on <a href="https://store.steampowered.com/app/3445850/Friday_Night_Knockout/" target="_blank">Friday Night Knockout</a>. Friday Night Knockout is a fighting game, and so it has a lot of visuals. Laura, the first character I worked on, had over two hundred frames of animation, not counting the ones for the hirelings that she would summon.
-
-The problem with the workflow that I had was an X/Y problem.
 
 You see, my thought process was like this:
 
@@ -44,9 +42,7 @@ So my workflow ended up like this:
     
     4. Create the Animations in Unity, drag the frames in, and set the correct framerate for each animation
     
-    5. Link the animations together in the Animator
-    
-    6. Create various variables and set the transitions in the Animator to transition under certain conditions
+    5. Add the Animations to the Animator and create transitions between them to trigger under certain conditions using Unity Animator Parameters
 </Steps>
 
 This was okay when I had a character with a couple of animations, but the fighting game made it abundantly clear what that workflow lacked.
@@ -59,14 +55,142 @@ This was okay when I had a character with a couple of animations, but the fighti
 
 4. Animation Events are added manually and only support primitives (fighting game animations play sounds, create hitboxes, alter hurtboxes, and can do anything from creating an object in the world to changing post-processing effects)
 
+5. Every time I updated any animations whatsoever, I would need to re-export the frames (this creates two sources of truth, which isn't great, and requires me to set each individual frame's Import Settings if they're new)
+
 What I wanted was a workflow that looked like this:
 
 <Steps>
     1. Create and/or edit the animations in the art software
     
     2. Save
-    
-    3. The animations were in the game
 </Steps>
 
+Of course, this seems impossible, but it's not. This is the actual workflow that I use for Friday Night Knockout.
+
+The problem with the workflow that I had was an X/Y problem. I thought that the only way to get animations into Unity was by manually creating an Animator and specifying transitions. If there was a file format that would automatically update a set of Unity Animations based on the animations in the file itself and if I had an alternative to the Unity Animator transitions, then I wouldn't ever have to touch a single Unity Animation or Animator.
+
+Fortunately, the file format already exists: there's a Unity package called the <a href="https://docs.unity3d.com/Packages/com.unity.2d.aseprite@1.0/manual/index.html" target="_blank">Aseprite Importer</a>. Unity projects with this package installed will recognize them. If the Aseprite file has tagged frame sequences, they're recognized as Animations and will be automatically kept in the Animator associated with that Aseprite file.
+
+This alone is incredibly useful. Even if you just create an Animator using the one Unity creates for the Aseprite file, it solves various problems: there's only one source of truth for the frames, you don't have to keep each frame's Import Settings, each character only takes up one entry in the folder they're saved in instead of an arbitrary number equal to the number of frames they contain, and the Unity Animations are kept up to date.
+
+Now all that's left is to remove the necessity for using the Unity Animator GUI. We'll still use the Animator itself, but purely to play the animations.
+
+This is more involved. If you're looking for somewhere to start, go <a href="https://github.com/alexzorzella/Socrates_Plugin/tree/alexz/custom_animation_system/Assets/Scripts/Animator" target="_blank">here</a>.
+
 ## Runtime Sprite Creation
+
+If you want to create sprites in code, there are some things to note. This is useful for when you have static sprites that need color changes, or you have composite sprites that you create by layering different sprites over each other.
+
+Here's a generic example of a function that loops through the pixels in a sprite. In this generic loop, you can see that the Texture2D coordinate system differs from what someone might expect: first, (0, 0) isn't the top rightmost pixel, but the bottom leftmost, and second, the sprite's origin isn't necessarily (0, 0), but is defined by (rect.x, rect.y).
+
+```csharp
+    public static void Foo(){
+        Sprite sprite = ResourceLoader.LoadSprite("sprite_name");
+        Texture2D texture = sprite.texture;
+        Rect rect = sprite.rect;
+
+        int minY = (int)rect.y;
+        int minX = (int)rect.x;
+
+        int height = (int)rect.height;
+        int width = (int)rect.width;
+
+        for (int y = height - 1; y >= minY; y--) {
+            for (int x = minX; x < width; x++) {
+                Color pixelColor = texture.GetPixel(x, y);
+
+                if (y == height - 1) {
+                    // The loop is looking at the first row, which is the topmost row
+                    // from the sprite's perspective
+                } else {
+                    
+                }
+            }
+        }
+    }
+```
+
+You'll find that a sprite's origin isn't at (0, 0) when taking a look at a sprite cut out from a sprite sheet (except for if that sprite happens to align with the origin). When storing a sprite that's a part of a sprite sheet, Unity doesn't cut out those pixels from the original sprite sheet and keep it as its own independent sprite. Instead, it stores the original sprite sheet along with some information on the sprite's location and size (among other things). When it's prompted to display a sprite, it then uses that information to only display that slice of the sheet instead of the entire thing.
+
+## Shader Based Palette
+
+If you want to swap a sprite's color using a material based approach, you'll want to take the shader route. This is the route I took in Friday Night Knockout. I have a few animated characters with different palettes, and I have no need to keep the sprites in a catalogue. <a href="https://github.com/alexzorzella/Socrates_Plugin/blob/main/Assets/Materials/ColorSwapShader.shader" target="_blank">This</a> specific shader may not be the best solution, but it gets the job done. It uses a basic 32 color palette and a reference index that points to the palette row it'll replace the original colors with.
+
+```shaderlab
+Shader "Custom/ReplaceColor" {
+    Properties {
+        _MainTex ("Texture", 2D) = "white" {}
+        _Threshold ("Threshold", Range(0,0.05)) = 0.01
+        _ColorPalette ("Color Palette", 2D) = "white" {}
+        _CurrentPalette ("Current Palette", Int) = 0
+        _AlphaCutoff ("Alpha Cutoff", Range(0,1)) = 0.5
+    }
+    SubShader {
+        Tags { "Queue"="Transparent" "RenderType"="Transparent" }
+        Blend SrcAlpha OneMinusSrcAlpha
+        ZWrite On
+        ZTest LEqual
+        Cull Off
+        LOD 100
+
+        Pass {
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #include "UnityCG.cginc"
+
+            sampler2D _MainTex;
+            sampler2D _ColorPalette;
+            float _Threshold;
+            float _CurrentPalette;
+            float _AlphaCutoff;
+
+            struct appdata_t {
+                float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
+            };
+
+            struct v2f {
+                float2 uv : TEXCOORD0;
+                float4 vertex : SV_POSITION;
+            };
+
+            v2f vert (appdata_t v) {
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = v.uv;
+                return o;
+            }
+
+            fixed4 frag (v2f i) : SV_Target {
+                fixed4 texColor = tex2D(_MainTex, i.uv);
+
+                // Discard fully transparent pixels for crisp edges
+                if (texColor.a < _AlphaCutoff)
+                    discard;
+
+                if (_CurrentPalette == 0)
+                    return texColor;
+
+                float paletteWidth = 32;
+                float paletteHeight = 32;
+
+                for (float x = 0; x < paletteWidth; x++) {
+                    float midU = (x + 0.5) / paletteWidth;
+                    float fromV = 1;
+                    float toV = 1 - (_CurrentPalette / paletteHeight) - (0.5 / paletteHeight);
+
+                    float4 sourceColor = tex2D(_ColorPalette, float2(midU, fromV));
+                    if (distance(texColor.rgb, sourceColor.rgb) < _Threshold) {
+                        float4 newColor = tex2D(_ColorPalette, float2(midU, toV));
+                        return fixed4(newColor.rgb, texColor.a);
+                    }
+                }
+
+                return texColor;
+            }
+            ENDCG
+        }
+    }
+}
+```
