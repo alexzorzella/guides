@@ -1,0 +1,43 @@
+---
+title: Scheme Testing
+description: A three function library to make your Scheming life easier.
+---
+
+Alex's Bookmobile is a three function library to make your Scheming life easier.
+
+```scheme
+; Prints 'x' and then a new line
+(define (print x) (begin (display x) (newline)))
+
+; A simple test function asserting whether items are equal.
+; (assert-equal? 'Your Test's Name' the_expected_value the_actual_value)
+(define (assert-equal? test-name expected actual)
+  (begin 
+       (display test-name) 
+       (display " - " )
+       (if (equal? expected actual) 
+               (display "Passed")
+               (begin 
+                    (display "Failed: Expected ")
+                    (display expected) (display " but was ")
+                    (display actual)))
+       (newline)
+  )
+)
+
+(define (assert-empty? test-name actual)
+  (begin 
+       (display test-name) 
+       (display " - " )
+       (if (null? actual) 
+               (display "Passed")
+               (begin 
+                    (display "Failed: Expected empty ")
+                    (display " but was ")
+                    (display actual)))
+       (newline)
+  )
+)
+
+; (assert-equal? "test_1" 1 1)
+```
