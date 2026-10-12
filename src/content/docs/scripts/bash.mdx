@@ -1,0 +1,47 @@
+---
+title: Bash
+description: Shell scripts are awesome!
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+## Why
+
+Shell scripts are useful in various situations:
+
+If you frequently run
+
+1. The same command repeatedly
+2. A variety of commands repeatedly
+3. A command with various parameters repeatedly
+4. A sequence of commands every time you're working on a new computer
+
+Yes, using reverse-i-search with Ctrl+R is fine, but you're a software engineer: the more time you save, the better!
+
+Just because you've got the commands that you want in your history doesn't mean that you're good, either. If you work on more than one computer, you're going to have to either memorize all of those commands and re-type them every time or have them somewhere to copy and paste from. Even if you use a single computer, you're bound to restart it eventually. Those commands aren't going to be there forever.
+
+## How
+
+<Steps>
+    
+    1. Create your shell script `foo.sh`
+    
+    2. Include the [shebang](https://medium.com/@jcroyoaun/a-deeper-view-into-the-shebang-for-linux-scripting-4a26395df49d) at the top: `#!/usr/bin/env bash`
+    
+    3. Write the script (find documentation [here](https://devdocs.io/bash/))
+    
+    4. Run `chmod u+x ./foo.sh` to make the script executable
+    
+    5. Commit to git and continue with peace of mind
+    
+</Steps>
+
+If you want autocomplete options for a certain shell script, you can add the following to your ~/.bashrc (don't forget to `source ~/.bashrc` after updating it!). This will add autocomplete for a script called `script_name`, and the options will be `foo bar baz`.
+
+```bash
+_script_name_completion() {
+local cur="${COMP_WORDS[COMP_CWORD]}"
+COMPREPLY=( $(compgen -W "foo bar baz" -- "$cur") )
+}
+complete -F _script_name_completion ./script_name.sh
+```
