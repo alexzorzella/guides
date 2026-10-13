@@ -14,10 +14,10 @@ wsl.exe --install
 ```
 
 <Aside type="note">
-    To install a specific distribution, use 
-    
-    ```bash 
-    wsl.exe --install distribution 
+    To install a specific distribution, use
+
+    ```bash
+    wsl.exe --install distribution
     ```
 </Aside>
 
@@ -26,6 +26,10 @@ View your distributions with
 ```bash
 wsl --list --verbose
 ```
+
+<Aside type="caution">
+    The following will permanantly delete all data, settings, and software associated with this distribution.
+</Aside>
 
 Unregister a distribution using
 
@@ -40,14 +44,6 @@ wsl --update
 ```
 
 Install C/C++ essentials with
-
-```bash
-sudo apt install gcc
-sudo apt install g++
-sudo apt install make
-```
-
-or just
 
 ```bash
 sudo apt install build-essential

@@ -25,12 +25,12 @@ Run the installer and install PostgreSQL Server and Command Line Tools (psql)
 #### Part Two: Setting Up the Database
 
 <Steps>
-    1. Run PowerShell as admin 
-    
+    1. Run PowerShell as admin
+
     2. Run `psql -U postgres` to open the postgres shell If that doesn't work, try `& "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres` (or restart your computer and  try again)
-    
+
     3. Run `CREATE DATABASE db_name;` to create a new database called `db_name`
-    
+
     4. Run `\c db_name` to navigate to said database 5. To import a SQL database, run `\i 'C:/Users/monalisa/Documents/Path/To/Database/File.db.sql'`
 </Steps>
 
@@ -42,30 +42,30 @@ Run `\dt` to query all the tables in your database, and SQL commands to query yo
 
 <Steps>
     1. Run
-    
+
         ```ps1
         CREATE USER username WITH PASSWORD 'password';
         ```
-        
-        where `username` matches your system username. Check `C:/Users` to view the users. Your account will be listed there. 
-    
+
+        where `username` matches your system username. Check `C:/Users` to view the users. Your account will be listed there.
+
     2. Run
-    
+
         ```ps1
         ALTER USER username WITH SUPERUSER;
         ```
         to give the newly created account `SUPERUSER` status
-    
+
     3. Restart postgres or restart your computer
-    
-    4. To update your password, run 
-    
+
+    4. To update your password, run
+
         ```ps1
         ALTER USER username WITH PASSWORD 'new_password';
         ```
-    
+
     5. To explicitly grant connection access, run
-    
+
         ```
         GRANT CONNECT ON DATABASE db_name TO username;
         ```
@@ -79,13 +79,13 @@ Run the program. If psycopg isn't finding PostgreSQL, try
 
 <Steps>
     1. Press <kbd>Win</kbd> + <kbd>r</kbd>
-    
+
     2. Type `sysdm.cpl` and hit OK
-    
+
     3. Navigate to `Advanced > Environment Variables`
-    
+
     4. Navigate to `System Variables > Path > Edit > New > Add`, and paste `C:\Program Files\PostgreSQL\18\bin`. If you're using a different version of PostgreSQL, make sure that the path is accurate, i.e. a user using PostgreSQL 17 will paste `C:\Program Files\PostgreSQL\17\bin`. If you installed PostgreSQL in a different location other than `C:\Program Files`, use that path instead
-    
+
     5. Restart postgres or restart your computer
 </Steps>
 
@@ -93,17 +93,41 @@ Run the program. If psycopg isn't finding PostgreSQL, try
 
 <Steps>
     1. Open `postgresql.conf`
-    
+
     2. Uncomment and update the following line: `log_statement = 'all'`. This will make postgres log all queries, including ones from external connections.
-    
-    3. Run `Powershell` as admin 
-    
+
+    3. Run `Powershell` as admin
+
     4. Run `cd "C:/Users/monalisa/Documents/Path/To/Dump/Location"` to navigate to the location you desire to save the `.dump` files
-    
-    5. Run `pg_dump -U postgres -d db_name --params > filename.dump` to save a `.dump` file with the specifications outlined by `--params`
-    
-    6. You can find the `pg_dump` documentation [here](https://www.postgresql.org/docs/current/app-pgdump.html)
-    
+
+    5. Run the following in PowerShell to write a custom-format backup directly to a timestamped file, without shell redirection. Replace `db_name` with your database name.
+
+        ```powershell
+        $backup = "db_name-$(Get-Date -Format 'yyyyMMdd-HHmmss-fffffff').dump"
+        if (Test-Path -LiteralPath $backup) {
+            throw "Backup file already exists: $backup"
+        }
+        pg_dump -U postgres -d db_name -Fc -f $backup
+        if ($LASTEXITCODE -ne 0) {
+            throw "pg_dump failed. Do not use the possibly partial backup: $backup"
+        }
+        ```
+
+        Review any warnings from `pg_dump`. A file's existence does not prove that the backup succeeded. A failed dump can leave a partial file. Timestamped names and the existence check help avoid overwrites, but do not guarantee unique files when backups run concurrently. Give concurrent jobs separate output paths.
+
+    6. Separately create an isolated, empty test database named `db_name_restore_test` before running the restore below. Do not use your production database as the restore target. In the same PowerShell session, run:
+
+        ```powershell
+        pg_restore -U postgres -d db_name_restore_test --exit-on-error $backup
+        if ($LASTEXITCODE -ne 0) {
+            throw "pg_restore failed. The test database may be only partially restored."
+        }
+        ```
+
+        After a successful restore, check the expected tables and data in the test database. If the restore fails, investigate the error and recreate the empty test database before retrying.
+
+        See the official [`pg_dump`](https://www.postgresql.org/docs/current/app-pgdump.html) and [`pg_restore`](https://www.postgresql.org/docs/current/app-pgrestore.html) documentation.
+
     7. Find the log file using `SELECT pg_current_logfile();` when in the postgres shell
 
         <Aside type="tip" icon="starlight">
