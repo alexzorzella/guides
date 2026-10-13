@@ -43,18 +43,23 @@ Here some of my favorite Vim keybinds:
 |/|Open find (use \c in the find query for case insensitivity)|
 |w|Move forward one word|
 |b|Move back one word|
-|v|Visual mode (select)|
+|v|Enter visual mode (select)|
 |Shift+v|Enter visual line mode (select line)|
 |Ctrl+v|Enter blockwise visual mode|
+|Esc|Return to normal mode|
 |u|Undo|
-|y|Yank (copy)|
-|p|Paste|
-|x|Delete (copies the deleted contents into your paste buffer)|
-|d+(any navigation key)|Delete|
+|y|Yank into paste buffer (copy)|
+|p|Paste from paste buffer|
+|x|Copies contents into paste buffer and delete|
+|d(any navigation key)|Delete|
 |dd|Delete line|
 |n|Next search result|
+|i(encapsulating character, i.e. \})]|Inside 'character'|
+|t(character)|Until next instance of 'character'|
 |gg|Go to top|
 |Shift+g|Go to bottom|
+|"+p|Paste from system paste buffer|
+|"+y|Yank to system paste buffer|
 
 ## IdeaVim
 
@@ -89,5 +94,22 @@ nmap fe <Action>(SearchEverywhere)
 nmap fr <Action>(RecentFiles)
 nmap fm <Action>(FileMenu)
 nmap fn <Action>(NewElement)
+vmap fc <Action>(CommentByLineComment)
 nmap fc <Action>(CommentByLineComment)
+nmap ff <Action>(Find)
+nmap fw <Action>(SelectInProjectView)
+nmap fh <Action>(HideSideWindows)
+nmap fs <Action>(SplitVertically)
+nmap fu <Action>(Unsplit)
+nmap ft <Action>(TerminalNewPredefinedSession)
+nmap fy <Action>($Copy)
+vmap fy <Action>($Copy)
+nmap fp <Action>($Paste)
+vmap fp <Action>($Paste)
+```
+
+Apply the changes without closing the editor by running
+
+```bash
+:source ~/.ideavimrc
 ```
