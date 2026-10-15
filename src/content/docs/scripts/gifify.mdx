@@ -17,6 +17,21 @@ RESET='\033[0m'
 
 OPTS=`getopt --options hs:e:i:f:x:zo:p:rt --longoptions help,start:,end:,input:,framerate:,scale:,optimize,output:,speed:,repeat,ping-pong -n 'parse-options' -- "$@"`
 
+help() {
+  echo -e "gifify --help --start <00:00:00> --end <00:00:00> --input <string> --framerate <int> --scale <int> --optimize --output <string> --speed <float> --repeat --ping-pong"
+  echo -e "-h | --help       : Help"
+  echo -e "-s | --start      : The start timestamp of the gif in HH:MM:SS.MMM format"
+  echo -e "-e | --end        : The end timestamp of the gif in HH:MM:SS.MMM format"
+  echo -e "-i | --input      : The name of the input file. If you are using --repeat, use the desired file extension, (i.e. .mp4)"
+  echo -e "-f | --framerate  : The framerate of the output gif"
+  echo -e "-x | --scale      : The horizontal resolution of the gif (the vertical resolution will scale)"
+  echo -e "-z | --optimize   : Whether ffmpeg will optimize the gif creation. Recommended"
+  echo -e "-o | --output     : The name of the output file. Not used when using --repeat. If no output filename is passed, the output file will be the input's filename with the .gif extension"
+  echo -e "-p | --speed      : The speed of the final gif"
+  echo -e "-r | --repeat     : Enable to repeat the process for all files with the extension passed to --input"
+  echo -e "-t | --ping-pong  : Enable to get a gif that reverses to the begining when it gets to the end"
+}
+
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 
 eval set -- "$OPTS"
@@ -34,7 +49,7 @@ PING_PONG=false
 
 while true; do
   case "$1" in
-    -h | --help ) echo "gifify --help --start <00:00:00> --end <00:00:00> --input <string> --framerate <int> --scale <int> --optimize --output <string> --speed <float> --repeat --ping-pong" ;;
+    -h | --help ) help; exit ;;
     -s | --start ) START=$2; shift; shift ;;
     -e | --end ) END=$2; shift; shift ;;
     -i | --input ) INPUT=$2; shift; shift ;;
@@ -83,6 +98,10 @@ fi
 if $REPEAT; then
   COMMAND="${COMMAND} __OUTPUT__"
 else
+  if [ -z "$OUTPUT" ]; then
+    OUTPUT="${INPUT%.*}.gif"
+  fi
+  
   COMMAND="${COMMAND} ${OUTPUT}"
 fi
 
