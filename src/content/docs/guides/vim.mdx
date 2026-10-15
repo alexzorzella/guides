@@ -90,23 +90,25 @@ I like
 ```bash
 set relativenumber
 
-nmap fe <Action>(SearchEverywhere)
-nmap fr <Action>(RecentFiles)
-nmap fm <Action>(FileMenu)
-nmap fn <Action>(NewElement)
-vmap fc <Action>(CommentByLineComment)
-nmap fc <Action>(CommentByLineComment)
-nmap ff <Action>(Replace)
-nmap fw <Action>(SelectInProjectView)
-nmap fh <Action>(HideSideWindows)
-nmap fs <Action>(SplitVertically)
-nmap fu <Action>(Unsplit)
-nmap ft <Action>(TerminalNewPredefinedSession)
-nmap fy <Action>($Copy)
-vmap fy <Action>($Copy)
-nmap fp <Action>($Paste)
-vmap fp <Action>($Paste)
-nmap f" <Action>(RenameElement)
+let mapleader=" "
+
+nmap <leader>e <Action>(SearchEverywhere)
+nmap <leader>r <Action>(RecentFiles)
+nmap <leader>m <Action>(FileMenu)
+nmap <leader>n <Action>(NewElement)
+vmap <leader>c <Action>(CommentByLineComment)
+nmap <leader>c <Action>(CommentByLineComment)
+nmap <leader>f <Action>(Replace)
+nmap <leader>w <Action>(SelectInProjectView)
+nmap <leader>h <Action>(HideSideWindows)
+nmap <leader>s <Action>(SplitVertically)
+nmap <leader>u <Action>(Unsplit)
+nmap <leader>t <Action>(TerminalNewPredefinedSession)
+nmap <leader>y <Action>($Copy)
+vmap <leader>y <Action>($Copy)
+nmap <leader>p <Action>($Paste)
+vmap <leader>p <Action>($Paste)
+nmap <leader>" <Action>(RenameElement)
 ```
 
 Apply the changes without closing the editor by running

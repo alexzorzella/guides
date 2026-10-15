@@ -15,7 +15,7 @@ sudo apt install ffmpeg
 GREEN='\033[0;32m'
 RESET='\033[0m'
 
-OPTS=`getopt --options hs:e:i:f:x:zo:p:r --longoptions help,start:,end:,input:,framerate:,scale:,optimize,output:,speed:,repeat -n 'parse-options' -- "$@"`
+OPTS=`getopt --options hs:e:i:f:x:zo:p:rt --longoptions help,start:,end:,input:,framerate:,scale:,optimize,output:,speed:,repeat,ping-pong -n 'parse-options' -- "$@"`
 
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 
@@ -30,10 +30,11 @@ OPTIMIZE=false
 OUTPUT="output.gif"
 SPEED=1
 REPEAT=false
+PING_PONG=false
 
 while true; do
   case "$1" in
-    -h | --help ) echo "gifify --help --start <00:00:00> --end <00:00:00> --input <string> --framerate <int> --scale <int> --optimize --output <string> --speed <float> --repeat" ;;
+    -h | --help ) echo "gifify --help --start <00:00:00> --end <00:00:00> --input <string> --framerate <int> --scale <int> --optimize --output <string> --speed <float> --repeat --ping-pong" ;;
     -s | --start ) START=$2; shift; shift ;;
     -e | --end ) END=$2; shift; shift ;;
     -i | --input ) INPUT=$2; shift; shift ;;
@@ -43,6 +44,7 @@ while true; do
     -o | --output ) OUTPUT="$2"; shift; shift ;;
     -p | --speed ) SPEED="$2"; shift; shift ;;
     -r | --repeat ) REPEAT=true; shift;;
+    -t | --ping-pong ) PING_PONG=true; shift;;
     -- ) shift; break ;;
     * ) break ;;
   esac
@@ -72,7 +74,11 @@ else
   OPTIONS="${OPTIONS}[s0]palettegen[p];[s1][p]paletteuse"
 fi
 
-COMMAND="${COMMAND} -vf \"${OPTIONS}\""
+if $PING_PONG; then
+  COMMAND="${COMMAND} -filter_complex \"[0:v]reverse[r];[0:v][r]concat=n=2:a=0[fv];[fv]${OPTIONS}\""
+else
+  COMMAND="${COMMAND} -vf \"${OPTIONS}\""
+fi
 
 if $REPEAT; then
   COMMAND="${COMMAND} __OUTPUT__"
@@ -92,7 +98,7 @@ if $REPEAT; then
 else
     echo -e "Running ${COMMAND}"
     eval "${COMMAND}"
-fi  
+fi
 ```
 
 For terminal autocomplete:
@@ -100,7 +106,7 @@ For terminal autocomplete:
 ```bash title="~/.bashrc"
 _gifify_completion() {
   local cur="${COMP_WORDS[COMP_CWORD]}"
-  COMPREPLY=( $(compgen -W "--help -h --start -s --end -e --input -i --framerate -f --scale -x --optimize -z --output -o --speed -p --repeat -r" -- "$cur") )
+  COMPREPLY=( $(compgen -W "--help -h --start -s --end -e --input -i --framerate -f --scale -x --optimize -z --output -o --speed -p --repeat -r --ping-pong -t" -- "$cur") )
 }
 complete -F _gifify_completion gifify
 ```
