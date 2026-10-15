@@ -1,0 +1,106 @@
+---
+title: gifify
+description: Gif bash script
+---
+
+gifify requires ffmpeg
+
+```bash
+sudo apt install ffmpeg
+```
+
+```bash title="gifify"
+#!/usr/bin/env bash
+
+GREEN='\033[0;32m'
+RESET='\033[0m'
+
+OPTS=`getopt --options hs:e:i:f:x:zo:p:r --longoptions help,start:,end:,input:,framerate:,scale:,optimize,output:,speed:,repeat -n 'parse-options' -- "$@"`
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+
+eval set -- "$OPTS"
+
+START=
+END=
+INPUT="input.mp4"
+FRAMERATE=20
+SCALE=512
+OPTIMIZE=false
+OUTPUT="output.gif"
+SPEED=1
+REPEAT=false
+
+while true; do
+  case "$1" in
+    -h | --help ) echo "gifify --help --start <00:00:00> --end <00:00:00> --input <string> --framerate <int> --scale <int> --optimize --output <string> --speed <float> --repeat" ;;
+    -s | --start ) START=$2; shift; shift ;;
+    -e | --end ) END=$2; shift; shift ;;
+    -i | --input ) INPUT=$2; shift; shift ;;
+    -f | --framerate ) FRAMERATE="$2"; shift; shift ;;
+    -x | --scale ) SCALE="$2"; shift; shift ;;
+    -z | --optimize ) OPTIMIZE=true; shift;;
+    -o | --output ) OUTPUT="$2"; shift; shift ;;
+    -p | --speed ) SPEED="$2"; shift; shift ;;
+    -r | --repeat ) REPEAT=true; shift;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+COMMAND="ffmpeg"
+
+if [ -n "$START" ]; then
+  COMMAND="${COMMAND} -ss ${START}"
+fi
+
+if [ -n "$END" ]; then
+  COMMAND="${COMMAND} -to ${END}"
+fi
+
+if $REPEAT; then
+  COMMAND="${COMMAND} -i __INPUT__"
+else
+  COMMAND="${COMMAND} -i ${INPUT}"
+fi
+
+OPTIONS="fps=${FRAMERATE},setpts=PTS/${SPEED},scale=${SCALE}:-1:flags=lanczos,split[s0][s1];"
+
+if [ "${OPTIMIZE}" ]; then
+  OPTIONS="${OPTIONS}[s0]palettegen=max_colors=128:stats_mode=diff[p];[s1][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle"
+else
+  OPTIONS="${OPTIONS}[s0]palettegen[p];[s1][p]paletteuse"
+fi
+
+COMMAND="${COMMAND} -vf \"${OPTIONS}\""
+
+if $REPEAT; then
+  COMMAND="${COMMAND} __OUTPUT__"
+else
+  COMMAND="${COMMAND} ${OUTPUT}"
+fi
+
+if $REPEAT; then
+  for file in *$INPUT; do
+    if [ -f "$file" ]; then
+      FINAL_COMMAND=`echo "${COMMAND/"__INPUT__"/"$file"}"`
+      FINAL_COMMAND=`echo "${FINAL_COMMAND/"__OUTPUT__"/"${file%.*}.gif"}"`
+      echo -e "Running ${FINAL_COMMAND}"
+      eval "${FINAL_COMMAND}"
+    fi
+  done
+else
+    echo -e "Running ${COMMAND}"
+    eval "${COMMAND}"
+fi  
+```
+
+For terminal autocomplete:
+
+```bash title="~/.bashrc"
+_gifify_completion() {
+  local cur="${COMP_WORDS[COMP_CWORD]}"
+  COMPREPLY=( $(compgen -W "--help -h --start -s --end -e --input -i --framerate -f --scale -x --optimize -z --output -o --speed -p --repeat -r" -- "$cur") )
+}
+complete -F _gifify_completion gifify
+```
