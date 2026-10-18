@@ -11,14 +11,14 @@ Here's what mine looks like. If you're copying this file,
 
 <Steps>
 
-    1. Replace `YOUR_GITHUB_USERNAME` with your GitHub username
+    1. Replace `\<github_username\>` with your GitHub username
     
-    2. Replace `0123456789+YOUR_GITHUB_USERNAME@users.noreply.github.com` with your GitHub email
+    2. Replace `\<github_noreply_email\>` with your GitHub noreply email. It should look like 012345789+username@users.noreply.github.com
     
-    3. Replace `YOUR_NAME` with whatever you want your Git branch names to be preceded with.
-      
-        For example, if your name is Amelia Qux, then you could precede your branches with `ameliaq`. If your name was Ellen Ripley, you could precede your branches with `eripley`.
-
+    3. Replace `\<branch_prefix\>` with whatever you want your Git branch names to be preceded with. For example, if your name is Katherine Johnson, then you could precede your branches with `kathyj` or `kjohnson`. If your name is Socrates, then you could precede your branches with `socrates`. If you don't want your branch names preceded by anything, remove \<branch_prefix\> as well as the / that comes after it. You may also delete the `cko` alias, as it exists to make it easy to checkout to branches preceded by your branch prefix. Branch prefixes exist to make identifying who's mainly working on a branch easy.
+    
+    4. Replace `\<email\>` with your email
+    
 </Steps>
     
 ```bash title=".gitconfig"
@@ -28,38 +28,40 @@ Here's what mine looks like. If you're copying this file,
 	process = git-lfs filter-process
 	required = true
 [user]
-	name = YOUR_GITHUB_USERNAME
-	email = 0123456789+YOUR_GITHUB_USERNAME@users.noreply.github.com
+	name = <github_username>
+	email = <github_noreply_email>
 	
 [alias]
+cf = "!f() { nvim ~/.gitconfig; }; f;"
 br = branch
 co = checkout
+cko = "!f() { git checkout <branch_prefix>/\"$1\"; }; f \"$@\""
+
+bait  = "!f() { git checkout -b <branch_prefix>/\"$1\"; git push --set-upstream origin <branch_prefix>/\"$1\"; }; f \"$@\""
+
 st = status
 z-prune = pull --prune
 z-current = branch --show-current
 log-pretty = log --all --decorate --oneline --graph
 
-cko = "!f() { git checkout YOUR_NAME/\"$1\"; }; f \"$@\""
-
-cf = "!f() { emacs ~/.gitconfig; }; f;"
+amend = "!f() { git commit --amend; git push -f; }; f \"$@\""
 
 whoami = "!f() { name=$(git config user.name); email=$(git config user.email); echo \"$name [$email]\"; }; f;"
+whereami = remote -v
 
 zsc = "!f() { git commit -p -m \"$1\"; git push; }; f;"
 
 wave = "!f() { git add -A; git commit -m \"$1\"; git push; }; f \"$@\""
+co-wave = "!f() { git add -A; git commit -m \"$1\" -m \"Co-authored-by: $2 <$3>\"; git push; }; f \"$@\""
 
-bait  = "!f() { git checkout -b YOUR_NAME/\"$1\"; git push --set-upstream origin YOUR_NAME/\"$1\"; }; f \"$@\""
+chmod-x = update-index --chmod=+x
 
-reel = "!f() { git co main; git pull --prune; z-git-delete-gone-branches.sh; git bait $1; }; f \"$@\""
+formatting = "!f() { git wave "Formatting"; }; f \"$@\""
 
-gen-ssh = "!f() { ssh-keygen -t ed25519 -C YOUR_EMAIL; cat ~/.ssh/id_ed25519.pub; }; f;"
+gen-ssh = "!f() { ssh-keygen -t ed25519 -C <email>; cat ~/.ssh/id_ed25519.pub; }; f;"
 mask-ssh = "!f() { chmod 600 ~/.ssh/id_ed25519; chmod 644 ~/.ssh/id_ed25519.pub; }; f;"
 ping-ssh = "!f() { ssh -T git@github.com; }; f;"
 
-set-origin = "!f() { git remote set-url origin \"$1\"; }; f \"$@\""
-set-upstream = "!f() { git remote set-url upstream \"$1\"; }; f \"$@\""
-rig = set-origin
-
-whereami = remote -v
+update-remote = "!f() { git remote set-url origin \"$1\"; }; f \"$@\""
+rig = update-remote
 ```
