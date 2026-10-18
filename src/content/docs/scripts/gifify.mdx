@@ -3,10 +3,10 @@ title: gifify
 description: Gif bash script
 ---
 
-gifify requires ffmpeg
+gifify requires ffmpeg and fzf
 
 ```bash
-sudo apt install ffmpeg
+sudo apt install ffmpeg -y && sudo apt install fzf -y
 ```
 
 ```bash title="gifify"
@@ -36,13 +36,13 @@ if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 
 eval set -- "$OPTS"
 
-START=
-END=
-INPUT="input.mp4"
+START=""
+END=""
+INPUT=""
 FRAMERATE=20
 SCALE=512
 OPTIMIZE=false
-OUTPUT="output.gif"
+OUTPUT=""
 SPEED=1
 REPEAT=false
 PING_PONG=false
@@ -64,6 +64,14 @@ while true; do
     * ) break ;;
   esac
 done
+
+if [ -z $INPUT ]; then
+  INPUT=$(fzf)
+  
+  if [ -z $INPUT ]; then
+    exit
+  fi
+fi
 
 COMMAND="ffmpeg"
 
@@ -101,7 +109,7 @@ else
   if [ -z "$OUTPUT" ]; then
     OUTPUT="${INPUT%.*}.gif"
   fi
-  
+
   COMMAND="${COMMAND} ${OUTPUT}"
 fi
 
