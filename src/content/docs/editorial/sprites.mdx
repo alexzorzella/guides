@@ -3,12 +3,6 @@ title: Sprites
 description: Sprites
 ---
 
-import { Steps, Aside } from "@astrojs/starlight/components";
-
-<Aside>
-    This editorial isn't complete.
-</Aside>
-
 ## Introduction
 
 The vast majority of 2D games have visuals, and the vast majority of those are going to use sprites. I have had to do a lot of spritework over the years. I have used different software with different benefits, but the first main crossroads is how the sprites get imported into the project.
@@ -83,9 +77,9 @@ This is more involved. If you're looking for somewhere to start, go <a href="htt
 
 ## Runtime Sprite Creation
 
-If you want to create sprites in code, there are some things to note. This is useful for when you have static sprites that need color changes, or you have composite sprites that you create by layering different sprites over each other.
+If you want to create sprites in code, there are some things to note. This is useful for when you have static sprites that need color changes, or you have composite sprites that you create by layering different sprites over each other. If you want to change an animated sprite's palette, I would recommend going the [shader route](/editorial/sprites/#shader-palette-swap) discussed below.
 
-Here's a generic example of a function that loops through the pixels in a sprite. In this generic loop, you can see that the Texture2D coordinate system differs from what someone might expect: first, (0, 0) isn't the top rightmost pixel, but the bottom leftmost, and second, the sprite's origin isn't necessarily (0, 0), but is defined by (rect.x, rect.y).
+Here's a generic example of a function that loops through the pixels in a sprite. In this generic loop, you can see that the Texture2D coordinate system differs from what you might expect. First, (0, 0) isn't the top leftmost pixel, but the bottom leftmost. Second, the sprite's origin isn't necessarily (0, 0), but is defined by (rect.x, rect.y).
 
 ```csharp
     public static void Foo(){
@@ -116,7 +110,7 @@ Here's a generic example of a function that loops through the pixels in a sprite
 
 You'll find that a sprite's origin isn't at (0, 0) when taking a look at a sprite cut out from a sprite sheet (except for if that sprite happens to align with the origin). When storing a sprite that's a part of a sprite sheet, Unity doesn't cut out those pixels from the original sprite sheet and keep it as its own independent sprite. Instead, it stores the original sprite sheet along with some information on the sprite's location and size (among other things). When it's prompted to display a sprite, it then uses that information to only display that slice of the sheet instead of the entire thing.
 
-## Shader Based Palette
+## Shader Palette Swap
 
 If you want to swap a sprite's color using a material based approach, you'll want to take the shader route. This is the route I took in Friday Night Knockout. I have a few animated characters with different palettes, and I have no need to keep the sprites in a catalogue. <a href="https://github.com/alexzorzella/Socrates_Plugin/blob/main/Assets/Materials/ColorSwapShader.shader" target="_blank">This</a> specific shader may not be the best solution, but it gets the job done. It uses a basic 32 color palette and a reference index that points to the palette row it'll replace the original colors with.
 
