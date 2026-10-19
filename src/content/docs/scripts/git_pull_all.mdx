@@ -1,0 +1,81 @@
+---
+title: git-pull-all
+description: A shell script to pull all changes from remote to clean repositories
+---
+
+```bash title="git-pull-all"
+#!/usr/bin/env bash
+
+# Git repo name
+# Source - https://stackoverflow.com/a/15716016
+# Posted by Fuad Saud, modified by community. See post 'Timeline' for change history
+# Retrieved 2026-10-17, License - CC BY-SA 4.0
+
+# Bash colors
+# Source - https://stackoverflow.com/a/5947802
+# Posted by Tobias, modified by community. See post 'Timeline' for change history
+# Retrieved 2026-10-17, License - CC BY-SA 4.0
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+RESET='\033[0m'
+
+OPTS=`getopt --options hr:d: --longoptions help,relative-to:,max-depth: -n 'parse-options' -- "$@"`
+
+help() {
+  echo -e "git-pull-all --relative-to --max-depth"
+  echo -e "-h | --help        : Help"
+  echo -e "-r | --relative-to : The root directory that the search will begin in, default ."
+  echo -e "-d | --max-depth   : The max depth that the program will search for git repostiories, default 3"
+}
+
+plural() {
+  if [ "${1}" -ne 1 ]; then
+    echo s
+  fi
+}
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+
+eval set -- "$OPTS"
+
+RELATIVE_TO="."
+MAX_DEPTH=3
+
+while true; do
+  case "$1" in
+    -h | --help ) help; exit ;;
+    -s | --relative-to ) RELATIVE_TO=$2; shift; shift ;;
+    -e | --max-depth ) MAX_DEPTH=$2; shift; shift ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+echo "Getting directories in $RELATIVE_TO"
+
+dirs=($(find $RELATIVE_TO -mindepth 1 -maxdepth $MAX_DEPTH -type d))
+
+echo "Found ${#dirs[@]} directories in $RELATIVE_TO"
+
+for dir in "${dirs[@]}"; do
+  if [ -d "${dir}" ]; then
+    cd "${dir}"
+    
+    if [ -d .git ]; then
+      NAME=$(basename `git rev-parse --show-toplevel`)
+      
+      if [ -z "$(git status --porcelain)" ]; then
+        echo -e "${GREEN}${NAME} is clean, pulling...${RESET}"
+	git pull --prune
+      else
+        ALTERED_FILE_COUNT=$(git status --porcelain | grep -E "^ M" | wc -l)
+        UNTRACKED_FILE_COUNT=$(git status --porcelain | grep -E "^\?\?" | wc -l)
+        
+        echo -e "${RED}$NAME is not clean (Found ${ALTERED_FILE_COUNT} altered file$(plural $ALTERED_FILE_COUNT) and/or ${UNTRACKED_FILE_COUNT} untracked file$(plural $UNTRACKED_FILE_COUNT))${RESET}"
+      fi
+    fi
+    cd -> /dev/null
+  fi
+done
+```
