@@ -4,8 +4,12 @@ description: Resource Loader
 ---
 
 import { LinkButton, Steps } from "@astrojs/starlight/components";
+import { Image } from 'astro:assets';
+import logo from '/src/assets/socrates_plugin_logo.png';
 
-## The Socrates Plugin
+<div align="center">
+    <Image src={logo} alt="Socrates Plugin Logo" width="700" place-content="center"/>
+</div>
 
 <LinkButton href="https://github.com/alexzorzella/Socrates_Plugin/releases/latest/download/socrates_plugin.unitypackage">
    Download
