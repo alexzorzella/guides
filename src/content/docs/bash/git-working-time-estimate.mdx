@@ -1,0 +1,97 @@
+---
+title: git-working-time-estimate
+description: Estimates the amount of time spent working on a Git repository.
+---
+
+git-working-time-estimate can give you a rough estimate of how much time has been spent working on a repository.
+
+```bash title="git-working-time-estimate"
+#!/usr/bin/env bash
+
+GREEN='\033[0;32m'
+CYAN='\033[0;34m'
+YELLOW='\033[0;33m'
+RESET='\033[0m'
+
+OPTS=`getopt --options hc: --longoptions help,cutoff: -n 'parse-options' -- "$@"`
+
+help() {
+  echo -e "${GREEN}git-working-time-estimate --help --cutoff HH:MM:SS${RESET}"
+  echo -e "-h | --help       : Help"
+  echo -e "-c | --cutoff     : The maximum amount of time between commits considered in HH:MM:SS format"
+}
+
+format_time() {
+	printf '%dh:%dm:%ds\n' $(($1/3600)) $(($1%3600/60)) $(($1%60))
+}
+
+to_seconds() {
+    echo $1 | awk -F: 'NF==3 { print ($1 * 3600) + ($2 * 60) + $3 } NF==2 { print ($1 * 60) + $2 } NF==1 { print 0 + $1 }'
+}
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+
+eval set -- "$OPTS"
+
+INTERVAL_LIMIT=""
+
+while true; do
+  case "$1" in
+    -h | --help ) help; exit ;;
+    -s | --cutoff ) INTERVAL_LIMIT=$2; shift; shift ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+INTERVAL_CUTOFF='7200'
+
+if [ -n "$INTERVAL_LIMIT" ]; then
+	INTERVAL_CUTOFF=$(to_seconds $INTERVAL_LIMIT)
+fi
+
+formatted_cutoff=$(format_time $INTERVAL_CUTOFF)
+
+echo -e "${CYAN}Checking commit history with maximum commit interval ${formatted_cutoff}${RESET}"
+
+total_time='0'
+total_commits='0'
+last_timestamp='-1'
+skipped='0'
+longest_interval='-1'
+shortest_interval='1000000'
+
+for timestamp in $(git log --pretty=format:"%ct" | tac); do
+	if [ "$last_timestamp" != '-1' ]; then
+		time_interval=$((timestamp - last_timestamp))
+
+		if [ "$time_interval" -le "$INTERVAL_CUTOFF" ]; then
+			total_time=$((total_time+time_interval))
+			
+			if [ "$time_interval" -gt "$longest_interval" ]; then
+				longest_interval=$time_interval
+			fi
+
+			if [ "$time_interval" -lt "$shortest_interval" ]; then
+				shortest_interval=$time_interval
+			fi
+		else
+			skipped=$((skipped+1))
+		fi
+
+		total_commits=$((total_commits+1))
+	fi
+
+	last_timestamp=$timestamp
+done
+
+average_time_per_commit=$((total_time/total_commits))
+total_time=$((total_time+skipped*average_time_per_commit))
+
+formatted_time=$(format_time $total_time)
+formatted_time_average=$(format_time $average_time_per_commit)
+
+echo -e "${GREEN}Estimated time: ${formatted_time} over ${total_commits} commits${RESET}"
+echo -e "${GREEN}Average time per commit: ${CYAN}${formatted_time_average}${RESET}"
+echo -e "${GREEN}Shortest interval: ${CYAN}$(format_time $shortest_interval)${GREEN}, longest interval: ${CYAN}$(format_time $longest_interval)${RESET}"
+```

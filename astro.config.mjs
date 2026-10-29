@@ -30,6 +30,10 @@ export default defineConfig({
           items: [ { autogenerate: { directory: "guides" } } ],
         },
         {
+          label: "Bash",
+          items: [ { autogenerate: { directory: "bash" } } ],
+        },
+        {
           label: "Scripts",
           items: [ { autogenerate: { directory: "scripts" } } ],
         },

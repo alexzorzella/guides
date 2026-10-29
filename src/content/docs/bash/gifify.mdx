@@ -1,0 +1,139 @@
+---
+title: gifify
+description: Gif bash script
+---
+
+gifify requires ffmpeg and fzf
+
+```bash
+sudo apt install ffmpeg -y && sudo apt install fzf -y
+```
+
+```bash title="gifify"
+#!/usr/bin/env bash
+
+GREEN='\033[0;32m'
+RESET='\033[0m'
+
+OPTS=`getopt --options hs:e:i:f:x:zo:p:rt --longoptions help,start:,end:,input:,framerate:,scale:,optimize,output:,speed:,repeat,ping-pong -n 'parse-options' -- "$@"`
+
+help() {
+  echo -e "gifify --help --start <00:00:00> --end <00:00:00> --input <string> --framerate <int> --scale <int> --optimize --output <string> --speed <float> --repeat --ping-pong"
+  echo -e "-h | --help       : Help"
+  echo -e "-s | --start      : The start timestamp of the gif in HH:MM:SS.MMM format"
+  echo -e "-e | --end        : The end timestamp of the gif in HH:MM:SS.MMM format"
+  echo -e "-i | --input      : The name of the input file. If you are using --repeat, use the desired file extension, (i.e. .mp4)"
+  echo -e "-f | --framerate  : The framerate of the output gif"
+  echo -e "-x | --scale      : The horizontal resolution of the gif (the vertical resolution will scale)"
+  echo -e "-z | --optimize   : Whether ffmpeg will optimize the gif creation. Recommended"
+  echo -e "-o | --output     : The name of the output file. Not used when using --repeat. If no output filename is passed, the output file will be the input's filename with the .gif extension"
+  echo -e "-p | --speed      : The speed of the final gif"
+  echo -e "-r | --repeat     : Enable to repeat the process for all files with the extension passed to --input"
+  echo -e "-t | --ping-pong  : Enable to get a gif that reverses to the begining when it gets to the end"
+}
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+
+eval set -- "$OPTS"
+
+START=""
+END=""
+INPUT=""
+FRAMERATE=20
+SCALE=512
+OPTIMIZE=false
+OUTPUT=""
+SPEED=1
+REPEAT=false
+PING_PONG=false
+
+while true; do
+  case "$1" in
+    -h | --help ) help; exit ;;
+    -s | --start ) START=$2; shift; shift ;;
+    -e | --end ) END=$2; shift; shift ;;
+    -i | --input ) INPUT=$2; shift; shift ;;
+    -f | --framerate ) FRAMERATE="$2"; shift; shift ;;
+    -x | --scale ) SCALE="$2"; shift; shift ;;
+    -z | --optimize ) OPTIMIZE=true; shift;;
+    -o | --output ) OUTPUT="$2"; shift; shift ;;
+    -p | --speed ) SPEED="$2"; shift; shift ;;
+    -r | --repeat ) REPEAT=true; shift;;
+    -t | --ping-pong ) PING_PONG=true; shift;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+if [ -z $INPUT ]; then
+  INPUT=$(fzf)
+  
+  if [ -z $INPUT ]; then
+    exit
+  fi
+fi
+
+COMMAND="ffmpeg"
+
+if [ -n "$START" ]; then
+  COMMAND="${COMMAND} -ss ${START}"
+fi
+
+if [ -n "$END" ]; then
+  COMMAND="${COMMAND} -to ${END}"
+fi
+
+if $REPEAT; then
+  COMMAND="${COMMAND} -i __INPUT__"
+else
+  COMMAND="${COMMAND} -i ${INPUT}"
+fi
+
+OPTIONS="fps=${FRAMERATE},setpts=PTS/${SPEED},scale=${SCALE}:-1:flags=lanczos,split[s0][s1];"
+
+if [ "${OPTIMIZE}" ]; then
+  OPTIONS="${OPTIONS}[s0]palettegen=max_colors=128:stats_mode=diff[p];[s1][p]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle"
+else
+  OPTIONS="${OPTIONS}[s0]palettegen[p];[s1][p]paletteuse"
+fi
+
+if $PING_PONG; then
+  COMMAND="${COMMAND} -filter_complex \"[0:v]reverse[r];[0:v][r]concat=n=2:a=0[fv];[fv]${OPTIONS}\""
+else
+  COMMAND="${COMMAND} -vf \"${OPTIONS}\""
+fi
+
+if $REPEAT; then
+  COMMAND="${COMMAND} __OUTPUT__"
+else
+  if [ -z "$OUTPUT" ]; then
+    OUTPUT="${INPUT%.*}.gif"
+  fi
+
+  COMMAND="${COMMAND} ${OUTPUT}"
+fi
+
+if $REPEAT; then
+  for file in *$INPUT; do
+    if [ -f "$file" ]; then
+      FINAL_COMMAND=`echo "${COMMAND/"__INPUT__"/"$file"}"`
+      FINAL_COMMAND=`echo "${FINAL_COMMAND/"__OUTPUT__"/"${file%.*}.gif"}"`
+      echo -e "Running ${FINAL_COMMAND}"
+      eval "${FINAL_COMMAND}"
+    fi
+  done
+else
+    echo -e "Running ${COMMAND}"
+    eval "${COMMAND}"
+fi
+```
+
+For terminal autocomplete:
+
+```bash title="~/.bashrc"
+_gifify_completion() {
+  local cur="${COMP_WORDS[COMP_CWORD]}"
+  COMPREPLY=( $(compgen -W "--help -h --start -s --end -e --input -i --framerate -f --scale -x --optimize -z --output -o --speed -p --repeat -r --ping-pong -t" -- "$cur") )
+}
+complete -F _gifify_completion gifify
+```

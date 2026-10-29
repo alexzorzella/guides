@@ -1,0 +1,88 @@
+---
+title: git-clone-all-repos
+description: A utility script that clones all the repositories in your Github account, bare by default and regularly if specified.
+---
+
+You must be signed into gh and have [SSH](../../guides/git/#setting-up-ssh-on-macoslinux) set up on your device. If you don't have gh installed, use
+
+```bash
+sudo apt install gh -y
+```
+
+```bash title="git-clone-all-repos"
+#!/usr/bin/env bash
+
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+CYAN='\033[0;34m'
+YELLOW='\033[0;33m'
+RESET='\033[0m'
+
+OPTS=`getopt --options hdc --longoptions help,deep,create-git-dir -n 'parse-options' -- "$@"`
+
+help() {
+  echo -e "${GREEN}github-clone-all-repos --help --deep --create-git-dir${RESET}"
+  echo -e "-h | --help            : Help"
+  echo -e "-d | --deep            : Whether the repositories will be cloned regularly instead of using '--bare --filter=blob:none'"
+  echo -e "-c | --create-git-dir  : Whether the program will create an empty .git directory when cloning bare"
+  echo -e "${YELLOW}github-clone-all-repos uses SSH. You must create and add an SSH key to your GitHub account for it to function as intended.${RESET}"
+}
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+
+eval set -- "$OPTS"
+
+DEEP=
+CREATE_GIT_DIR=
+
+while true; do
+  case "$1" in
+    -h | --help ) help; exit ;;
+    -d | --deep ) DEEP='1'; shift ;;
+    -c | --create-git-dir ) CREATE_GIT_DIR='1'; shift ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+USERNAME=$(git config user.username)
+
+if [ -z "$USERNAME" ]; then
+	echo -e "${RED}You haven't set a username in your git config (~/.gitconfig)${RESET}"
+	echo -e "Set your username by running ${YELLOW}git config --global user.username yourusername${RESET}"
+	read -p "Enter your github username to automatically update it (press enter to skip and exit): " USERNAME
+
+	if [ -n "$USERNAME" ]; then
+		git config --global user.username $USERNAME
+		echo -e "${GREEN}git config username updated to '${USERNAME}'${RESET}"
+		git config user.username
+	else
+		exit
+	fi
+fi
+
+echo -e "${GREEN}Cloning $(gh repo list -L 200 --json name | jq '.[].name' | tr -d '"' | wc -l) repositories...${RESET}"
+
+for repo_name in $(gh repo list -L 200 --json name | jq '.[].name' | tr -d '"'); do
+	folder_name="${repo_name}.git"
+	repo_ssh_link="git@github.com:${USERNAME}/${folder_name}"
+	
+	if [ -d $folder_name ]; then
+		echo -e "${YELLOW}${repo_ssh_link} already cloned, skipping${RESET}"
+	else	
+		if [ -z "$DEEP" ]; then
+			echo -e "${GREEN}Cloning ${repo_ssh_link} bare...${RESET}"
+			git clone $repo_ssh_link --bare --filter=blob:none
+			
+			if [ -n "$CREATE_GIT_DIR" ]; then
+			  mkdir .git
+			fi
+		else
+			echo -e "${GREEN}Regularly cloning ${repo_ssh_link}...${RESET}"
+			git clone $repo_ssh_link
+		fi
+
+		sleep 1
+	fi
+done
+```

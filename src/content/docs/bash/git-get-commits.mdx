@@ -1,0 +1,48 @@
+---
+title: git-get-commits
+description: A utility script to put all of a repository's commits into a file.
+---
+
+```bash title="git-get-commits"
+#!/usr/bin/env bash
+
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+CYAN='\033[0;34m'
+YELLOW='\033[0;33m'
+RESET='\033[0m'
+
+OPTS=`getopt --options hf: --longoptions help,filename: -n 'parse-options' -- "$@"`
+
+help() {
+  echo -e "${GREEN}git-get-commits --help --filename${RESET}"
+  echo -e "-h | --help        : Help"
+  echo -e "-f | --filename    : The output filename"
+}
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+
+eval set -- "$OPTS"
+
+FILENAME=''
+
+while true; do
+  case "$1" in
+    -h | --help ) help; exit ;;
+    -f | --filename ) FILENAME=$2; shift ; shift;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+if [ -z "$FILENAME" ]; then
+	echo -e "${RED}Please specify a filename${RESET}"
+	exit
+fi
+
+rm -f commits.tsv
+
+sed_command="sed 's/^/$repo_name /'"
+git log --pretty=format:"%h%x09%an%x09%ad%x09%s" | eval $sed_command >> $FILENAME
+
+```

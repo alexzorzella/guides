@@ -1,0 +1,87 @@
+---
+title: git-recur
+description: A bash script to run a command in all Git repositories.
+---
+
+git-recur is awesome. Given a parent directory (or the current working directory if nothing is passed), git-recur will navigate to each Git repository it finds given a max depth and run a passed command in each of their roots.
+
+```bash title="git-recur"
+#!/usr/bin/env bash
+
+# Git repo name
+# Source - https://stackoverflow.com/a/15716016
+# Posted by Fuad Saud, modified by community. See post 'Timeline' for change history
+# Retrieved 2026-10-17, License - CC BY-SA 4.0
+
+# Bash colors
+# Source - https://stackoverflow.com/a/5947802
+# Posted by Tobias, modified by community. See post 'Timeline' for change history
+# Retrieved 2026-10-17, License - CC BY-SA 4.0
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+RESET='\033[0m'
+
+OPTS=`getopt --options hr:d:c:q --longoptions help,relative-to:,max-depth:,command:,quiet -n 'parse-options' -- "$@"`
+
+help() {
+echo -e "${GREEN}git-recur --relative-to --max-depth --command${RESET}"
+echo -e "-h | --help        : Help"
+echo -e "-r | --relative-to : The root directory that the search will begin in, default ."
+echo -e "-d | --max-depth   : The max depth that the program will search for git repositories, default 3"
+echo -e "-c | --command     : The command to run at the root of each repository (i.e. \"git pull --prune\", \"git log | head -1\")"
+echo -e "-q | --quiet       : Suppresses printing the found repo names"
+}
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+
+eval set -- "$OPTS"
+
+RELATIVE_TO="."
+MAX_DEPTH=3
+COMMAND=""
+QUIET=
+
+while true; do
+case "$1" in
+-h | --help ) help; exit ;;
+-s | --relative-to ) RELATIVE_TO=$2; shift; shift ;;
+-e | --max-depth ) MAX_DEPTH=$2; shift; shift ;;
+-c | --command ) COMMAND=$2; shift; shift ;;
+-q | --quiet) QUIET='1'; shift ;;
+-- ) shift; break ;;
+    * ) break ;;
+esac
+done
+
+if [ -z "$COMMAND" ]; then
+echo -e "${RED}No command specified with --command${RESET}"
+echo -e "${GREEN}Listing repositories...${RESET}"
+fi
+
+dirs=($(find $RELATIVE_TO -mindepth 1 -maxdepth $MAX_DEPTH -type d))
+
+if [ -z "$QUIET" ]; then
+echo -n "Getting directories in $(realpath $RELATIVE_TO)"
+echo " (found ${#dirs[@]})"
+fi
+
+for dir in "${dirs[@]}"; do
+if [ -d "${dir}" ]; then
+cd "${dir}"
+
+	if [ -d .git ]; then
+		repo_name=$(basename `git rev-parse --show-toplevel`)
+    
+      if [ -z "$QUIET" ]; then
+        echo -e "${GREEN}${repo_name}${RESET}"
+      fi
+
+      if [ -n "$COMMAND" ]; then
+        eval $COMMAND
+      fi
+    fi
+    cd -> /dev/null
+fi
+done
+```
