@@ -90,8 +90,9 @@ I like
 ```bash
 set relativenumber
 
-let mapleader=" "
+let mapleader=","
 
+nnoremap <leader>, ,
 nmap <leader>e <Action>(SearchEverywhere)
 nmap <leader>r <Action>(RecentFiles)
 nmap <leader>m <Action>(FileMenu)
@@ -116,3 +117,5 @@ Apply the changes without closing the editor by running
 ```bash
 :source ~/.ideavimrc
 ```
+
+Pick a leader key that you like. I use the space bar a lot, so I chose `,` as my leader key (which I don't use nearly as often).
