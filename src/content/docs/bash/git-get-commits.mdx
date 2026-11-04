@@ -109,5 +109,5 @@ Given the default output, search for a search term in a message
 
 Display the list of word frequencies with the most common at the bottom (remove `tac` to put the least common at the bottom)
 ```bash
-cat commits.tsv | awk -v FS='\t' -v OFS='\t' '{print $4}' | tr '[:upper:]' '[:lower:]' | tr ' ' '\12' | sort | uniq -c | sort -nr | tac
+cat commits.tsv | awk -v FS='\t' -v OFS='\t' '{print $6}' | tr '[:upper:]' '[:lower:]' | tr ' ' '\12' | sort | uniq -c | sort -nr | tac
 ```
