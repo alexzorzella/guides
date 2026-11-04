@@ -82,7 +82,7 @@ fi
 
 while IFS= read -r commit; do
    printf '%s\n' "$commit" | column -t -s '§' -o $'\t' >> "$FILENAME"
-done < <(echo $OUTPUT | awk 'BEGIN{FS="%019 ";OFS="\n"} FNR==1{$1=$1;print;exit}')
+done < <(echo $OUTPUT | awk 'BEGIN{FS="%019";OFS="\n"} FNR==1{$1=$1;print;exit}')
 ```
 
 ### Fun Commands
