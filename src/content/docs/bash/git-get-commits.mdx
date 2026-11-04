@@ -14,15 +14,11 @@ git-recur --max-depth 1 --command "git-get-commits --output-filename ../commits.
 
 ### Documentation
 
-[git Pretty Formatting](https://git-scm.com/docs/pretty-formats)
+If you want to output a different format than `sha (shortened)  Commit Author   Author Date Subject/Body Wrapped`, take a look at the documentation for [git Pretty Formatting](https://git-scm.com/docs/pretty-formats).
 
-[awk Documentation](https://www.gnu.org/software/gawk/manual/gawk.html)
+There are plenty of fun things to do with the commit file. Use the [awk Documentation](https://www.gnu.org/software/gawk/manual/gawk.html), [grep Documentation](https://www.gnu.org/software/grep/manual/grep.html), and [sed Documentation](https://www.gnu.org/software/sed/manual/sed.html) to view, search, and sort your results in the command line.
 
-[grep Documentation](https://www.gnu.org/software/grep/manual/grep.html)
-
-[shuf Documentation](https://man7.org/linux/man-pages/man1/shuf.1.html)
-
-[sed Documentation](https://www.gnu.org/software/sed/manual/sed.html)
+Here's a fun one, suggested by a friend: [shuf Documentation](https://man7.org/linux/man-pages/man1/shuf.1.html).
 
 [All I Want For Christmas Is You](https://www.youtube.com/watch?v=yXQViqx6GMY)
 
@@ -35,7 +31,7 @@ CYAN='\033[0;34m'
 YELLOW='\033[0;33m'
 RESET='\033[0m'
 
-OPTS=`getopt --options ho:f: --longoptions help,output-filename:,format: -n 'parse-options' -- "$@"`
+OPTS=`getopt --options ho:f:n --longoptions help,output-filename:,format:,include-name -n 'parse-options' -- "$@"`
 
 FORMAT="%h§%an§%ad§%B%-"
 
@@ -44,6 +40,7 @@ help() {
   echo -e "-h | --help               : Help"
   echo -e "-o | --output-filename    : The output filename"
   echo -e "-f | --format             : Commit format, default '${FORMAT}'"
+  echo -e "-n | --include-name       : Whether each line of the output will be prefixed by the repo name"
 }
 
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
@@ -51,12 +48,14 @@ if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 eval set -- "$OPTS"
 
 FILENAME=''
+INCLUDE_NAME=
 
 while true; do
   case "$1" in
     -h | --help ) help; exit ;;
     -o | --output-filename ) FILENAME=$2; shift ; shift;;
     -f | --format ) FORMAT=$2; shift ; shift;;
+    -n | --include-name ) shift;;
     -- ) shift; break ;;
     * ) break ;;
   esac
@@ -73,7 +72,9 @@ fi
 
 OUTPUT=
 
-if [ -n "$repo_name" ]; then 
+repo_name=$(basename `git rev-parse --show-toplevel`) || $(basename "$PWD")
+
+if [ -n "$repo_name" ] && [ -n "$INCLUDE_NAME" ]; then 
   sed_command="sed 's/^/$repo_name§/'"
   OUTPUT=$(git log --pretty=format:"${FORMAT}%019" | eval $sed_command)
 else
