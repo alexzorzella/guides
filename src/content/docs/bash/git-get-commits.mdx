@@ -65,7 +65,7 @@ while true; do
     -h | --help ) help; exit ;;
     -o | --output-filename ) FILENAME=$2; shift ; shift;;
     -f | --format ) FORMAT=$2; shift ; shift;;
-    -n | --include-name ) shift;;
+    -n | --include-name ) INCLUDE_NAME='1'; shift;;
     -- ) shift; break ;;
     * ) break ;;
   esac
