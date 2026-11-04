@@ -3,6 +3,29 @@ title: git-get-commits
 description: A utility script to put all of a repository's commits into a file.
 ---
 
+It's fun to look through a comprehensive git commit history. The best approach is to run the following:
+
+```bash
+mkdir bare-repos
+cd bare-repos
+github-clone-all-repos --create-git-dir
+git-recur --max-depth 1 --command "git-get-commits --output-filename ../commits.tsv"
+```
+
+### Documentation
+
+[git Pretty Formatting](https://git-scm.com/docs/pretty-formats)
+
+[awk Documentation](https://www.gnu.org/software/gawk/manual/gawk.html)
+
+[grep Documentation](https://www.gnu.org/software/grep/manual/grep.html)
+
+[shuf Documentation](https://man7.org/linux/man-pages/man1/shuf.1.html)
+
+[sed Documentation](https://www.gnu.org/software/sed/manual/sed.html)
+
+[All I Want For Christmas Is You](https://www.youtube.com/watch?v=yXQViqx6GMY)
+
 ```bash title="git-get-commits"
 #!/usr/bin/env bash
 
@@ -12,12 +35,15 @@ CYAN='\033[0;34m'
 YELLOW='\033[0;33m'
 RESET='\033[0m'
 
-OPTS=`getopt --options hf: --longoptions help,filename: -n 'parse-options' -- "$@"`
+OPTS=`getopt --options ho:f: --longoptions help,output-filename:,format: -n 'parse-options' -- "$@"`
+
+FORMAT="%h§%an§%ad§%B%-"
 
 help() {
   echo -e "${GREEN}git-get-commits --help --filename${RESET}"
-  echo -e "-h | --help        : Help"
-  echo -e "-f | --filename    : The output filename"
+  echo -e "-h | --help               : Help"
+  echo -e "-o | --output-filename    : The output filename"
+  echo -e "-f | --format             : Commit format, default '${FORMAT}'"
 }
 
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
@@ -29,7 +55,8 @@ FILENAME=''
 while true; do
   case "$1" in
     -h | --help ) help; exit ;;
-    -f | --filename ) FILENAME=$2; shift ; shift;;
+    -o | --output-filename ) FILENAME=$2; shift ; shift;;
+    -f | --format ) FORMAT=$2; shift ; shift;;
     -- ) shift; break ;;
     * ) break ;;
   esac
@@ -40,9 +67,32 @@ if [ -z "$FILENAME" ]; then
 	exit
 fi
 
-rm -f commits.tsv
+if [ -f "$FILENAME" ] &&  [ "$(cat $FILENAME | wc -l)" -gt 0 ]; then
+	echo "" >> $FILENAME
+fi
 
-sed_command="sed 's/^/$repo_name /'"
-git log --pretty=format:"%h%x09%an%x09%ad%x09%s" | eval $sed_command >> $FILENAME
+OUTPUT=
 
+if [ -n "$repo_name" ]; then 
+  sed_command="sed 's/^/$repo_name§/'"
+  OUTPUT=$(git log --pretty=format:"${FORMAT}%019" | eval $sed_command)
+else
+  OUTPUT=$(git log --pretty=format:"${FORMAT}%019")
+fi
+
+while IFS= read -r commit; do
+   printf '%s\n' "$commit" | column -t -s '§' -o $'\t' >> "$FILENAME"
+done < <(echo $OUTPUT | awk 'BEGIN{FS="%019 ";OFS="\n"} FNR==1{$1=$1;print;exit}')
+```
+
+### Fun Commands
+
+Given the default output, search for a search term in a message
+```bash
+ cat commits.tsv | grep -P ".*\t.*\t.*\t[A-Z].*" | grep -i search_term
+```
+
+Display the list of word frequencies with the most common at the bottom (remove `tac` to put the least common at the bottom)
+```bash
+cat commits.tsv | awk -v FS='\t' -v OFS='\t' '{print $4}' | tr '[:upper:]' '[:lower:]' | tr ' ' '\12' | sort | uniq -c | sort -nr | tac
 ```

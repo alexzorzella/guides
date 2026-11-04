@@ -1,5 +1,5 @@
 ---
-title: git-clone-all-repos
+title: github-clone-all-repos
 description: A utility script that clones all the repositories in your Github account, bare by default and regularly if specified.
 ---
 
@@ -9,7 +9,7 @@ You must be signed into gh and have [SSH](../../guides/git/#setting-up-ssh-on-ma
 sudo apt install gh -y
 ```
 
-```bash title="git-clone-all-repos"
+```bash title="github-clone-all-repos"
 #!/usr/bin/env bash
 
 GREEN='\033[0;32m'
@@ -74,8 +74,11 @@ for repo_name in $(gh repo list -L 200 --json name | jq '.[].name' | tr -d '"');
 			echo -e "${GREEN}Cloning ${repo_ssh_link} bare...${RESET}"
 			git clone $repo_ssh_link --bare --filter=blob:none
 			
+
 			if [ -n "$CREATE_GIT_DIR" ]; then
+			  cd "$folder_name"
 			  mkdir .git
+			  cd -
 			fi
 		else
 			echo -e "${GREEN}Regularly cloning ${repo_ssh_link}...${RESET}"

@@ -1,0 +1,20 @@
+---
+title: git-try-pull
+description: A bash script that tries to pull changes for the repo in the current directory
+---
+
+```bash title="git-try-pull"
+#!/usr/bin/env bash
+ 
+NAME=$(basename `git rev-parse --show-toplevel`)
+
+if [ -z "$(git status --porcelain)" ]; then
+	echo -e "${GREEN}${NAME} is clean, pulling...${RESET}"
+	git pull --prune
+else
+	ALTERED_FILE_COUNT=$(git status --porcelain | grep -E "^ M" | wc -l)
+	UNTRACKED_FILE_COUNT=$(git status --porcelain | grep -E "^\?\?" | wc -l)
+
+	echo -e "${RED}$NAME is not clean (Found ${ALTERED_FILE_COUNT} altered file$(plural $ALTERED_FILE_COUNT) and/or ${UNTRACKED_FILE_COUNT} untracked file$(plural $UNTRACKED_FILE_COUNT))${RESET}"
+fi
+```

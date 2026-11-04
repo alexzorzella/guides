@@ -18,7 +18,7 @@ RESET='\033[0m'
 OPTS=`getopt --options hs:e:i:f:x:zo:p:rt --longoptions help,start:,end:,input:,framerate:,scale:,optimize,output:,speed:,repeat,ping-pong -n 'parse-options' -- "$@"`
 
 help() {
-  echo -e "gifify --help --start <00:00:00> --end <00:00:00> --input <string> --framerate <int> --scale <int> --optimize --output <string> --speed <float> --repeat --ping-pong"
+  echo -e "${GREEN}gifify --help --start <00:00:00> --end <00:00:00> --input <string> --framerate <int> --scale <int> --optimize --output <string> --speed <float> --repeat --ping-pong${RESET}"
   echo -e "-h | --help       : Help"
   echo -e "-s | --start      : The start timestamp of the gif in HH:MM:SS.MMM format"
   echo -e "-e | --end        : The end timestamp of the gif in HH:MM:SS.MMM format"
@@ -29,7 +29,7 @@ help() {
   echo -e "-o | --output     : The name of the output file. Not used when using --repeat. If no output filename is passed, the output file will be the input's filename with the .gif extension"
   echo -e "-p | --speed      : The speed of the final gif"
   echo -e "-r | --repeat     : Enable to repeat the process for all files with the extension passed to --input"
-  echo -e "-t | --ping-pong  : Enable to get a gif that reverses to the begining when it gets to the end"
+  echo -e "-t | --ping-pong  : Enable to get a gif that reverses to the beginning when it gets to the end"
 }
 
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
@@ -126,14 +126,4 @@ else
     echo -e "Running ${COMMAND}"
     eval "${COMMAND}"
 fi
-```
-
-For terminal autocomplete:
-
-```bash title="~/.bashrc"
-_gifify_completion() {
-  local cur="${COMP_WORDS[COMP_CWORD]}"
-  COMPREPLY=( $(compgen -W "--help -h --start -s --end -e --input -i --framerate -f --scale -x --optimize -z --output -o --speed -p --repeat -r --ping-pong -t" -- "$cur") )
-}
-complete -F _gifify_completion gifify
 ```
