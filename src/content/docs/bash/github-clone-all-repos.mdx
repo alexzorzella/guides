@@ -64,16 +64,15 @@ fi
 echo -e "${GREEN}Cloning $(gh repo list -L 200 --json name | jq '.[].name' | tr -d '"' | wc -l) repositories...${RESET}"
 
 for repo_name in $(gh repo list -L 200 --json name | jq '.[].name' | tr -d '"'); do
-	folder_name="${repo_name}.git"
-	repo_ssh_link="git@github.com:${USERNAME}/${folder_name}"
+	folder_name="${repo_name}"
+	repo_ssh_link="git@github.com:${USERNAME}/${folder_name}.git"
 	
 	if [ -d $folder_name ]; then
 		echo -e "${YELLOW}${repo_ssh_link} already cloned, skipping${RESET}"
 	else	
 		if [ -z "$DEEP" ]; then
 			echo -e "${GREEN}Cloning ${repo_ssh_link} bare...${RESET}"
-			git clone $repo_ssh_link --bare --filter=blob:none
-			
+			git clone $repo_ssh_link --bare --filter=blob:none $folder_name
 
 			if [ -n "$CREATE_GIT_DIR" ]; then
 			  cd "$folder_name"
@@ -82,7 +81,7 @@ for repo_name in $(gh repo list -L 200 --json name | jq '.[].name' | tr -d '"');
 			fi
 		else
 			echo -e "${GREEN}Regularly cloning ${repo_ssh_link}...${RESET}"
-			git clone $repo_ssh_link
+			git clone $repo_ssh_link $folder_name
 		fi
 
 		sleep 1
