@@ -72,8 +72,8 @@ fi
 
 OUTPUT=
 
-repo_name=$(basename `git rev-parse --show-toplevel`) || $(basename "$PWD")
-
+repo_name=$(basename $PWD)
+  
 if [ -n "$repo_name" ] && [ -n "$INCLUDE_NAME" ]; then 
   sed_command="sed 's/^/$repo_name§/'"
   OUTPUT=$(git log --pretty=format:"${FORMAT}%019" | eval $sed_command)

@@ -46,7 +46,7 @@ while true; do
   case "$1" in
     -h | --help ) help; exit ;;
     -s | --relative-to ) RELATIVE_TO=$2; shift; shift ;;
-    -e | --max-depth ) MAX_DEPTH=$2; shift; shift ;;
+    -d | --max-depth ) MAX_DEPTH=$2; shift; shift ;;
     -c | --command ) COMMAND=$2; shift; shift ;;
     -q | --quiet) QUIET='1'; shift ;;
     -- ) shift; break ;;
@@ -72,7 +72,7 @@ for dir in "${dirs[@]}"; do
     
     if [ -d .git ]; then
 	    if [ -z "$QUIET" ]; then
-		    repo_name=$(basename `git rev-parse --show-toplevel`)
+        repo_name=$(basename $PWD)
 		    echo -e "${GREEN}${repo_name}${RESET}"
 	    fi
 
