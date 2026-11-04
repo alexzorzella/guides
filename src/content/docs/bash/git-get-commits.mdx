@@ -25,7 +25,7 @@ rm -f commits.tsv && git-recur -d 1 -c "git-get-commits -o ../commits.tsv -n" &&
 Or, if you're looking for a more data driven format
 
 ```bash
-rm -f commits.tsv && git-recur -d 1 -c "git-get-commits -o ../commits.tsv -n --format \"%H§%an§%as§%ah§%B%-\"" && cat commits.tsv | head -20
+rm -f commits.tsv && git-recur -d 1 -c "git-get-commits -o ../commits.tsv -n --format \"%H§%an§%as§%ad§%B%-\"" && cat commits.tsv | head -20
 ```
 
 ### Resources
