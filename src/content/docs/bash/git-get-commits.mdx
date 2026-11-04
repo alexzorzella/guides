@@ -22,15 +22,23 @@ Or
 rm -f commits.tsv && git-recur -d 1 -c "git-get-commits -o ../commits.tsv -n" && cat commits.tsv | head -20
 ```
 
-### Documentation
+Or, if you're looking for a more data driven format
+
+```bash
+rm -f commits.tsv && git-recur -d 1 -c "git-get-commits -o ../commits.tsv -n --format \"%H§%an§%as§%ah§%B%-\"" && cat commits.tsv | head -20
+```
+
+### Resources
 
 If you want to output a different format than `sha (shortened)  Commit Author   Author Date Subject/Body Wrapped`, take a look at the documentation for [git Pretty Formatting](https://git-scm.com/docs/pretty-formats).
 
-There are plenty of fun things to do with the commit file. Use the [awk Documentation](https://www.gnu.org/software/gawk/manual/gawk.html), [grep Documentation](https://www.gnu.org/software/grep/manual/grep.html), and [sed Documentation](https://www.gnu.org/software/sed/manual/sed.html) to view, search, and sort your results in the command line.
+There are plenty of fun things to do with the commit file. Use the <a href="https://www.gnu.org/software/gawk/manual/gawk.html" target="_blank">awk Documentation</a>, <a href="https://www.gnu.org/software/grep/manual/grep.html" target="_blank">grep Documentation</a>, <a href="https://www.gnu.org/software/sed/manual/sed.html" target="_blank">sed Documentation</a> to view, search, and sort your results in the command line.
 
-Here's a fun one, suggested by a friend: [shuf Documentation](https://man7.org/linux/man-pages/man1/shuf.1.html).
+Here's a fun one, suggested by a friend: <a href="https://man7.org/linux/man-pages/man1/shuf.1.html" target="_blank">shuf Documentation</a>.
 
-[All I Want For Christmas Is You](https://www.youtube.com/watch?v=yXQViqx6GMY)
+<a href="https://www.youtube.com/watch?v=yXQViqx6GMY" target="_blank">All I Want For Christmas Is You</a>
+
+### Script
 
 ```bash title="git-get-commits"
 #!/usr/bin/env bash
