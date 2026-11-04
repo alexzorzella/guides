@@ -9,7 +9,17 @@ It's fun to look through a comprehensive git commit history. The best approach i
 mkdir bare-repos
 cd bare-repos
 github-clone-all-repos --create-git-dir
-git-recur --max-depth 1 --command "git-get-commits --output-filename ../commits.tsv"
+
+And then
+
+```bash
+git-recur --max-depth 1 --command "git-get-commits --output-filename ../commits.tsv --include-name"
+```
+
+Or
+
+```bash
+rm -f commits.tsv && git-recur -d 1 -c "git-get-commits -o ../commits.tsv -n" && cat commits.tsv | head -20
 ```
 
 ### Documentation
@@ -66,10 +76,6 @@ if [ -z "$FILENAME" ]; then
 	exit
 fi
 
-if [ -f "$FILENAME" ] &&  [ "$(cat $FILENAME | wc -l)" -gt 0 ]; then
-	echo "" >> $FILENAME
-fi
-
 OUTPUT=
 
 repo_name=$(basename $PWD)
@@ -83,7 +89,7 @@ fi
 
 while IFS= read -r commit; do
    printf '%s\n' "$commit" | column -t -s '§' -o $'\t' >> "$FILENAME"
-done < <(echo $OUTPUT | awk 'BEGIN{FS="%019";OFS="\n"} FNR==1{$1=$1;print;exit}')
+done < <(echo $OUTPUT | awk 'BEGIN{FS="%019[ ]?";OFS="\n"} FNR==1{$1=$1;print;exit}')
 ```
 
 ### Fun Commands
