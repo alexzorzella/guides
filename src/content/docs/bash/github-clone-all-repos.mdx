@@ -18,11 +18,13 @@ CYAN='\033[0;34m'
 YELLOW='\033[0;33m'
 RESET='\033[0m'
 
-OPTS=`getopt --options hdc --longoptions help,deep,create-git-dir -n 'parse-options' -- "$@"`
+OPTS=`getopt --options hu:s:dc --longoptions help,username:,host:,deep,create-git-dir -n 'parse-options' -- "$@"`
 
 help() {
   echo -e "${GREEN}github-clone-all-repos --help --deep --create-git-dir${RESET}"
   echo -e "-h | --help            : Help"
+  echo -e "-u | --username	  : The username of a user with read access to the repository. Defaults to the username set in your ~/.gitconfig."
+  echo -e "-s | --host            : The host of the github repo, default ${CYAN}git@github.com${RESET}. Used when cloning repos with an aliased ssh host."
   echo -e "-d | --deep            : Whether the repositories will be cloned regularly instead of using '--bare --filter=blob:none'"
   echo -e "-c | --create-git-dir  : Whether the program will create an empty .git directory when cloning bare"
   echo -e "${YELLOW}github-clone-all-repos uses SSH. You must create and add an SSH key to your GitHub account for it to function as intended.${RESET}"
@@ -34,10 +36,14 @@ eval set -- "$OPTS"
 
 DEEP=
 CREATE_GIT_DIR=
+HOST="github.com"
+USERNAME=
 
 while true; do
   case "$1" in
     -h | --help ) help; exit ;;
+    -u | --username ) USERNAME=$2; shift; shift ;;
+    -s | --host ) HOST=$2; shift; shift ;;
     -d | --deep ) DEEP='1'; shift ;;
     -c | --create-git-dir ) CREATE_GIT_DIR='1'; shift ;;
     -- ) shift; break ;;
@@ -45,7 +51,9 @@ while true; do
   esac
 done
 
-USERNAME=$(git config user.username)
+if [ -z $"USERNAME" ]; then
+	USERNAME=$(git config user.username)
+fi
 
 if [ -z "$USERNAME" ]; then
 	echo -e "${RED}You haven't set a username in your git config (~/.gitconfig)${RESET}"
@@ -61,11 +69,15 @@ if [ -z "$USERNAME" ]; then
 	fi
 fi
 
+if [ -n "$USERNAME" ]; then
+	echo -e "${YELLOW}Cloning all repos using username ${GREEN}${USERNAME}${YELLOW} and host ${GREEN}${HOST}${RESET}"
+fi
+
 echo -e "${GREEN}Cloning $(gh repo list -L 200 --json name | jq '.[].name' | tr -d '"' | wc -l) repositories...${RESET}"
 
 for repo_name in $(gh repo list -L 200 --json name | jq '.[].name' | tr -d '"'); do
 	folder_name="${repo_name}"
-	repo_ssh_link="git@github.com:${USERNAME}/${folder_name}.git"
+	repo_ssh_link="git@${HOST}:${USERNAME}/${folder_name}.git"
 	
 	if [ -d $folder_name ]; then
 		echo -e "${YELLOW}${repo_ssh_link} already cloned, skipping${RESET}"
